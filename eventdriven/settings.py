@@ -38,6 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'event',
+    'home',
+    'entertainer',
+    'location'
 ]
 
 MIDDLEWARE = [
@@ -83,9 +87,7 @@ DATABASES = {
         'USER': 'event-driven-db-user',
         'PASSWORD': 'adminpass',
         'HOST': '34.105.131.189',
-        'PORT': '5432',
-
-
+        'PORT': '5432'
     }
 }
 
