@@ -1,5 +1,26 @@
 from django.shortcuts import render
 
+
+def index(request):
+    return render(request, "pages/home.html", context={'events': TEMP_EVENTS})
+
+
+def help(request):
+    return render(request, 'pages/help.html')
+
+
+def event(request, event_id):
+    return render(request, "pages/event/index.html", context={'event_id': event_id})
+
+
+def entertainers(request):
+    return render(request, 'pages/entertainers/index.html')
+
+
+def entertainer(request, entertainer_id):
+    return render(request, 'pages/entertainers/index.html')
+
+
 # Create your views here.
 TEMP_EVENTS = [
 
@@ -78,7 +99,3 @@ TEMP_EVENTS = [
 
 
 ]
-
-
-def index(request):
-    return render(request, "home/index.html", context={'events': TEMP_EVENTS})
