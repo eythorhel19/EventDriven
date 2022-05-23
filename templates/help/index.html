@@ -1,4 +1,33 @@
 {% extends 'base.html' %} {% block content %}
 
-<h1>Help</h1>
+<style>
+    .help_wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+    }
+    .contact_info {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+</style>
+
+<div class="help_wrapper">
+    <h1 class="h1_regular">Contact Us:</h1>
+    <div class="contact_info">
+        <div>
+            <p class="label_light">Email</p>
+            <h2 class="h2_light">example@example.com</h2>
+        </div>
+        <div>
+            <p class="label_light">Phone</p>
+            <h2 class="h2_light">+354 123 4567</h2>
+        </div>
+        <div>
+            <p class="label_light">Available hours</p>
+            <h2 class="h2_light">ecom</h2>
+        </div>
+    </div>
+</div>
 {% endblock %}
