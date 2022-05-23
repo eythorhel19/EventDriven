@@ -26,7 +26,48 @@ TEMP_EVENTS = [
         "location": "Location 3",
         "description": "Description 3",
         "image": "https://picsum.photos/200/300/?random",
+    },
+    {
+        "name": "Event 4",
+        "date": "2019-01-03",
+        "time": "12:00",
+        "location": "Location 4",
+        "description": "Description 4",
+        "image": "https://picsum.photos/200/300/?random",
+    },
+    {
+        "name": "Event 5",
+        "date": "2019-01-03",
+        "time": "12:00",
+        "location": "Location 5",
+        "description": "Description 5",
+        "image": "https://picsum.photos/200/300/?random",
+    },
+    {
+        "name": "Event 6",
+        "date": "2019-01-03",
+        "time": "12:00",
+        "location": "Location 6",
+        "description": "Description 6",
+        "image": "https://picsum.photos/200/300/?random",
+    },
+    {
+        "name": "Event 6",
+        "date": "2019-01-03",
+        "time": "12:00",
+        "location": "Location 6",
+        "description": "Description 6",
+        "image": "https://picsum.photos/200/300/?random",
+    },
+    {
+        "name": "Event 7",
+        "date": "2019-01-03",
+        "time": "12:00",
+        "location": "Location 7",
+        "description": "Description 7",
+        "image": "https://picsum.photos/200/300/?random",
     }
+
 
 ]
 
