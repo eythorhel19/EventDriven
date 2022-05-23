@@ -359,3 +359,44 @@ body {
     border: 1px solid #888;
     width: 80%; /* Could be more or less, depending on screen size */
 }
+.card {
+    display: flex;
+    flex-direction: column;
+    padding: 0px;
+    justify-content: space-between;
+    width: 350px;
+    height: 450px;
+    background:  var(--base-secondary);
+    border-radius: 8px;
+}
+.btn-booking-card {
+    color: var(--type-primary);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 32px;
+    gap: 10px;
+    border-color: var(--graphical-primary);
+    background-color: transparent;
+    border-radius: 8px;
+    width: 318px;
+    height: 49px;                       
+}
+
+.card-img {
+    width: 350px;
+    height: 196px;
+    border-radius: 8px 8px 0px 0px;
+
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px;
+    gap: 16px;
+    width: 350px;
+    
+    }
