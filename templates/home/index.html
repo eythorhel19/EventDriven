@@ -2,11 +2,13 @@
 <div class="card">
     <img src="{{event.image}}" class="card-img" alt="events img" />
     <div class="card-body">
-        <h5 class="card-title">{{event.name}}</h5>
+        <h1 class="h2_semibold">{{event.name}}</h1>
         <p class="card-text">{{event.description}}</p>
+        <p class="icon_large">calendar_month</p>
     </div>
     <div>
         <button href="#" class="btn-booking-card">Book now</button>
     </div>
 </div>
+
 {% endfor %} {% endblock %}

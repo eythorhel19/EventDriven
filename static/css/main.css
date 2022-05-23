@@ -284,11 +284,13 @@
 
 
 /* Icons */
+
 .icon_large {
     font-family: var(--icon-font);
     font-size:var(--icon-large-font-size);
     padding: 0px;
     margin: 0px;
+    
 }
 
 .icon_normal {

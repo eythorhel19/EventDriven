@@ -56,7 +56,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-           os.path.join(BASE_DIR, 'templates')
+            os.path.join(BASE_DIR, 'templates')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -78,8 +78,14 @@ WSGI_APPLICATION = 'eventdriven.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'event-driven-db',
+        'USER': 'event-driven-db-user',
+        'PASSWORD': 'adminpass',
+        'HOST': '34.105.131.189',
+        'PORT': '5432',
+
+
     }
 }
 
