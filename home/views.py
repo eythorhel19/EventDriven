@@ -4,6 +4,7 @@ from django.shortcuts import render
 TEMP_EVENTS = [
 
     {
+        'id': 1,
         "name": "Event 1",
         "date": "2019-01-01",
         "time": "12:00",
@@ -12,6 +13,7 @@ TEMP_EVENTS = [
         "image": "https://picsum.photos/200/300/?random",
     },
     {
+        'id': 2,
         "name": "Event 2",
         "date": "2019-01-02",
         "time": "12:00",
@@ -20,6 +22,7 @@ TEMP_EVENTS = [
         "image": "https://picsum.photos/200/300/?random",
     },
     {
+        'id': 3,
         "name": "Event 3",
         "date": "2019-01-03",
         "time": "12:00",
@@ -28,6 +31,7 @@ TEMP_EVENTS = [
         "image": "https://picsum.photos/200/300/?random",
     },
     {
+        'id': 4,
         "name": "Event 4",
         "date": "2019-01-03",
         "time": "12:00",
@@ -36,6 +40,7 @@ TEMP_EVENTS = [
         "image": "https://picsum.photos/200/300/?random",
     },
     {
+        'id': 5,
         "name": "Event 5",
         "date": "2019-01-03",
         "time": "12:00",
@@ -44,6 +49,7 @@ TEMP_EVENTS = [
         "image": "https://picsum.photos/200/300/?random",
     },
     {
+        'id': 6,
         "name": "Event 6",
         "date": "2019-01-03",
         "time": "12:00",
@@ -52,6 +58,7 @@ TEMP_EVENTS = [
         "image": "https://picsum.photos/200/300/?random",
     },
     {
+        'id': 7,
         "name": "Event 6",
         "date": "2019-01-03",
         "time": "12:00",
@@ -60,6 +67,7 @@ TEMP_EVENTS = [
         "image": "https://picsum.photos/200/300/?random",
     },
     {
+        'id': 8,
         "name": "Event 7",
         "date": "2019-01-03",
         "time": "12:00",
