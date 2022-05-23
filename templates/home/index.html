@@ -23,23 +23,25 @@
     {% for event in events %}
     <div class="for-hower-clow">
         <div class="card">
-            <img src="{{event.image}}" class="card-img" alt="events img" />
-            <div class="card-body">
-                <h1 class="h2_semibold">{{event.name}}</h1>
-                <p class="card-text">{{event.description}}</p>
-                <div class="icon-and-text">
-                    <p class="icon_large">pin_drop</p>
-                    <h3 class="h3_regular">{{event.location}}</h3>
+            <a href="event/{{event.id}}">
+                <img src="{{event.image}}" class="card-img" alt="events img" />
+                <div class="card-body">
+                    <h1 class="h2_semibold">{{event.name}}</h1>
+                    <p class="card-text">{{event.description}}</p>
+                    <div class="icon-and-text">
+                        <p class="icon_large">pin_drop</p>
+                        <h3 class="h3_regular">{{event.location}}</h3>
+                    </div>
+                    <div class="icon-and-text">
+                        <p class="icon_large">calendar_month</p>
+                        <h3 class="h3_regular">{{event.date}}</h3>
+                    </div>
                 </div>
-                <div class="icon-and-text">
-                    <p class="icon_large">calendar_month</p>
-                    <h3 class="h3_regular">{{event.date}}</h3>
-                </div>
-            </div>
+            </a>
             <div class="book-button-div">
-                <button href="#" class="button_outlined button-adjust">
+                <a href="/event" class="btn button_outlined button-adjust">
                     Book now
-                </button>
+                </a>
             </div>
         </div>
     </div>
