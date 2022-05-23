@@ -1,4 +1,7 @@
 from django.db import models
+from entertainer.models import Entertainer
+from home.models import Category
+from location.models import Location
 
 
 class Event(models.Model):
@@ -7,6 +10,7 @@ class Event(models.Model):
     maximum_capacity = models.IntegerField()
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
+    location = models.ForeignKey(Location, on_delete=models.CASCADE)
 
 
 class EventImage(models.Model):
@@ -14,20 +18,16 @@ class EventImage(models.Model):
     event_id = models.ForeignKey(Event, on_delete=models.CASCADE)
     description = models.CharField(max_length=255)
 
-# CREATE TABLE Event (
-#     event_id SERIAL PRIMARY KEY,
-#     title VARCHAR NOT NULL,
-#     description VARCHAR NOT NULL,
-#     maximum_capacity VARCHAR,
-#     start_date TIMESTAMP,
-#     end_date TIMESTAMP,
-#     location_id INT REFERENCES Location (location_id)
-# );
 
-# CREATE TABLE EventImage(
-#     event_image_id SERIAL PRIMARY KEY,
-#     event_id INT REFERENCES Event (event_id),
-#     image_url VARCHAR NOT NULL,
-#     description VARCHAR,
-#     main_image BOOLEAN NOT NULL DEFAULT FALSE
-# );
+class EventCategory(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    models.UniqueConstraint(
+        name='unique_event_category',
+        fields=['event', 'category']
+    )
+
+
+class EventEntertainer(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    entertainer = models.ForeignKey(Entertainer, on_delete=models.CASCADE)
