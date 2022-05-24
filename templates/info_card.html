@@ -1,0 +1,76 @@
+<style>
+    .book-button-div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .button-adjust {
+        width: 300px;
+    }
+    .icon-and-text {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+    }
+    .for-hower-clow {
+        background: #ffffff;
+        border-radius: 10px;
+    }
+</style>
+<div class="for-hower-clow">
+    <div class="card">
+        <a href="event/{{event.id}}">
+            <img src="{{event.image}}" class="card-img" alt="events img" />
+            <div class="card-body">
+                <h1 class="h2_semibold">{{event.name}}</h1>
+                <p class="card-text">{{event.description}}</p>
+                <div class="icon-and-text">
+                    <p class="icon_large">pin_drop</p>
+                    <h3 class="h3_regular">{{event.location}}</h3>
+                </div>
+                <div class="icon-and-text">
+                    <p class="icon_large">calendar_month</p>
+                    <h3 class="h3_regular">{{event.date}}</h3>
+                </div>
+            </div>
+        </a>
+        <div class="book-button-div">
+            <a href="/event" class="btn button_outlined button-adjust">
+                Book now
+            </a>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Modal body text goes here.</p>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal"
+                    >
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        Save changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
