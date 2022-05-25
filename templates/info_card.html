@@ -40,7 +40,7 @@
     <div class="card">
         <a href="event/{{event.id}}">
             <div class="image_wrapper">
-                <img src="{{ event.image_url }}" class="card_img" alt="{{ event.image_description }}" />
+                <img src="{{ event.main_image_url }}" class="card_img" alt="Event image" />
             </div>
             <div class="card_body">
                 <h1 class="h2_semibold">{{event.title}}</h1>
@@ -61,7 +61,7 @@
             <!-- Trigger the modal with a button -->
             <button
                 data-bs-toggle="modal"
-                data-bs-target="#asdf"
+                data-bs-target="#booking_modal"
                 class="btn button_outlined button-adjust"
                 onclick="handleBookNow({{ event.id }})"
             >

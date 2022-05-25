@@ -9,22 +9,13 @@ def index(request):
         E.title,
         E.description,
         E.start_date,
-        CONCAT(L.name,', ',C.name) AS location_name,
-        X.image_url,
-        X.description AS image_description
+        E.main_image_url,
+        CONCAT(L.name,', ',C.name) AS location_name
     FROM events_event AS E
     INNER JOIN home_location AS L
     ON E.location_id = L.id
     INNER JOIN home_city AS C
-    ON L.city_id = C.id
-    INNER JOIN (
-        SELECT *
-        FROM
-            events_eventimage AS EI
-        WHERE
-            EI.main
-    ) AS X
-    ON E.id = X.event_id;
+    ON L.city_id = C.id;
     ''')
 
     progress_data = [

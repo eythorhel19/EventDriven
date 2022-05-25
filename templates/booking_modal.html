@@ -1,11 +1,13 @@
 <script>
-    function handleBookNow(event_id) {
+    async function handleBookNow(event_id) {
         console.log(event_id);
     }
 </script>
 <style>
     .model_adjuster {
-        max-width: 90vh;
+        width: 100vh;
+        max-width: 100vh;
+        border-radius: 16px;
     }
     .modal_base {
         background-color: var(--base-primary);
@@ -15,14 +17,11 @@
 </style>
 <div
     class="modal fade"
-    id="asdf"
+    id="booking_modal"
     tabindex="-1"
-    aria-labelledby="exampleModalLabel"
-    aria-hidden="true"
-    style="display: none"
 >
-    <div class="modal-dialog model_adjuster" style="color: black">
-        <div class="model-content">
+    <div class="modal-dialog model_adjuster">
+        <div class="modal-content model_adjuster">
             <div class="modal_base">
                 {% include 'components/progress_points.html' with progress_data=progress_data%}
                 <h1>Here</h1>

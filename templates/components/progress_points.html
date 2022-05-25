@@ -36,13 +36,13 @@
 
 <div class="progress_points_wrapper">
     {% for p_data in progress_data %}
-        <div class="progress_point_and_description">
+        <a class="progress_point_and_description">
             <div class="progress_point">
                 <p class="h3_bold">{{ p_data.id }}</p>
             </div>
             <div class="progress_description">
                 <p class="p_light">{{ p_data.description }}</p>
             </div>
-        </div>
+        </a>
     {% endfor %}
 </div>
