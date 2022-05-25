@@ -29,6 +29,9 @@ class Location(models.Model):
     name = models.CharField(max_length=255)
     capacity = models.IntegerField()
 
+    def __str__(self):
+        return "{}, {}".format(self.name, self.city)
+
 #   Address
 
 
