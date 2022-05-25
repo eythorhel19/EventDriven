@@ -452,3 +452,15 @@ a, a:hover, a:focus, a:active {
     text-decoration: none;
     color: inherit;
 }
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--base-secondary);
+    color: var( --type-primary);
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+}
