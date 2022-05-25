@@ -24,17 +24,17 @@
     <div class="for-hower-clow">
         <div class="card">
             <a href="event/{{event.id}}">
-                <img src="{{event.image}}" class="card-img" alt="events img" />
+                <img src="https://picsum.photos/200/300/?random" class="card-img" alt="events image" />
                 <div class="card-body">
-                    <h1 class="h2_semibold">{{event.name}}</h1>
+                    <h1 class="h2_semibold">{{event.title}}</h1>
                     <p class="card-text">{{event.description}}</p>
                     <div class="icon-and-text">
                         <p class="icon_large">pin_drop</p>
-                        <h3 class="h3_regular">{{event.location}}</h3>
+                        <h3 class="h3_regular">{{event.location_id}}</h3>
                     </div>
                     <div class="icon-and-text">
                         <p class="icon_large">calendar_month</p>
-                        <h3 class="h3_regular">{{event.date}}</h3>
+                        <h3 class="h3_regular">{{event.start_date}}</h3>
                     </div>
                 </div>
             </a>

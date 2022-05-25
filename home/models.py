@@ -1,4 +1,12 @@
+from tkinter import CASCADE
 from django.db import models
+from django.contrib.auth.models import User
+from events.models import Event
+from entertainers.models import Entertainer
+
+# BASE TABLES
+
+#   Location
 
 
 class Country(models.Model):
@@ -19,6 +27,9 @@ class City(models.Model):
 class Location(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
+    capacity = models.IntegerField()
+
+#   Address
 
 
 class PostalCode(models.Model):
@@ -31,33 +42,63 @@ class PostalCode(models.Model):
         fields=['postal_code', 'country']
     )
 
-
-class Entertainer(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
-
-
-class Event(models.Model):
-    title = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
-    maximum_capacity = models.IntegerField()
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+#   Category
 
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
-    # models.UniqueConstraint(
-    #     models.Lower('name').desc(),
-    #     'category',
-    #     name='unique_lower_name_category')
+    models.UniqueConstraint(
+        models.functions.Lower('name').desc(),
+        'Category',
+        name='unique_lower_name_category')
+
+#   User
 
 
-class EventImage(models.Model):
-    image_url = models.CharField(max_length=9999)
-    event_id = models.ForeignKey(Event, on_delete=models.CASCADE)
+class UserDetails(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_image_url = models.CharField(max_length=9999)
+
+#   Ticket
+
+
+class TicketType(models.Model):
     description = models.CharField(max_length=255)
+
+
+class Ticket(models.Model):
+    ticket_type = models.ForeignKey(TicketType, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    DELIVERY_METHODS = [
+        ('E', 'Electronic'),
+        ('P', 'Postal'),
+    ]
+    delivery_method = models.CharField(
+        max_length=1, choices=DELIVERY_METHODS, default='E'
+    )
+
+    email = models.EmailField(max_length=255)
+
+    TICKET_STATUS = [
+        ('U', 'Unreleased'),
+        ('R', 'Released'),
+        ('S', 'Sold'),
+    ]
+    status = models.CharField(max_length=1, choices=TICKET_STATUS, default='U')
+
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+
+    street_name = models.CharField(max_length=255)
+    house_number = models.IntegerField()
+    postal_code_id = models.ForeignKey(PostalCode, on_delete=models.CASCADE)
+
+
+# RELATION TABLES
+
+#    Event
 
 
 class EventCategory(models.Model):
@@ -72,13 +113,30 @@ class EventCategory(models.Model):
 class EventEntertainer(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     entertainer = models.ForeignKey(Entertainer, on_delete=models.CASCADE)
+    models.UniqueConstraint(
+        name='unique_event_entertainer',
+        fields=['event', 'entertainer']
+    )
+
+# Ticket
 
 
-class TicketType(models.Model):
-    description = models.CharField(max_length=255)
-
-
-class Ticket(models.Model):
-    ticket_type = models.ForeignKey(TicketType, on_delete=models.CASCADE)
+class EventTicketTypePrice(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    user = models.IntegerField()
+    ticket_type = models.ForeignKey(TicketType, on_delete=models.CASCADE)
+    price = models.FloatField()
+    models.UniqueConstraint(
+        name='unique_event_ticket_type',
+        fields=['event', 'ticket_type']
+    )
+
+#    User
+
+
+class UserFavoriteCategory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    models.UniqueConstraint(
+        name='unique_user_category',
+        fields=['user', 'category']
+    )

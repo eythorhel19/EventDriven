@@ -11,7 +11,7 @@
     --base-primary: #212529;
     --base-secondary: #343A40;
 
-    /* Typegraphy Colors */
+    /* Typography Colors */
     --type-primary: #F8F9Fa;
     --type-secondary: #FFFFFF;
     --type-weak: #DEE2E6;
@@ -22,10 +22,10 @@
     --graphical-secondary: #ABB5BE;
     
     /* Status colors */
-    --status-info: #17A2B8
-    --status-warning: #FFC107
-    --status-danger: #DC3545
-    --status-success: #28A745
+    --status-info: #17A2B8;
+    --status-warning: #FFC107;
+    --status-danger: #DC3545;
+    --status-success: #28A745;
 
 
     /* Typography */
@@ -84,32 +84,32 @@
     font-weight: 700;
     font-size:var(--h1-font-size);
     line-height: var(--h1-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .h1_semibold {
     font-family: var(--base-font);
     font-weight: 600;
     font-size:var(--h1-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .h1_regular {
     font-family: var(--base-font);
     font-weight: 500;
     font-size:var(--h1-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .h1_light {
     font-family: var(--base-font);
     font-weight: 300;
     font-size:var(--h1-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 /* H2 */
@@ -117,32 +117,32 @@
     font-family: var(--base-font);
     font-weight: 700;
     font-size:var(--h2-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .h2_semibold {
     font-family: var(--base-font);
     font-weight: 600;
     font-size:var(--h2-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .h2_regular {
     font-family: var(--base-font);
     font-weight: 500;
     font-size:var(--h2-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .h2_light {
     font-family: var(--base-font);
     font-weight: 300;
     font-size:var(--h2-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 /* H3 */
@@ -150,32 +150,32 @@
     font-family: var(--base-font);
     font-weight: 700;
     font-size:var(--h3-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .h3_semibold {
     font-family: var(--base-font);
     font-weight: 600;
     font-size:var(--h3-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .h3_regular {
     font-family: var(--base-font);
     font-weight: 500;
     font-size:var(--h3-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .h3_light {
     font-family: var(--base-font);
     font-weight: 300;
     font-size:var(--h3-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 /* H4 */
@@ -183,32 +183,32 @@
     font-family: var(--base-font);
     font-weight: 700;
     font-size:var(--h4-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .h4_semibold {
     font-family: var(--base-font);
     font-weight: 600;
     font-size:var(--h4-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .h4_regular {
     font-family: var(--base-font);
     font-weight: 500;
     font-size:var(--h4-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .h4_light {
     font-family: var(--base-font);
     font-weight: 300;
     font-size:var(--h4-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 /* p */
@@ -216,32 +216,32 @@
     font-family: var(--base-font);
     font-weight: 700;
     font-size:var(--p-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .p_semibold {
     font-family: var(--base-font);
     font-weight: 600;
     font-size:var(--p-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .p_regular {
     font-family: var(--base-font);
     font-weight: 500;
     font-size:var(--p-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .p_light {
     font-family: var(--base-font);
     font-weight: 300;
     font-size:var(--p-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 /* Labels */
@@ -250,8 +250,8 @@
     font-weight: 700;
     font-size:var(--p-font-size);
     text-transform: uppercase;
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .label_semibold {
@@ -259,8 +259,8 @@
     font-weight: 600;
     font-size:var(--p-font-size);
     text-transform: uppercase;
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .label_regular {
@@ -268,8 +268,8 @@
     font-weight: 500;
     font-size:var(--p-font-size);
     text-transform: uppercase;
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .label_light {
@@ -277,8 +277,8 @@
     font-weight: 300;
     font-size:var(--p-font-size);
     text-transform: uppercase;
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 
@@ -288,23 +288,23 @@
 .icon_large {
     font-family: var(--icon-font);
     font-size:var(--icon-large-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
     
 }
 
 .icon_normal {
     font-family: var(--icon-font);
     font-size:var(--icon-normal-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .icon_small {
     font-family: var(--icon-font);
     font-size:var(--icon-small-font-size);
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 html, body { height: 100%; }
@@ -331,7 +331,7 @@ body {
     /* Body */
     background-color: var(--base-primary);
     padding: 16px;
-    box-shadow: 0px 1px 24px rgba(255, 255, 255, 0.25);
+    box-shadow: 0 1px 24px rgba(255, 255, 255, 0.25);
 }
 
 .navbar_right_wrapper {
@@ -339,7 +339,7 @@ body {
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0px;
+    padding: 0;
     gap: 32px;
 }
 
@@ -348,8 +348,8 @@ body {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    padding: 0px;
-    gap: 0px;
+    padding: 0;
+    gap: 0;
     text-align: center;
 }
 
@@ -372,7 +372,7 @@ body {
     justify-content: center;
 }
 
-/* Button */
+/* Buttons */
 .button_outlined {
     /* Alignment */
     display: flex;
@@ -393,6 +393,10 @@ body {
     background-color: var(--graphical-primary);
 }
 
+.button_large {
+    font-size: var(--h1-font-size);
+}
+
 /* Login Modal */
 .modal_content {
     background-color: #fefefe;
@@ -404,12 +408,11 @@ body {
 .card {
     display: flex;
     flex-direction: column;
-    padding: 0px;
+    padding-bottom: 16px;
     justify-content: space-between;
     width: 350px;
     min-width: 350px;
     max-width: 350px;
-    height: 450px;
     background:  var(--base-secondary);
     border-radius: 8px;
 }
@@ -423,8 +426,7 @@ body {
 .card-img {
     width: 100%;
     height: 196px;
-    border-radius: 8px 8px 0px 0px;
-
+    border-radius: 8px 8px 0 0;
 }
 
 .card-body {
@@ -439,7 +441,7 @@ body {
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0px;
+    padding: 0;
     gap: 32px;
     width: 100%;
     overflow-x: scroll;
