@@ -1,6 +1,66 @@
 {% extends "base.html" %} {% block content %}
 
-<div class="row-of-cards">
-    <h1>specific event with id {{event_id}}</h1>
+<style>
+    .main_wrapper {
+        display: flex;
+    }
+    .top_wrapper {
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 0;
+        gap: 32px;
+    }
+    .image_wrapper {
+        display: flex;;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        width: 70%;
+        height: 40vw;
+        border-radius: 16px;
+    }
+    .image_wrapper img {
+        flex-shrink: 0;
+        min-width: 100%;
+        min-height: 100%;
+    }
+    .info_and_book_wrapper {
+        display: flex;
+        width: 30%;
+        height: 100%;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .info_wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+    }
+    .max_cap_wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+</style>
+<div class="main_wrapper">
+    <div class="top_wrapper">
+        <div class="image_wrapper">
+            <img src={{ event_image.image_url }} alt="{{ event_image.description }}"/>
+        </div>
+        <div class="info_and_book_wrapper">
+            <div class="info_wrapper">
+                <h1 class="h1_semibold">{{event.title}}</h1>
+                <h3 class="h3_light">{{event.description}}</h3>
+                <div class="max_cap_wrapper">
+                    <p class="label_light">Maximum Capacity</p>
+                    <p class="h3_regular">{{ event.maximum_capacity }}</p>
+                </div>
+            </div>
+
+            <button class="button_outlined button_large">Book Now</button>
+        </div>
+    </div>
 </div>
 {% endblock %}
