@@ -1,4 +1,25 @@
 {% extends 'base.html' %} {% block content %}
+<style>
+    .the_container {
+        width: 300px;
+        height: 300px;
+        gap: 32px;
+    }
+</style>
+<div>
+    <input id="datepicker" />
 
-<h1>Entertainers</h1>
+    <script>
+        $(function () {
+            $("#datepicker").datepicker({
+                autoShow: true,
+                show: true,
+                date: new Date(2022, 05, 24),
+                autoPick: true,
+                inline: true,
+                // container: "#datepicker",
+            });
+        });
+    </script>
+</div>
 {% endblock %}

@@ -311,7 +311,6 @@ html, body { height: 100%; }
 body { 
     margin: 0;
     background-color: var(--base-primary);
-    color: var(--type-primary);
 }
 
 .page_body {
@@ -465,4 +464,6 @@ a, a:hover, a:focus, a:active {
     text-align: center;
     display: flex;
     justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;
 }
