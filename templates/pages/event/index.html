@@ -3,6 +3,7 @@
 <style>
     .main_wrapper {
         display: flex;
+        flex-direction: column;
     }
     .top_wrapper {
         display: flex;
@@ -43,11 +44,28 @@
         flex-direction: column;
         gap: 0;
     }
+    .map_and_calander_wrapper {
+        display: flex;
+        flex-direction: row;
+        gap: 32px;
+        width: 100%;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+    .the_map_wrapper {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        height: 100%;
+    }
 </style>
 <div class="main_wrapper">
     <div class="top_wrapper">
         <div class="image_wrapper">
-            <img src={{ event_image.image_url }} alt="{{ event_image.description }}"/>
+            <img
+                src="{{event_image.image_url}}"
+                alt="{{ event_image.description }}"
+            />
         </div>
         <div class="info_and_book_wrapper">
             <div class="info_wrapper">
@@ -60,6 +78,45 @@
             </div>
 
             <button class="button_outlined button_large">Book Now</button>
+        </div>
+    </div>
+    <div class="map_and_calander_wrapper">
+        <div class="the_map_wrapper">
+            <p>Location</p>
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1741.2666455640954!2d-21.92913164803894!3d64.12383388350435!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48d60b4e184b7e19%3A0xb87126c26f3d3420!2sReykjavik%20University!5e0!3m2!1sen!2sis!4v1653479719720!5m2!1sen!2sis"
+                height="600"
+                style="border: 0"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+        </div>
+        <div class="the_map_wrapper">
+            <p>Date</p>
+            <style>
+                .the_container {
+                    width: 300px;
+                    height: 300px;
+                    gap: 32px;
+                }
+            </style>
+            <div>
+                <input id="datepicker" />
+
+                <script>
+                    $(function () {
+                        $("#datepicker").datepicker({
+                            autoShow: true,
+                            show: true,
+                            date: new Date(2022, 05, 24),
+                            autoPick: true,
+                            inline: true,
+                            // container: "#datepicker",
+                        });
+                    });
+                </script>
+            </div>
         </div>
     </div>
 </div>
