@@ -1,50 +1,8 @@
 {% extends "base.html" %} {% block content %}
-<style>
-    .book-button-div {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .button-adjust {
-        width: 300px;
-    }
-    .icon-and-text {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 10px;
-    }
-    .for-hower-clow {
-        background: #ffffff;
-        border-radius: 10px;
-    }
-</style>
+
 <div class="row-of-cards">
     {% for event in events %}
-    <div class="for-hower-clow">
-        <div class="card">
-            <a href="event/{{event.id}}">
-                <img src="https://picsum.photos/200/300/?random" class="card-img" alt="events image" />
-                <div class="card-body">
-                    <h1 class="h2_semibold">{{event.title}}</h1>
-                    <p class="card-text">{{event.description}}</p>
-                    <div class="icon-and-text">
-                        <p class="icon_large">pin_drop</p>
-                        <h3 class="h3_regular">{{event.location_id}}</h3>
-                    </div>
-                    <div class="icon-and-text">
-                        <p class="icon_large">calendar_month</p>
-                        <h3 class="h3_regular">{{event.start_date}}</h3>
-                    </div>
-                </div>
-            </a>
-            <div class="book-button-div">
-                <a href="/event" class="btn button_outlined button-adjust">
-                    Book now
-                </a>
-            </div>
-        </div>
-    </div>
+    <div>{% include 'info_card.html' with event=event %}</div>
     {% endfor %}
 </div>
 {% endblock %}

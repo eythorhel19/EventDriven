@@ -423,19 +423,20 @@ body {
 }
 
 
-.card-img {
+.card_img {
     width: 100%;
     height: 196px;
     border-radius: 8px 8px 0 0;
 }
 
-.card-body {
+.card_body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding: 16px;
     width: 350px;
-    }
+    color: var(--type-primary);
+}
 
 .row-of-cards {
     display: flex;

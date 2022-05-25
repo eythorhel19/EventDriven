@@ -1,0 +1,133 @@
+<style>
+    .book-button-div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .button-adjust {
+        width: 300px;
+    }
+    .icon-and-text {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+    }
+    .for-hower-clow {
+        background: #ffffff;
+        border-radius: 10px;
+    }
+    .image_wrapper {
+        display: flex;;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        width: 100%;
+        height: 200px;
+        border-radius: 16px 16px 0px 0px;
+    }
+    .image_wrapper img {
+        flex-shrink: 0;
+        min-width: 100%;
+        min-height: 100%;
+    }
+    .description_wrapper {
+        overflow: hidden;
+        height: 48px;
+    }
+</style>
+<div class="for-hower-clow">
+    <div class="card">
+        <a href="event/{{event.id}}">
+            <div class="image_wrapper">
+                <img src="https://picsum.photos/200/300/?random" class="card_img" alt="events img" />
+            </div>
+            <div class="card_body">
+                <h1 class="h2_semibold">{{event.title}}</h1>
+                <div class="description_wrapper">
+                    <p class="card-text">{{event.description}}</p>
+                </div>
+                <div class="icon-and-text">
+                    <p class="icon_large">pin_drop</p>
+                    <h3 class="h3_regular">{{event.location_id}}</h3>
+                </div>
+                <div class="icon-and-text">
+                    <p class="icon_large">calendar_month</p>
+                    <h3 class="h3_regular">{{event.start_date}}</h3>
+                </div>
+            </div>
+        </a>
+        <div class="book-button-div">
+            <!-- Trigger the modal with a button -->
+            <a
+                data-bs-toggle="modal"
+                data-bs-target="#asdf"
+                class="btn button_outlined button-adjust"
+            >
+                Book now
+            </a>
+        </div>
+    </div>
+    <div
+        class="modal fade"
+        id="asdf"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+        style="display: none"
+    >
+        <div class="modal-dialog" style="color: black">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        New message to {{event.id}}
+                    </h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label"
+                                >Recipient:</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="recipient-name"
+                            />
+                        </div>
+                        <div class="mb-3">
+                            <label for="message-text" class="col-form-label"
+                                >Message:</label
+                            >
+                            <textarea
+                                class="form-control"
+                                id="message-text"
+                            ></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        Send message
+                    </button>
+                </div>
+                <h1>asfdasdfasfd</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- this is for the popup window -->
+</div>

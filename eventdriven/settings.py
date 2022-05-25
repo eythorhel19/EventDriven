@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'home',
     'events',
-    'entertainers'
+    'entertainers',
+    'bootstrap_modal_forms'
 ]
 
 MIDDLEWARE = [
