@@ -3,9 +3,33 @@ from events.models import Event
 
 
 def index(request):
-    events = Event.objects.all()
+    events = Event.objects.raw('''
+    SELECT
+        E.id,
+        E.title,
+        E.description,
+        E.start_date,
+        E.main_image_url,
+        CONCAT(L.name,', ',C.name) AS location_name
+    FROM events_event AS E
+    INNER JOIN home_location AS L
+    ON E.location_id = L.id
+    INNER JOIN home_city AS C
+    ON L.city_id = C.id;
+    ''')
 
-    return render(request, "pages/home.html", context={'events': events})
+    progress_data = [
+        {'id': 1, 'description': 'Your Booking'},
+        {'id': 2, 'description': 'Delivery Method'},
+        {'id': 3, 'description': 'Delivery Info'},
+        {'id': 4, 'description': 'Payment'},
+        {'id': 5, 'description': 'Confirm'}
+    ]
+
+    return render(request, "pages/home.html", context={
+        'events': events,
+        'progress_data': progress_data
+    })
 
 
 def help(request):

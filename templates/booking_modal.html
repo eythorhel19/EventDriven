@@ -1,0 +1,31 @@
+<script>
+    async function handleBookNow(event_id) {
+        console.log(event_id);
+    }
+</script>
+<style>
+    .model_adjuster {
+        width: 100vh;
+        max-width: 100vh;
+        border-radius: 16px;
+    }
+    .modal_base {
+        background-color: var(--base-primary);
+        border: 1px solid var(--type-weak);
+        border-radius: 16px;
+    }
+</style>
+<div
+    class="modal fade"
+    id="booking_modal"
+    tabindex="-1"
+>
+    <div class="modal-dialog model_adjuster">
+        <div class="modal-content model_adjuster">
+            <div class="modal_base">
+                {% include 'components/progress_points.html' with progress_data=progress_data%}
+                <h1>Here</h1>
+            </div>
+        </div>
+    </div>
+</div>
