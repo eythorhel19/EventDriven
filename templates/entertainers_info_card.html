@@ -38,40 +38,29 @@
 </style>
 <div class="for-hower-clow">
     <div class="card">
-        <a href="/event/{{event.id}}">
+        <a href="/entertainer/{{entertainer.id}}">
             <div class="image_wrapper">
                 <img
-                    src="{{ event.main_image_url }}"
+                    src="{{ entertainer.image_url }}"
                     class="card_img"
                     alt="Event image"
                 />
             </div>
             <div class="card_body">
-                <h1 class="h2_semibold">{{event.title}}</h1>
+                <h1 class="h2_semibold">{{entertainer.name}}</h1>
                 <div class="description_wrapper">
-                    <p class="card-text">{{event.description}}</p>
+                    <p class="card-text">{{entertainer.description}}</p>
                 </div>
-                <div class="icon-and-text">
+                <!-- <div class="icon-and-text">
                     <p class="icon_large">pin_drop</p>
-                    <h3 class="h3_regular">{{event.location}}</h3>
+                    <h3 class="h3_regular">{{entertainer.location_name}}</h3>
                 </div>
                 <div class="icon-and-text">
                     <p class="icon_large">calendar_month</p>
-                    <h3 class="h3_regular">{{event.start_date}}</h3>
-                </div>
+                    <h3 class="h3_regular">{{entertainer.start_date}}</h3>
+                </div> -->
             </div>
         </a>
-        <div class="book-button-div">
-            <!-- Trigger the modal with a button -->
-            <button
-                data-bs-toggle="modal"
-                data-bs-target="#booking_modal"
-                class="btn button_outlined button-adjust"
-                onclick="handleBookNow({{ event.id }})"
-            >
-                Book now
-            </button>
-        </div>
     </div>
     <!-- this is for the popup window -->
 </div>

@@ -1,17 +1,126 @@
 {% load static %}
+<style>
+    .navbar_wrapper {
+        /* Alignment */
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        /* Body */
+        background-color: var(--base-primary);
+        padding: 16px;
+        box-shadow: 0 1px 24px rgba(255, 255, 255, 0.25);
+    }
+    @media only screen and (max-width: 800px) {
+        .navbar_wrapper {
+            /* Alignment */
+            height: 120px;
 
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+
+            /* Body */
+            background-color: var(--base-primary);
+            box-shadow: 0 1px 24px rgba(255, 255, 255, 0.25);
+            padding-left: 8px;
+            padding-right: 8px;
+            padding-bottom: 0px;
+        }
+    }
+
+    .navbar_navbar_logo_login {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0;
+    }
+    @media only screen and (max-width: 800px) {
+        .navbar_navbar_logo_login {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 800px;
+            padding: 0;
+            gap: 0px;
+        }
+    }
+
+    .navbar_options {
+        position: absolute;
+        margin-top: 40px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    @media only screen and (max-width: 800px) {
+        .navbar_options {
+            position: relative;
+            width: 100%;
+            justify-content: center;
+            margin-top: 25px;
+        }
+    }
+
+    .navbar_option {
+        color: var(--type-primary);
+        text-decoration: none;
+        padding: 8px;
+    }
+
+    .navbar_option:hover {
+        color: var(--type-primary);
+        background-color: var(--base-secondary);
+        border-radius: 8px;
+        padding: 8px;
+    }
+    .the_options {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        width: 100%;
+        gap: 16px;
+    }
+
+    @media only screen and (max-width: 800px) {
+        .button_outlined {
+            /* Alignment */
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 8px 16px;
+
+            /* Body */
+            background-color: rgba(0, 0, 0, 0);
+            border: 2px solid var(--graphical-primary);
+            border-radius: 8px;
+            color: var(--type-primary);
+            font-size: 18px;
+        }
+    }
+</style>
 <nav class="navbar_wrapper">
-  <div class="navbar_right_wrapper">
-    <a href="/">
-      <img src={% static 'images/event_driven_white_transparent.png' %} alt="Event driven logo"
-      />
-    </a>
-    <div class="navbar_options">
-      <a class="navbar_option" href="/">Home</a>
-      <a class="navbar_option" href="/entertainer">Entertainers</a>
-      <a class="navbar_option" href="/help">Help</a>
+    <div class="navbar_navbar_logo_login">
+        <a href="/">
+            <img src={% static 'images/event_driven_white_transparent.png' %}
+            alt="Event driven logo" />
+        </a>
+        <div>
+            <button class="button_outlined">Login / Register</button>
+        </div>
     </div>
-  </div>
-
-  <button class="button_outlined">Login / Register</button>
+    <div class="navbar_options">
+        <div class="the_options">
+            <a class="navbar_option h3_light" href="/">Home</a>
+            <a class="navbar_option h3_light" href="/entertainer"
+                >Entertainers</a
+            >
+            <a class="navbar_option h3_light" href="/help">Help</a>
+        </div>
+    </div>
 </nav>

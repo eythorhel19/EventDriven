@@ -30,7 +30,7 @@ class Location(models.Model):
     capacity = models.IntegerField()
 
     def __str__(self):
-        return "{}, {}".format(self.name, self.city)
+        return "{}, {}".format(self.name, self.city.name)
 
 #   Address
 
