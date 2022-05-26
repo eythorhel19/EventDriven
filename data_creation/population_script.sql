@@ -14,14 +14,15 @@ INSERT INTO home_postalcode (postal_code, city_id, country_id, description) VALU
 INSERT INTO home_postalcode (postal_code, city_id, country_id, description) VALUES ('101', 4, 3, 'Miðborg');
 INSERT INTO home_postalcode (postal_code, city_id, country_id, description) VALUES ('203', 5, 3, 'Hvorf og Korar');
 
-INSERT INTO events_event (title, description, maximum_capacity, start_date, end_date, location_id) VALUES 
+INSERT INTO events_event (title, description, maximum_capacity, start_date, end_date, location_id, main_image_url) VALUES 
 (
     'Coachella', 
     'The festival you cannot miss!', 
     25000, 
     '2022-06-14', 
     '2022-06-14', 
-    4
+    4,
+    'https://coinlive.me/wp-content/uploads/2022/02/Coachella-Music-Festival-opens-for-NFT-sale.jpg'
 ),
 (
     'Skepta', 
@@ -29,7 +30,8 @@ INSERT INTO events_event (title, description, maximum_capacity, start_date, end_
     5000, 
     '2022-07-1', 
     '2022-07-1', 
-    4
+    4,
+    'https://i.guim.co.uk/img/media/05d40829197a54e67e8bde4bcaffe35d5da1fe46/0_250_3414_2048/master/3414.jpg?width=465&quality=45&auto=format&fit=max&dpr=2&s=7d23a70263bfc696fa3dd09aba7c778c'
 );
 
 INSERT INTO events_eventimage(image_url, event_id, description, main) VALUES ('https://coinlive.me/wp-content/uploads/2022/02/Coachella-Music-Festival-opens-for-NFT-sale.jpg', 1, 'Coachella Stage', true);
@@ -77,3 +79,13 @@ INSERT INTO entertainers_entertainer (name, description, image_url) VALUES
 
 insert into home_evententertainer (entertainer_id,event_id)
 values (1,2),(2,2),(3,2),(4,2),(5,2),(1,1),(2,1),(3,1),(4,1),(5,1);
+INSERT INTO home_tickettype (description) VALUES 
+('Standard'),
+('VIP');
+
+INSERT INTO home_eventtickettypeprice (event_id, ticket_type_id, price) VALUES
+(1, 1, 100),
+(1, 2, 160),
+(2, 1, 40),
+(2, 2, 60);
+

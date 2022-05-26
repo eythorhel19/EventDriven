@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% block content %}
 
-{% include 'booking_modal.html' with progress_data=progress_data%}
+{% include 'components/booking_modal.html' with progress_data=progress_data%}
 <div class="row-of-cards">
     {% for event in events %}
     <div>{% include 'info_card.html' with event=event %}</div>

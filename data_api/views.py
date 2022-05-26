@@ -1,10 +1,12 @@
 from django.shortcuts import render
 import json
 from django.http import JsonResponse
-from events.models import Event
 from django.forms.models import model_to_dict
-# Create your views here.
 
+from events.models import Event
+from home.models import TicketType
+
+# Create your views here.
 
 def event(request, event_id):
 
@@ -18,6 +20,7 @@ def event(request, event_id):
             E.title,
             E.description,
             E.start_date,
+            E.end_date,
             CONCAT(L.name,', ',C.name) AS location_name,
             E.main_image_url
         FROM events_event AS E
@@ -28,8 +31,40 @@ def event(request, event_id):
         WHERE E.id = {};
     '''.format(event_id))
 
+    ticket_types_result = TicketType.objects.raw('''
+    SELECT
+        TT.*,
+        ETTP.price,
+        CONCAT(TT.description,' - ', ETTP.price) AS option_description
+    FROM
+        home_tickettype AS TT
+        INNER JOIN home_eventtickettypeprice AS ETTP
+        ON TT.id = ETTP.ticket_type_id
+    WHERE
+        ETTP.event_id = {};
+    '''.format(event_id))
+
+    ticket_types = []
+    for tt in ticket_types_result:
+        ticket_types.append({
+            'ticket_type_id': tt.id,
+            'option_description': tt.option_description,
+            'price': tt.price
+        })
+
     if len(events) == 0:
         return JsonResponse(status=400, data={'message': 'Event not found!'})
     else:
         event_dict = model_to_dict(events[0])
+
+        event_dict['location_name'] = events[0].location_name
+        event_dict['ticket_types'] = ticket_types
+
+        if events[0].start_date == events[0].end_date:
+            event_dict['date_description'] = "{}".format(events[0].start_date.strftime("%d. %B"))
+        else:
+            event_dict['date_description'] = "{} to {}".format(
+                events[0].start_date.strftime("%d. %B"), 
+                events[0].end_date.strftime("%d. %B")
+            )
         return JsonResponse(event_dict)
