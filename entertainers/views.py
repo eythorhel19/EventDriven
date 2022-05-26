@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from entertainers.models import Entertainer
+from home.models import Category
 
 # Create your views here.
 
@@ -8,7 +9,7 @@ from entertainers.models import Entertainer
 def entertainers(request):
     entertainer = Entertainer.objects.all()
 
-    return render(request, 'pages/entertainers/index.html', context={"entertainer": entertainer})
+    return render(request, 'pages/entertainers/index.html', context={"entertainer": entertainer, 'categories': Category.objects.all()})
 
 
 def entertainer(request, entertainer_id):

@@ -314,7 +314,7 @@ html, body { height: 100%; }
 body { 
     margin: 0;
     background-color: var(--base-primary);
-    color: var(--type-primary);
+    /* color: var(--type-primary); */
     /* min-height: 100vh; */
 }
 
@@ -398,5 +398,4 @@ a, a:hover, a:focus, a:active {
     text-decoration: none;
     color: inherit;
 }
-
 

@@ -1,8 +1,16 @@
 {% extends "base.html" %} {% block content %}
 <div>{% include 'search_bar.html' with categories=categories %}</div>
+
 <div class="row-of-cards">
-    {% for event in events %}
+    {% for event in searched_events %}
     <div>{% include 'info_card.html' with event=event %}</div>
+    {% endfor %}
+</div>
+<div class="row-of-cards">
+    {% for entertainer in searched_events_later %}
+    <div>
+        {% include 'entertainers_info_card.html' with entertainer=entertainer %}
+    </div>
     {% endfor %}
 </div>
 {% endblock %}

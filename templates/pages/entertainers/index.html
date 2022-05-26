@@ -1,4 +1,6 @@
 {% extends "base.html" %} {% block content %}
+<div>{% include 'search_bar.html' with categories=categories %}</div>
+
 <div class="row-of-cards">
     {% for entertainer in entertainer %}
     <div>

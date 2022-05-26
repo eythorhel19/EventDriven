@@ -89,3 +89,6 @@ INSERT INTO home_eventtickettypeprice (event_id, ticket_type_id, price) VALUES
 (2, 1, 40),
 (2, 2, 60);
 
+INSERT INTO HOME_EVENTCATEGORY(CATEGORY_ID,EVENT_ID)
+VALUES (1,1),(3,1),(4,2),(3,2),(2,2),(1,2)
+
