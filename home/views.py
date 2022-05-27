@@ -154,14 +154,19 @@ def dashboard(request):
         query_dashboard_user_tickets)
 
     query_dashboard_user_fav_cat_ent_events = '''
-        SELECT DISTINCT(EEVE.*)
-        FROM EVENTS_EVENT AS EEVE
-        JOIN HOME_EVENTCATEGORY AS HEVECAT ON HEVECAT.EVENT_ID = EEVE.ID
-        WHERE EEVE.ID IN
-            (SELECT HUFC.ID
-                FROM HOME_USERFAVORITECATEGORY AS HUFC
-                WHERE HUFC.USER_ID = {})
-        '''.format(request.user.id)
+
+SELECT DISTINCT(EEVE.*)
+FROM EVENTS_EVENT AS EEVE
+JOIN HOME_EVENTCATEGORY AS HEVECAT ON HEVECAT.EVENT_ID = EEVE.ID
+JOIN HOME_EVENTENTERTAINER AS HEENT ON HEENT.EVENT_ID = EEVE.ID
+WHERE HEVECAT.ID IN
+		(SELECT HUFC.CATEGORY_ID
+FROM HOME_USERFAVORITECATEGORY AS HUFC
+WHERE HUFC.USER_ID = {}) OR HEENT.ID IN(SELECT HUFENT.ENTERTAINER_ID
+												 FROM HOME_USERFAVORITEENTERTAINER AS HUFENT
+												 WHERE HUFENT.USER_ID = {})
+			
+        '''.format(request.user.id, request.user.id)
 
     query_dashboard_user_fav_cat_ent_events_res = Event.objects.raw(
         query_dashboard_user_fav_cat_ent_events)
