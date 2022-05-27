@@ -56,6 +56,11 @@
         flex-direction: column;
         gap: 32px;
     }
+    .upp_comming_events_header {
+        margin-top: 40px;
+        margin-left: 0px;
+        color: var(--type-primary);
+    }
 </style>
 
 <div>
@@ -74,9 +79,7 @@
             </div>
         </div>
     </div>
-    <div style="margin-top: 40px; margin-left: 0px">
-        <p class="h3_regular">Upcoming events</p>
-    </div>
+    <p class="h3_regular upp_comming_events_header">Upcoming events</p>
     <div class="row-of-cards">
         {% for event in entertainer_events %}
         <div>{% include 'info_card.html' with event=event %}</div>

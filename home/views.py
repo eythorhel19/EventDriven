@@ -6,18 +6,45 @@ from entertainers.models import Entertainer
 
 
 def index(request):
-    events = Event.objects.all()
 
+    query_for_cat_hom = '''
+        SELECT HCAT.ID AS CATEGORY_ID, HCAT.NAME AS CATEGORY_NAME, EEV.*
+        FROM EVENTS_EVENT AS EEV
+        JOIN HOME_EVENTCATEGORY AS HEVC ON EEV.ID = HEVC.EVENT_ID
+        JOIN HOME_CATEGORY AS HCAT ON HCAT.ID = HEVC.CATEGORY_ID
+        ORDER BY HEVC.CATEGORY_ID
+        '''
+    events_wit_cat = Event.objects.raw(query_for_cat_hom)
+
+    event_cat_categorised = []
+    current_ev_id_cat = []
+    last_event_cat_id = -1
+    for event_what_cat in events_wit_cat:
+        if event_what_cat.category_id == last_event_cat_id:
+            current_ev_id_cat.append(event_what_cat)
+        else:
+            if last_event_cat_id != -1:
+                event_cat_categorised.append(current_ev_id_cat)
+                current_ev_id_cat = []
+            current_ev_id_cat.append(event_what_cat)
+            last_event_cat_id = event_what_cat.category_id
+
+    # events = Event.objects.all()
+    # for i in events:
+    #     print(i)
+
+    # return render(request, "pages/home.html", context={, 'categories': Category.objects.all()})
     progress_data = [
         {'id': 1, 'tag_id': 'booking_modal_pp_1', 'description': 'Your Booking'},
-        {'id': 2, 'tag_id': 'booking_modal_pp_2','description': 'Delivery Method'},
-        {'id': 3, 'tag_id': 'booking_modal_pp_3','description': 'Delivery Info'},
-        {'id': 4, 'tag_id': 'booking_modal_pp_4','description': 'Payment'},
-        {'id': 5, 'tag_id': 'booking_modal_pp_5','description': 'Confirm'}
+        {'id': 2, 'tag_id': 'booking_modal_pp_2',
+            'description': 'Delivery Method'},
+        {'id': 3, 'tag_id': 'booking_modal_pp_3', 'description': 'Delivery Info'},
+        {'id': 4, 'tag_id': 'booking_modal_pp_4', 'description': 'Payment'},
+        {'id': 5, 'tag_id': 'booking_modal_pp_5', 'description': 'Confirm'}
     ]
 
     return render(request, "pages/home.html", context={
-        'events': events,
+        'event_cat_categorised': event_cat_categorised,
         'progress_data': progress_data,
         'categories': Category.objects.all()
     })
@@ -46,6 +73,14 @@ def search(request):
         search_input_field_events2 = "true"
         search_input_field_events3 = "true"
         search_input_field_events4 = "true"
+        search_input_field_events5 = "true"
+        search_input_field_events6 = "true"
+        search_input_field_events7 = "true"
+        search_input_field_events8 = "true"
+        search_input_field_events9 = "true"
+        search_input_field_events10 = "true"
+        search_input_field_events11 = "true"
+        search_input_field_events12 = "true"
     else:
         search_input_field_events = "LOWER(EVEE.TITLE) LIKE LOWER('_{}_')".format(
             search_input_field)
@@ -63,16 +98,32 @@ def search(request):
             search_input_field)
         search_input_field_events8 = "LOWER(ENT.NAME) = LOWER('{}')".format(
             search_input_field)
+        search_input_field_events9 = "LOWER(HLC.NAME) = LOWER('{}')".format(
+            search_input_field)
+        search_input_field_events10 = "LOWER(HCITY.NAME) = LOWER('{}')".format(
+            search_input_field)
+        search_input_field_events11 = "LOWER(HSTATE.NAME) = LOWER('{}')".format(
+            search_input_field)
+        search_input_field_events12 = "LOWER(HCONT.NAME) = LOWER('{}')".format(
+            search_input_field)
 
     query = '''   
         SELECT DISTINCT(EVEE.*)
         FROM (  
-            SELECT EVEE.*
+            SELECT *
             FROM EVENTS_EVENT AS EVEE
             JOIN HOME_EVENTCATEGORY AS HEC  ON EVEE.ID = HEC.EVENT_ID
             JOIN HOME_CATEGORY AS HCAT ON HCAT.ID = HEC.CATEGORY_ID
-            WHERE {} AND {} AND ({} OR {} OR {} OR {})) AS EVEE
-        '''.format(categories_events, date_options_events, search_input_field_events, search_input_field_events2, search_input_field_events3, search_input_field_events4)
+			JOIN HOME_LOCATION AS HLC ON HLC.ID = EVEE.LOCATION_ID
+			JOIN HOME_CITY AS HCITY ON HCITY.ID = HLC.CITY_ID
+			JOIN HOME_STATE AS HSTATE ON HSTATE.ID = HCITY.STATE_ID
+			JOIN HOME_COUNTRY AS HCONT ON HCONT.ID = HSTATE.COUNTRY_ID
+            WHERE {} AND {} AND ({} OR {} OR {} OR {} OR {} OR {} OR {} OR {})
+            ORDER BY EVEE.START_DATE
+            ) AS EVEE
+        '''.format(categories_events, date_options_events, search_input_field_events, search_input_field_events2, search_input_field_events3, search_input_field_events4, search_input_field_events9, search_input_field_events10, search_input_field_events11, search_input_field_events12)
+
+    print('query', query)
 
     searched_events = Event.objects.raw(query)
 
@@ -81,7 +132,7 @@ def search(request):
         FROM ENTERTAINERS_ENTERTAINER AS ENT
         WHERE {} or {} or {} or {}
         '''.format(search_input_field_events5, search_input_field_events6, search_input_field_events7, search_input_field_events8)
-    print(query2)
+
     searched_events_later = Entertainer.objects.raw(query2)
 
     return render(request, 'pages/search.html', context={'searched_events': searched_events, 'searched_events_later': searched_events_later,  'categories': Category.objects.all()})
@@ -91,3 +142,7 @@ def search(request):
 # Create your views here.
 
 #
+
+
+def dashboard(request):
+    return render(request, 'pages/dashboard.html')

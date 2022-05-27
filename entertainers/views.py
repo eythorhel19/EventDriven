@@ -7,8 +7,19 @@ from home.models import Category
 
 
 def entertainers(request):
-    entertainer = Entertainer.objects.all()
+    # entertainer = Entertainer.objects.all()
 
+    query_for_entertainers_card = '''
+    SELECT EENT.ID, EENT.NAME, EENT.DESCRIPTION, EENT.IMAGE_URL, MIN(EVE.START_DATE) AS NEXT_EVENT_DATE, HLOC.NAME AS LOCATION_NAME
+    FROM ENTERTAINERS_ENTERTAINER AS EENT
+    JOIN HOME_EVENTENTERTAINER AS HEVENT ON EENT.ID = HEVENT.ENTERTAINER_ID
+    JOIN EVENTS_EVENT AS EVE ON EVE.ID = HEVENT.EVENT_ID
+    JOIN HOME_LOCATION AS HLOC ON HLOC.ID = EVE.LOCATION_ID
+    GROUP BY EENT.ID, EENT.NAME, EENT.DESCRIPTION, EENT.IMAGE_URL, HLOC.NAME
+    '''
+    entertainer = Entertainer.objects.raw(query_for_entertainers_card)
+    for i in entertainer:
+        print(i.next_event_date)
     return render(request, 'pages/entertainers/index.html', context={"entertainer": entertainer, 'categories': Category.objects.all()})
 
 

@@ -1,8 +1,17 @@
 {% extends "base.html" %} {% block content %}
+<style>
+    .categorie_name {
+        padding: 0;
+        margin-top: 20px;
+        color: var(--type-primary);
+    }
+</style>
 <div>{% include 'search_bar.html' with categories=categories %}</div>
+{% for events in event_cat_categorised %}
+<p class="h2_regular categorie_name">{{events.0.category_name}}</p>
 <div class="row-of-cards">
     {% for event in events %}
     <div>{% include 'info_card.html' with event=event %}</div>
     {% endfor %}
 </div>
-{% endblock %}
+{% endfor %} {% endblock %}

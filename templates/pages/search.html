@@ -1,11 +1,20 @@
 {% extends "base.html" %} {% block content %}
+<style>
+    .event_or_ent_header {
+        color: var(--type-primary);
+        margin-top: 8px;
+    }
+</style>
 <div>{% include 'search_bar.html' with categories=categories %}</div>
-
+<p class="h2_regular event_or_ent_header">Events matching your search result</p>
 <div class="row-of-cards">
     {% for event in searched_events %}
     <div>{% include 'info_card.html' with event=event %}</div>
     {% endfor %}
 </div>
+<p class="h2_regular event_or_ent_header">
+    Entertainers matching your search result
+</p>
 <div class="row-of-cards">
     {% for entertainer in searched_events_later %}
     <div>
