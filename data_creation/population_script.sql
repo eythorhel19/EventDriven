@@ -94,3 +94,6 @@ INSERT INTO home_eventtickettypeprice (event_id, ticket_type_id, price) VALUES
 INSERT INTO HOME_EVENTCATEGORY(CATEGORY_ID,EVENT_ID)
 VALUES (1,1),(3,1),(4,2),(3,2),(2,2),(1,2);
 
+
+INSERT INTO HOME_TICKET(DELIVERY_METHOD, EMAIL, STATUS, FIRST_NAME, LAST_NAME, STREET_NAME, HOUSE_NUMBER, EVENT_ID, POSTAL_CODE_ID, TICKET_TYPE_ID, USER_ID)
+VALUES ('E', 'arona19@ru.is', 'S', 'aron', 'asmundsson', 'blikanes', 6, 1, 2, 2,2),('E', 'eythorhel19@ru.is', 'S', 'Eythor', 'Veit ekki', 'HR', 6, 1, 2, 2,1);

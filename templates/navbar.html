@@ -112,15 +112,11 @@
         </a>
         <div>
             {% if user.is_authenticated %}
-                <a
-                        class="button_outlined"
-                        href="{% url 'logout' %}"
-                >Logout</a>
+            <a class="button_outlined" href="{% url 'logout' %}">Logout</a>
             {% else %}
-                <a
-                    class="button_outlined"
-                    href="{% url 'login' %}"
-                >Login / Register</a>
+            <a class="button_outlined" href="{% url 'login' %}"
+                >Login / Register</a
+            >
             {% endif %}
         </div>
     </div>
@@ -128,9 +124,13 @@
         <div class="the_options">
             <a class="navbar_option h3_light" href="/">Home</a>
             <a class="navbar_option h3_light" href="/entertainer"
-                >Entertainers</a>
+                >Entertainers</a
+            >
             <a class="navbar_option h3_light" href="/help">Help</a>
+            {% if user.is_authenticated %}
             <a class="navbar_option h3_light" href="/dashboard">Dashboard</a>
+
+            {% endif %}
         </div>
     </div>
 </nav>

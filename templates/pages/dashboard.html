@@ -1,1 +1,51 @@
-{% extends 'base.html' %} {% block content %} {% endblock %}
+{% extends 'base.html' %} {% block content %}
+<style>
+    .dashboard_body {
+        color: var(--type-primary);
+    }
+    .ticket_and_favorites {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        height: 300px;
+        padding: 0;
+        border: 2px solid red;
+    }
+    .all_users_tickets {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        width: 50%;
+        height: 100%;
+        padding: 0;
+        border: 2px solid green;
+    }
+    .all_users_favorites {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 50%;
+        height: 100%;
+        padding: 0;
+        border: 2px solid blue;
+    }
+</style>
+<div class="dashboard_body">
+    <div class="ticket_and_favorites">
+        <div class="all_users_tickets">ticket</div>
+        <div class="all_users_favorites">
+            <p>fav categories</p>
+            <p>fav entertainers</p>
+        </div>
+    </div>
+    <div class="row-of-cards">
+        {% for event in events %}
+        <div>{% include 'info_card.html' with event=event %}</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
