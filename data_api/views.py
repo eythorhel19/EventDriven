@@ -5,11 +5,13 @@ from django.forms.models import model_to_dict
 from django.core import serializers
 
 from events.models import Event
-from home.models import TicketType
+from home.models import Ticket, TicketType
 from home.models import Country
 
-# Create your views here.
+from rest_framework.decorators import api_view
 
+# Create your views here.
+@api_view(['GET'])
 def event(request, event_id):
 
     if not event_id.isdigit():
@@ -72,7 +74,7 @@ def event(request, event_id):
             )
         return JsonResponse(event_dict)
 
-
+@api_view(['GET'])
 def countries(request):
     c = Country.objects.values()
 
@@ -81,3 +83,12 @@ def countries(request):
         country_list.append(elem)
 
     return JsonResponse(country_list, safe=False)
+
+@api_view(['POST'])
+def book_ticket(request):
+    ticket = Ticket.objects.create(
+        
+    )
+
+
+    return JsonResponse({"it": "works!"})

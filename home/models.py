@@ -137,3 +137,11 @@ class UserFavoriteCategory(models.Model):
         name='unique_user_category',
         fields=['user', 'category']
     )
+
+class UserFavoriteEntertainer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    entertainer = models.ForeignKey(Entertainer, on_delete=models.CASCADE)
+    models.UniqueConstraint(
+        name='unique_user_category',
+        fields=['user', 'category']
+    )

@@ -1,4 +1,6 @@
 from asyncio import constants
+
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from events.models import Event
 from home.models import Category
@@ -136,13 +138,8 @@ def search(request):
     searched_events_later = Entertainer.objects.raw(query2)
 
     return render(request, 'pages/search.html', context={'searched_events': searched_events, 'searched_events_later': searched_events_later,  'categories': Category.objects.all()})
-# Coachella
-#
-
-# Create your views here.
-
-#
 
 
+@login_required
 def dashboard(request):
     return render(request, 'pages/dashboard.html')

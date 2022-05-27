@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
 from user.forms.profile_form import ProfileForm
@@ -20,17 +21,21 @@ def register(request):
 
 @login_required
 def profile(request):
-    user = UserDetails.objects.filter(user=request.user).first()
+    user_details = UserDetails.objects.filter(user=request.user).first()
+
+    print(user_details)
 
     if request.method == 'POST':
-        form = ProfileForm(instance=user, data=request.POST)
+        form = ProfileForm(instance=user_details, data=request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.user = request.user
-            user.save()
+            user_details = form.save(commit=False)
+            user_details.user = request.user
+            user_details.save()
             return redirect('profile')
 
     return render(request, 'pages/user/profile.html', {
-        'form': ProfileForm(instance=user)
+        'form': ProfileForm(instance=user_details),
+        'user_details': user_details,
+        'user': request.user
     })
 
