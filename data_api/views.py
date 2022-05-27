@@ -1,10 +1,12 @@
 from django.shortcuts import render
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.forms.models import model_to_dict
+from django.core import serializers
 
 from events.models import Event
 from home.models import TicketType
+from home.models import Country
 
 # Create your views here.
 
@@ -48,6 +50,7 @@ def event(request, event_id):
     for tt in ticket_types_result:
         ticket_types.append({
             'ticket_type_id': tt.id,
+            'description': tt.description,
             'option_description': tt.option_description,
             'price': tt.price
         })
@@ -68,3 +71,13 @@ def event(request, event_id):
                 events[0].end_date.strftime("%d. %B")
             )
         return JsonResponse(event_dict)
+
+
+def countries(request):
+    c = Country.objects.values()
+
+    country_list = []
+    for elem in c:
+        country_list.append(elem)
+
+    return JsonResponse(country_list, safe=False)
