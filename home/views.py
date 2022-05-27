@@ -33,7 +33,7 @@ def index(request):
     # for i in events:
     #     print(i)
 
-    return render(request, "pages/home.html", context={'event_cat_categorised': event_cat_categorised, 'categories': Category.objects.all()})
+    # return render(request, "pages/home.html", context={, 'categories': Category.objects.all()})
     progress_data = [
         {'id': 1, 'tag_id': 'booking_modal_pp_1', 'description': 'Your Booking'},
         {'id': 2, 'tag_id': 'booking_modal_pp_2',
@@ -44,7 +44,7 @@ def index(request):
     ]
 
     return render(request, "pages/home.html", context={
-        'events': events,
+        'event_cat_categorised': event_cat_categorised,
         'progress_data': progress_data,
         'categories': Category.objects.all()
     })
@@ -77,6 +77,10 @@ def search(request):
         search_input_field_events6 = "true"
         search_input_field_events7 = "true"
         search_input_field_events8 = "true"
+        search_input_field_events9 = "true"
+        search_input_field_events10 = "true"
+        search_input_field_events11 = "true"
+        search_input_field_events12 = "true"
     else:
         search_input_field_events = "LOWER(EVEE.TITLE) LIKE LOWER('_{}_')".format(
             search_input_field)
@@ -94,16 +98,32 @@ def search(request):
             search_input_field)
         search_input_field_events8 = "LOWER(ENT.NAME) = LOWER('{}')".format(
             search_input_field)
+        search_input_field_events9 = "LOWER(HLC.NAME) = LOWER('{}')".format(
+            search_input_field)
+        search_input_field_events10 = "LOWER(HCITY.NAME) = LOWER('{}')".format(
+            search_input_field)
+        search_input_field_events11 = "LOWER(HSTATE.NAME) = LOWER('{}')".format(
+            search_input_field)
+        search_input_field_events12 = "LOWER(HCONT.NAME) = LOWER('{}')".format(
+            search_input_field)
 
     query = '''   
         SELECT DISTINCT(EVEE.*)
         FROM (  
-            SELECT EVEE.*
+            SELECT *
             FROM EVENTS_EVENT AS EVEE
             JOIN HOME_EVENTCATEGORY AS HEC  ON EVEE.ID = HEC.EVENT_ID
             JOIN HOME_CATEGORY AS HCAT ON HCAT.ID = HEC.CATEGORY_ID
-            WHERE {} AND {} AND ({} OR {} OR {} OR {})) AS EVEE
-        '''.format(categories_events, date_options_events, search_input_field_events, search_input_field_events2, search_input_field_events3, search_input_field_events4)
+			JOIN HOME_LOCATION AS HLC ON HLC.ID = EVEE.LOCATION_ID
+			JOIN HOME_CITY AS HCITY ON HCITY.ID = HLC.CITY_ID
+			JOIN HOME_STATE AS HSTATE ON HSTATE.ID = HCITY.STATE_ID
+			JOIN HOME_COUNTRY AS HCONT ON HCONT.ID = HSTATE.COUNTRY_ID
+            WHERE {} AND {} AND ({} OR {} OR {} OR {} OR {} OR {} OR {} OR {})
+            ORDER BY EVEE.START_DATE
+            ) AS EVEE
+        '''.format(categories_events, date_options_events, search_input_field_events, search_input_field_events2, search_input_field_events3, search_input_field_events4, search_input_field_events9, search_input_field_events10, search_input_field_events11, search_input_field_events12)
+
+    print('query', query)
 
     searched_events = Event.objects.raw(query)
 
@@ -122,3 +142,7 @@ def search(request):
 # Create your views here.
 
 #
+
+
+def dashboard(request):
+    return render(request, 'pages/dashboard.html')

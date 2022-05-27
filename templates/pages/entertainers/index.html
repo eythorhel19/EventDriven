@@ -1,7 +1,11 @@
 {% extends "base.html" %} {% block content %}
 <div>{% include 'search_bar.html' with categories=categories %}</div>
-
-<div class="row-of-cards">
+<style>
+    .extra_margin_entertainers_index {
+        margin-top: 32px;
+    }
+</style>
+<div class="row-of-cards extra_margin_entertainers_index">
     {% for entertainer in entertainer %}
     <div>
         {% include 'entertainers_info_card.html' with entertainer=entertainer %}

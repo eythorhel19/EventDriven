@@ -183,7 +183,7 @@
             class="form-select cat_options"
             aria-label="categories"
         >
-            <option selected>All</option>
+            <option selected value="All">All categories</option>
             {% for category in categories %}
             <option value="{{category.name}}">{{category.name}}</option>
             {% endfor %}
@@ -196,7 +196,7 @@
             onchange="isItSpecificDate(this)"
             style="border-radius: 0px 0px 0px 0px"
         >
-            <option value="" selected>All</option>
+            <option value="" selected>All dates</option>
             <option value="today">Today</option>
             <option value="this week">This week</option>
             <option value="specific date">Specific date</option>
