@@ -90,7 +90,7 @@ class Ticket(models.Model):
 
     street_name = models.CharField(max_length=255)
     house_number = models.IntegerField()
-    postal_code_id = models.ForeignKey(PostalCode, on_delete=models.CASCADE)
+    postal_code = models.ForeignKey(PostalCode, on_delete=models.CASCADE)
 
 
 # RELATION TABLES
