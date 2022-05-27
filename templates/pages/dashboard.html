@@ -9,19 +9,15 @@
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        height: 300px;
         padding: 0;
-        border: 2px solid red;
     }
     .all_users_tickets {
         display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
+        flex-direction: column;
         width: 50%;
+        max-width: 50%;
         height: 100%;
         padding: 0;
-        border: 2px solid green;
     }
     .all_users_favorites {
         display: flex;
@@ -29,21 +25,43 @@
         justify-content: center;
         align-items: center;
         width: 50%;
+        max-width: 50%;
         height: 100%;
         padding: 0;
-        border: 2px solid blue;
+    }
+    .row_of_tickets {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0;
+        gap: 32px;
+        width: 100%;
+        overflow-x: scroll;
+        padding-bottom: 20px;
     }
 </style>
 <div class="dashboard_body">
     <div class="ticket_and_favorites">
-        <div class="all_users_tickets">ticket</div>
         <div class="all_users_favorites">
             <p>fav categories</p>
             <p>fav entertainers</p>
         </div>
+        <div class="all_users_tickets">
+            <p class="h3_regular">Your tickets</p>
+            <div class="row_of_tickets">
+                {% for ticket in query_dashboard_user_tickets_results %}
+                <div>
+                    {% include 'ticket_info_card.html' with ticket=ticket %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
+    <p class="h3_regular">
+        NOT FUNCTIONAL: Upcomming events matching your favorite categories
+    </p>
     <div class="row-of-cards">
-        {% for event in events %}
+        {% for event in query_dashboard_user_fav_cat_ent_events_res %}
         <div>{% include 'info_card.html' with event=event %}</div>
         {% endfor %}
     </div>
