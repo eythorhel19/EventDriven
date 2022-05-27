@@ -28,6 +28,7 @@ class Location(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     capacity = models.IntegerField()
+    map_url = models.CharField(max_length=510, default="")
 
     def __str__(self):
         return "{}, {}".format(self.name, self.city.name)

@@ -1,10 +1,27 @@
+{% load static %}
 <script>
     let eventData;
-    const postData = {};
+    let postData = {};
+    let countryData;
+
+    const sourceParts = window.location.href.split('/');
+    const BASE_URL = sourceParts[0] + '//' + sourceParts[2];
+
+    // Requests
 
     async function getEventData(eventID) {
-        const sourceParts = window.location.href.split('/');
-        const url = sourceParts[0] + '//' + sourceParts[2] + "/api/event/" + eventID;
+        const url = BASE_URL + "/api/event/" + eventID;
+        const res = await fetch(url);
+
+        if (res.status != 200) {
+            return;
+        }
+        const data = await res.json();
+        return data;
+    }
+
+    async function getCountryData() {
+        const url = BASE_URL + "/api/country";
         const res = await fetch(url);
 
         if (res.status != 200) {
@@ -32,13 +49,11 @@
     }
 
     function startLoading(loadingTag, contentTag) {
-        loadingTag.style.display = 'flex';
-        contentTag.style.display = 'none';
+        document.getElementById('booking_modal_loading').style.display = 'flex';
     }
 
     function stopLoading(loadingTag, contentTag) {
-        loadingTag.style.display = 'none';
-        contentTag.style.display = 'flex';
+        document.getElementById('booking_modal_loading').style.display = 'none';
     }
 
     function showErrorMessage(message) {
@@ -55,13 +70,200 @@
         errorWrapperTag.style.display = "none";
     }
 
+    function setProgressPoint(index) {
+        const numberOfPoints = document.getElementById('progress_points_wrapper').children.length;
+
+        for (let i = 1; i<numberOfPoints + 1; i++) {
+            const id = 'booking_modal_pp_' + String(i);
+            
+            // Setting default state
+            document.getElementById(id).className = "progress_point";
+            
+            if (index > i) {
+                document.getElementById(id).classList.add('finished');
+            } else if (index == i) {
+                document.getElementById(id).classList.add('active');
+            }
+        }
+    }
+
+
+    // Content Switchers
+
+    function displayContentPage(index) {
+        const numberOfPoints = document.getElementById('progress_points_wrapper').children.length;
+
+        setProgressPoint(index);
+
+        if (index < 3 || index == 5) {
+            hideInfoBar();
+        } else {
+            displayInfoBar();
+        }
+
+        for (let i = 1; i<numberOfPoints + 1; i++) {
+            const id = 'booking_modal_content_' + String(i);
+
+            // Setting default state
+            if (index === i) {
+                document.getElementById(id).style.display = 'flex';
+            } else {
+                document.getElementById(id).style.display = 'none';            
+            }
+            
+        }
+    }
+
+    function displayInfoBar() {
+        document.getElementById('booking_modal_order_info').style.display = 'flex';
+
+        document.getElementById('booking_modal_order_info_event').textContent = eventData.title;
+        document.getElementById('booking_modal_order_info_date').textContent = eventData.date_description;
+        document.getElementById('booking_modal_order_info_quantity').textContent = postData.ticket_quantity;
+        document.getElementById('booking_modal_order_info_delivery').textContent = postData.delivery_method_description;
+
+        let ticketType = '';
+        let totalPrice = 0;
+
+        for (let i = 0; i<eventData.ticket_types.length; i++) {
+            if (eventData.ticket_types[i].ticket_type_id === postData.ticket_type_id) {
+                ticketType = eventData.ticket_types[i].description;
+                totalPrice = eventData.ticket_types[i].price * postData.ticket_quantity;
+            }
+        }
+
+        document.getElementById('booking_modal_order_info_ticket_type').textContent = ticketType;
+        document.getElementById('booking_modal_order_info_total_price').textContent = totalPrice;
+    }
+
+    function hideInfoBar () {
+        document.getElementById('booking_modal_order_info').style.display = 'none';
+    }
+
+    function displayPostalInfo() {
+        displayContentPage(3);
+        document.getElementById('booking_modal_content_3_p').style.display = 'flex';
+        document.getElementById('booking_modal_content_3_e').style.display = 'none';
+        
+    }
+
+    function populateEmailInfo(countryData) {
+        const select = document.getElementById("booking_modal_e_phone_country_code");
+        select.innerHTML = "";
+        for (let i = 0; i<countryData.length; i++) {
+            let option = document.createElement('option');
+            option.value = countryData[i].id;
+            option.textContent = countryData[i].name;
+            select.appendChild(option);
+        }
+    }
+
+    async function displayEmailInfo() {
+        
+        displayContentPage(-1);
+        setProgressPoint(2);
+        startLoading();
+
+        countryData = await getCountryData();
+
+        populateEmailInfo(countryData);
+
+        stopLoading();
+        
+        displayContentPage(3);
+        document.getElementById('booking_modal_content_3_e').style.display = 'flex';
+        document.getElementById('booking_modal_content_3_p').style.display = 'none';
+    }
+
+    function formatCardNumber(cardNumber) {
+        let ret_str = "";
+
+        for (let i = 0; i<cardNumber.length; i++) {
+            ret_str += cardNumber[i];
+            if ((i + 1) % 4 == 0 && i !== 15) {
+                ret_str += '-';
+            }
+        }
+
+        return ret_str;
+    }
+
+    function displayConfimationPage() {
+        displayContentPage(5);
+
+        // Event Info
+        document.getElementById('booking_modal_confirm_event_title').textContent = eventData.title;
+        document.getElementById('booking_modal_confirm_location').textContent = eventData.location_name;
+        document.getElementById('booking_modal_confirm_date').textContent = eventData.date_description;
+        
+        document.getElementById('booking_modal_confirm_delivery_method').textContent = 'Via ' + postData.delivery_method_description;
+        const delivery_details =  document.getElementById('booking_modal_confirm_delivery_details');
+        delivery_details.innerHTML = "";
+
+        
+        // Delivery Info
+        if (postData.delivery_method == 'P') {
+
+        } else if (postData.delivery_method == 'E') {
+            const nameTag = document.createElement('p');
+            nameTag.textContent = postData.email_delivery_info.first_name + ' ' + postData.email_delivery_info.last_name;
+            nameTag.classList.add('p_light');
+            delivery_details.appendChild(nameTag);
+
+            const emailTag = document.createElement('p');
+            emailTag.textContent = postData.email_delivery_info.email;
+            emailTag.classList.add('p_light');
+            delivery_details.appendChild(emailTag);
+
+            let countryCode = '';
+            for (let i = 0; i<countryData.length; i++) {
+                if (countryData[i].id === postData.email_delivery_info.phone_country) {
+                    countryCode = countryData[i].phone_country_code;
+                }
+            }
+
+            const phoneTag = document.createElement('p');
+            phoneTag.textContent = '+' + countryCode + ' ' + postData.email_delivery_info.phone_number;
+            phoneTag.classList.add('p_light');
+            delivery_details.appendChild(phoneTag);
+        }
+
+        // Payment Info
+        document.getElementById('booking_modal_confirm_card_name').textContent = postData.paymentInfo.name_on_card;
+        document.getElementById('booking_modal_confirm_card_number').textContent = formatCardNumber(postData.paymentInfo.card_number);
+        document.getElementById('booking_modal_confirm_expiration_date').textContent = postData.paymentInfo.expiration_date;
+        document.getElementById('booking_modal_confirm_cvc').textContent = postData.paymentInfo.cvc;
+
+        // Amount
+        let ticketType = '';
+        let ticketPrice;
+        let totalPrice;
+
+        for (let i = 0; i<eventData.ticket_types.length; i++) {
+            if (eventData.ticket_types[i].ticket_type_id === postData.ticket_type_id) {
+                ticketType = eventData.ticket_types[i].description;
+                ticketPrice = eventData.ticket_types[i].price;
+                totalPrice = eventData.ticket_types[i].price * postData.ticket_quantity;
+            }
+        }
+
+        document.getElementById('booking_modal_confirm_ticket_type').textContent = ticketType;
+        document.getElementById('booking_modal_confirm_quantity').textContent = postData.ticket_quantity;
+        document.getElementById('booking_modal_confirm_ticket_price').textContent = ticketPrice;
+        document.getElementById('booking_modal_confirm_total_price').textContent = totalPrice;
+    }
+
+    // Handler Functions
+
     async function handleBookNow(eventID) {
+        // Initilizing
         closeErrorMessage();
-        let loadingTag = document.getElementById('booking_modal_loading');
-        let contentTag = document.getElementById('booking_modal_content');
+        displayContentPage(-1);
+        eventData = undefined;
+        postData = {};
 
         // Start loading
-        startLoading(loadingTag, contentTag);
+        startLoading();
 
         // Getting event data
         eventData = await getEventData(eventID);
@@ -70,18 +272,187 @@
         populateData(eventData);
 
         // Stop loading
-        stopLoading(loadingTag, contentTag);
+        stopLoading();
+        displayContentPage(1);
     }
 
     function handleDeliveryMethodPage() {
-        const ticket_amount = document.getElementById('ticket_amount_entry_field').value;
+        const ticketAmount = document.getElementById('ticket_amount_entry_field').value;
 
-        console.log('BRO')
-
-        if (ticket_amount > 10) {
+        if (isNaN(ticketAmount) || ticketAmount == "") {
+            showErrorMessage("Please enter a valid integer input as the quantity.");
+            return;
+        } else if (ticketAmount > 10) {
             showErrorMessage("You can only buy a maximum of 10 tickets.");
+            return;
         }
+
+        postData['ticket_quantity'] = Number(ticketAmount);
+        postData['ticket_type_id'] = Number(document.getElementById('ticket_type_select').value);
         
+        closeErrorMessage();
+
+        displayContentPage(2);
+    }
+
+    function handleDeliveryMethod(chosenMethod) {
+        if (chosenMethod == 'postal') {
+            postData['delivery_method'] = 'P';
+            postData['delivery_method_description'] = 'Postal';
+            displayPostalInfo();
+            
+        } else if (chosenMethod == 'email') {
+            postData['delivery_method'] = 'E';
+            postData['delivery_method_description'] = 'Email';
+            displayEmailInfo();
+        }
+    }
+
+    function handleBack(contentPageIndex) {
+        displayContentPage(contentPageIndex - 1);
+    }
+
+    function validateEmail(value) {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+            return true;
+        }
+        return false;
+    }
+
+    function handleSaveEmailDeliveryInfo() {
+        closeErrorMessage();
+
+        const firstName = document.getElementById('booking_modal_e_first_name').value;
+        if (firstName == '') {
+            showErrorMessage('Please enter your first name.');
+            return;
+        }
+
+        const lastName = document.getElementById('booking_modal_e_last_name').value;
+        if (lastName == '') {
+            showErrorMessage('Please enter your last name.');
+            return;
+        }
+
+        const email = document.getElementById('booking_modal_e_email').value;
+        if (!validateEmail(email)) {
+            showErrorMessage('Please enter a valid email address.');
+            return;
+        }
+
+        const phoneCountry = Number(document.getElementById('booking_modal_e_phone_country_code').value);
+
+        const phoneNumber = document.getElementById('booking_modal_e_phone_number').value;
+
+        if (phoneNumber == '') {
+            showErrorMessage('Please enter your phone number.')
+            return;
+        } else if (isNaN(phoneNumber)) {
+            showErrorMessage('Please enter a valid phone number. It should only include digits.')
+            return;
+        }
+
+        postData['email_delivery_info'] = {
+            'first_name': firstName,
+            'last_name': lastName,
+            'email': email,
+            'phone_country': phoneCountry,
+            'phone_number': Number(phoneNumber)
+        }
+
+        // Autofill Name
+        const nameOnCard = document.getElementById('booking_modal_name_on_card');
+        if (nameOnCard.value.length === 0) {
+            if (postData.delivery_method == 'P') {
+                nameOnCard.value = postData.postal_delivery_info.first_name + ' ' + postData.postal_delivery_info.last_name;
+            } else if (postData.delivery_method == 'E') {
+                nameOnCard.value = postData.email_delivery_info.first_name + ' ' + postData.email_delivery_info.last_name;
+            }
+        }
+        displayContentPage(4);
+    }
+
+    function validateExpirationDate(exDate) {
+        dateSplit = exDate.split('/');
+        if (dateSplit.length !== 2) {
+            return false;
+        } else if (dateSplit[0].length !== 2 || dateSplit[1].length !== 2) {
+            return false;
+        } else if (isNaN(dateSplit[0]) || isNaN(dateSplit[1])) {
+            return false;
+        } else if (1 > Number(dateSplit[0]) || Number(dateSplit[0]) > 12) {
+            return false;
+        } else if (0 > Number(dateSplit[1]) || Number(dateSplit[1]) > 99) {
+            return false;
+        }
+
+        const today = new Date();
+        const expirationDate = new Date('20' + dateSplit[1] + '-' + dateSplit[0] + '-1')
+
+        if (expirationDate <= today) {
+            return false;
+        }
+
+        return true;
+    }
+
+    function validateCVC(cvc) {
+        if (cvc.length !== 3) {
+            return false;
+        } else if (isNaN(cvc)) {
+            return false;
+        }
+        return true;
+    }
+
+    function validateCardNumber(cardNumber) {
+        if (cardNumber.length !== 16) {
+            return false;
+        } else if (isNaN(cardNumber)) {
+            return false;
+        }
+        return true;
+    }
+
+    function handleSavePaymentInfo() {
+        closeErrorMessage();
+
+        const nameOnCard = document.getElementById('booking_modal_name_on_card').value;
+
+        if (nameOnCard.length < 4) {
+            showErrorMessage('Please enter a valid name on the card.')
+            return;
+        }
+
+        const cardNumber = document.getElementById('booking_modal_card_number').value.replaceAll('-', '');
+
+        if (!validateCardNumber(cardNumber)) {
+            showErrorMessage('Please enter a valid card number. The card number should only include digits.')
+            return;
+        }
+
+        const expirationDate = document.getElementById('booking_modal_expiration_date').value;
+
+        if (!validateExpirationDate(expirationDate)) {
+            showErrorMessage('Please enter the valid expiration date in the following format MM/YY.')
+            return;
+        }
+
+        const cvc = document.getElementById('booking_modal_cvc').value;
+
+        if (!validateCVC(cvc)) {
+            showErrorMessage('Please enter a valid CVC number, a CVC number should only include 3 digits.')
+            return;
+        }
+
+        postData['paymentInfo'] = {
+            'name_on_card': nameOnCard,
+            'card_number': cardNumber,
+            'expiration_date': expirationDate,
+            'cvc': cvc
+        }
+
+        displayConfimationPage();
     }
 
 </script>
@@ -96,10 +467,10 @@
         border: 1px solid var(--type-weak);
         border-radius: 16px;
     }
-    .main_wrapper {
+    .booking_modal_main_wrapper {
         display: none;
         flex-direction: row;
-        gap: 32px;
+        gap: 4%;
         height: 100%;
         padding: 16px;
     }
@@ -108,7 +479,7 @@
         justify-content: center;
         align-items: center;
         overflow: hidden;
-        width: calc(40% - 16px);
+        width: 38%;
         height: 100%;
         max-height: 500px;
         border-radius: 16px;
@@ -120,9 +491,9 @@
     }
     .info_and_button_wrapper {
         display: flex;
-        width: calc(60% - 16px);
+        width: 58%;
         height: 500px;
-        max-height: 500px;
+        max-height: none;
         min-width: 350px;
         flex-direction: column;
         justify-content: space-between;
@@ -169,7 +540,10 @@
     .bottom_wrapper {
         display: flex;
         flex-direction: row;
+        justify-content: space-between;
+        flex-wrap: wrap;
         align-items: flex-end;
+        row-gap: 8px;
     }
     .icon_and_text {
         display: flex;
@@ -184,7 +558,6 @@
     }
     .entry_fields_wrapper {
         display: flex;
-        width: 100%;
         gap: 16px;
     }
     .entry_field_main_wrapper {
@@ -213,6 +586,122 @@
         color: var(--type-primary);
         border-radius: 0 16px 0 16px;
     }
+    .booking_modal_delivery_method_wrapper {
+        width: 48%;
+        display: flex;
+        background-color: var(--type-primary);
+        border-radius: 16px;
+        height: 500px;
+        align-items: center;
+        justify-content: center;
+    }
+    .booking_modal_delivery_method_wrapper:hover {
+        border: 4px solid var(--graphical-primary);
+        color: var(--base-primary);
+    }
+    .booking_modal_delivery_method_content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+        color: var(--base-primary);
+    }
+    .booking_modal_delivery_method_content img {
+        width: 200px;
+        height: 200px;
+    }
+    #booking_modal_order_info {
+        display: none;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        background-color: var(--type-primary);
+        border-radius: 16px;
+        color: var(--base-primary);
+        padding: 8px 16px;
+        margin: 0 16px;
+    }
+    .booking_modal_order_info_item {
+        overflow: hidden;
+        min-width: 120px;
+        width: 16%;
+    }
+    #booking_modal_content_3_p {
+        height: calc(500px - 61px);
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        justify-content: space-between;
+    }
+    #booking_modal_content_3_e {
+        height: calc(500px - 61px);
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        justify-content: space-between;
+    }
+    .booking_modal_entry_field_stack_wrapper {
+        display: flex; 
+        gap: 32px;
+    }
+    .booking_modal_entry_field_stack {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .booking_modal_back_continue_wrapper {
+        display: flex; 
+        gap: 16px;
+        justify-content: flex-end;
+    }
+    .back_button {
+        border-color: var(--type-weak);
+    }
+
+    .back_button:hover {
+        background-color: var(--type-weak);
+        color: var(--base-secondary);
+    }
+    .booking_modal_payment_wrapper {
+        height: calc(500px - 61px);
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        justify-content: space-between;
+    }
+    #booking_modal_content_5 {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        justify-content: space-between;
+    }
+    .booking_modal_confirm_wrapper {
+        display: flex;
+        height: calc(500px - 47px);
+        gap: 4%;
+    }
+    .booking_modal_confirm_column {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 48%;
+    }
+    .booking_modal_line_item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .booking_modal_confirm_event_info_wrapper {
+        min-height: 96px;
+    }
+    .booking_modal_confirm_payment_info_wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .underline {
+        border-bottom: 1px solid var(--type-weak);
+    }
 </style>
 <div
     class="modal fade"
@@ -227,10 +716,41 @@
                     <p id="booking_modal_error_message" class="p_light">Error message!</p>
                 </div>
                 {% include 'components/progress_points.html' with progress_data=progress_data%}
+                
+                <div id="booking_modal_order_info">
+                    <div class="booking_modal_order_info_item">
+                        <p class="label_light">Event</p>
+                        <p id="booking_modal_order_info_event" class="p_regular"></p>
+                    </div>
+                    <div class="booking_modal_order_info_item">
+                        <p class="label_light">Date</p>
+                        <p id="booking_modal_order_info_date" class="p_regular"></p>
+                    </div>
+                    <div class="booking_modal_order_info_item">
+                        <p class="label_light">Quantity</p>
+                        <p id="booking_modal_order_info_quantity" class="p_regular"></p>
+                    </div>
+                    <div class="booking_modal_order_info_item">
+                        <p class="label_light">Delivery</p>
+                        <p id="booking_modal_order_info_delivery" class="p_regular"></p>
+                    </div>
+                    <div class="booking_modal_order_info_item">
+                        <p class="label_light">Ticket Type</p>
+                        <p id="booking_modal_order_info_ticket_type" class="p_regular"></p>
+                    </div>
+                    <div class="booking_modal_order_info_item">
+                        <p class="label_light">Total Price</p>
+                        <p id="booking_modal_order_info_total_price" class="p_regular"></p>
+                    </div>
+                </div>
+
+                <!-- Loading -->
                 <div id="booking_modal_loading">
                     <div class="lds-dual-ring"></div>
                 </div>
-                <div id="booking_modal_content" class="main_wrapper">
+
+                <!-- Content Page 1 -->
+                <div id="booking_modal_content_1" class="booking_modal_main_wrapper">
                     <div class="img_wrapper">
                         <img id="booking_modal_image" alt="event image">
                     </div>
@@ -269,6 +789,229 @@
                                 <button class="button_outlined" onclick="handleDeliveryMethodPage()">Continue</button>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Content Page 2 -->
+                <div id="booking_modal_content_2" class="booking_modal_main_wrapper">
+                    <a class="booking_modal_delivery_method_wrapper" onclick="handleDeliveryMethod('postal')">
+                        <div class="booking_modal_delivery_method_content">
+                            <img src={% static 'images/postal_icon.png' %} alt="Postal delivery icon"/>
+                            <h1 class="h1_regular">Get tickets via post mail</h1>
+                        </div>
+                    </a>
+                    <a class="booking_modal_delivery_method_wrapper" onclick="handleDeliveryMethod('email')">
+                        <div class="booking_modal_delivery_method_content">
+                            <img src={% static 'images/email_icon.png' %} alt="Email delivery icon"/>
+                            <h1 class="h1_regular">Get tickets via email</h1>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Content Page 3 -->
+                <div id="booking_modal_content_3" class="booking_modal_main_wrapper">
+                    
+                    <!-- Postal Delivery -->
+                    <div id="booking_modal_content_3_p">
+                        <div class="booking_modal_entry_field_stack_wrapper">
+                            <div class="booking_modal_entry_field_stack">
+                                <div class="entry_field_main_wrapper">
+                                    <div class="entry_field_description">
+                                        <p class="label_light">Country</p>
+                                    </div>
+                                    <select id="" class="entry_field_body"></select>
+                                </div>
+                                <div class="entry_field_main_wrapper">
+                                    <div class="entry_field_description">
+                                        <p class="label_light">City</p>
+                                    </div>
+                                    <select id="" class="entry_field_body"></select>
+                                </div>
+                                <div class="entry_field_main_wrapper">
+                                    <div class="entry_field_description">
+                                        <p class="label_light">Street name</p>
+                                    </div>
+                                    <input id="" class="entry_field_body"></input>
+                                </div>
+                                <div class="entry_field_main_wrapper">
+                                    <div class="entry_field_description">
+                                        <p class="label_light">House Number</p>
+                                    </div>
+                                    <input id="" class="entry_field_body"></input>
+                                </div>
+                            </div>
+                            <div class="booking_modal_entry_field_stack">
+                                <div class="entry_field_main_wrapper">
+                                    <div class="entry_field_description">
+                                        <p class="label_light">Phone Country Code</p>
+                                    </div>
+                                    <select id="" class="entry_field_body"></select>
+                                </div>
+                                <div class="entry_field_main_wrapper">
+                                    <div class="entry_field_description">
+                                        <p class="label_light">Phone Number</p>
+                                    </div>
+                                    <input id="" class="entry_field_body"></input>
+                                </div>
+                                <div class="entry_field_main_wrapper">
+                                    <div class="entry_field_description">
+                                        <p class="label_light">Email</p>
+                                    </div>
+                                    <input id="" class="entry_field_body" type="email"></input>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="booking_modal_back_continue_wrapper">
+                            <button class="button_outlined back_button" onclick="handleBack(3)">Back</button>
+                            <button class="button_outlined" >Continue</button>
+                        </div>
+                    </div>
+
+                    <!-- Email Delivery -->
+                    <div id="booking_modal_content_3_e">
+                        <div class="booking_modal_entry_field_stack_wrapper">
+                            <div class="booking_modal_entry_field_stack">
+                                <div class="entry_field_main_wrapper">
+                                    <div class="entry_field_description">
+                                        <p class="label_light">First Name</p>
+                                    </div>
+                                    <input id="booking_modal_e_first_name" class="entry_field_body"></input>
+                                </div>
+                                <div class="entry_field_main_wrapper">
+                                    <div class="entry_field_description">
+                                        <p class="label_light">Last Name</p>
+                                    </div>
+                                    <input id="booking_modal_e_last_name" class="entry_field_body"></input>
+                                </div>
+                                <div class="entry_field_main_wrapper">
+                                    <div class="entry_field_description">
+                                        <p class="label_light">Email</p>
+                                    </div>
+                                    <input id="booking_modal_e_email" class="entry_field_body" type="email"></input>
+                                </div>
+                            </div>
+
+                            <div class="booking_modal_entry_field_stack">
+                                <div class="entry_field_main_wrapper">
+                                    <div class="entry_field_description">
+                                        <p class="label_light">Phone Country Code</p>
+                                    </div>
+                                    <select id="booking_modal_e_phone_country_code" class="entry_field_body">
+                                    </select>
+                                </div>
+                                <div class="entry_field_main_wrapper">
+                                    <div class="entry_field_description">
+                                        <p class="label_light">Phone Number</p>
+                                    </div>
+                                    <input id="booking_modal_e_phone_number" class="entry_field_body"></input>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="booking_modal_back_continue_wrapper">
+                            <button class="button_outlined back_button" onclick="handleBack(3)">Back</button>
+                            <button class="button_outlined" onclick="handleSaveEmailDeliveryInfo()">Continue</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Page 4 -->
+                <div id="booking_modal_content_4" class="booking_modal_main_wrapper">
+                    <div class="booking_modal_payment_wrapper">
+                        <div class="booking_modal_entry_field_stack_wrapper">
+                            <div class="booking_modal_entry_field_stack">
+
+                                <div class="entry_field_main_wrapper">
+                                    <div class="entry_field_description">
+                                        <p class="label_light">Name on card</p>
+                                    </div>
+                                    <input id="booking_modal_name_on_card" class="entry_field_body"></input>
+                                </div>
+                                
+                                <div class="entry_field_main_wrapper">
+                                    <div class="entry_field_description">
+                                        <p class="label_light">Card Number</p>
+                                    </div>
+                                    <input id="booking_modal_card_number" class="entry_field_body"></input>
+                                </div>
+                            </div>
+
+                            <div class="booking_modal_entry_field_stack">
+                                <div class="entry_field_main_wrapper">
+                                    <div class="entry_field_description">
+                                        <p class="label_light">Expiration Date</p>
+                                    </div>
+                                    <input id="booking_modal_expiration_date" class="entry_field_body"></input>
+                                </div>
+                                <div class="entry_field_main_wrapper">
+                                    <div class="entry_field_description">
+                                        <p class="label_light">CVC</p>
+                                    </div>
+                                    <input id="booking_modal_cvc" class="entry_field_body"></input>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="booking_modal_back_continue_wrapper">
+                            <button class="button_outlined back_button" onclick="handleBack(4)">Back</button>
+                            <button class="button_outlined" onclick="handleSavePaymentInfo()">Continue</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Page 5 -->
+                <div id="booking_modal_content_5" class="booking_modal_main_wrapper">
+                    <div class="booking_modal_confirm_wrapper">
+                        <div class="booking_modal_confirm_column">
+                            <h2 class="h3_semibold underline">Event</h2>
+                            <div class="booking_modal_confirm_event_info_wrapper">
+                                <p id="booking_modal_confirm_event_title" class="p_light">lalalala</p>
+                                <p id="booking_modal_confirm_location" class="p_light">lalalala</p>
+                                <p id="booking_modal_confirm_date" class="p_light">lalalala</p>
+                            </div>
+
+                            <h2 class="h3_semibold underline">Delivery</h2>
+                            <div class="booking_modal_confirm_event_info_wrapper">
+                                <p id="booking_modal_confirm_delivery_method" class="p_semibold"></p>
+                                <div id="booking_modal_confirm_delivery_details"></div>
+                            </div>
+                        </div>
+                        <div class="booking_modal_confirm_column">
+                            <h2 class="h3_semibold underline">Payment</h2>
+                            <div class="booking_modal_confirm_event_info_wrapper">
+                                <p id="booking_modal_confirm_card_name" class="p_light"></p>
+                                <p id="booking_modal_confirm_card_number" class="p_light"></p>
+                                <p id="booking_modal_confirm_expiration_date" class="p_light"></p>
+                                <p id="booking_modal_confirm_cvc" class="p_light"></p>
+                            </div>
+
+                            <h2 class="h3_semibold underline">Amount</h2>
+                            <div class="booking_modal_confirm_payment_info_wrapper">
+                                <div>
+                                    <p class="label_light">Ticket Type</p>
+                                    <p id="booking_modal_confirm_ticket_type" class="p_light"></p>
+                                </div>
+
+                                <div>
+                                    <div class="booking_modal_line_item">
+                                        <p class="label_light">Quantity</p>
+                                        <p id="booking_modal_confirm_quantity" class="p_light"></p>
+                                    </div>
+                                    <div class="booking_modal_line_item">
+                                        <p class="label_light">Price</p>
+                                        <p id="booking_modal_confirm_ticket_price" class="p_light"></p>
+                                    </div>
+                                    <div class="booking_modal_line_item" style="border-top: 1px solid var(--type-primary);">
+                                        <p class="label_bold">Total Price</p>
+                                        <p id="booking_modal_confirm_total_price" class="p_bold"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="booking_modal_back_continue_wrapper">
+                        <button class="button_outlined back_button" onclick="handleBack(5)">Back</button>
+                        <button class="button_outlined" onclick="handleSavePaymentInfo()">Confirm</button>
                     </div>
                 </div>
             </div>

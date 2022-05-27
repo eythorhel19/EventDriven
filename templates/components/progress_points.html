@@ -1,5 +1,5 @@
 <style>
-    .progress_points_wrapper {
+    #progress_points_wrapper {
         display: flex;
         justify-content: space-between;
         padding: 16px;
@@ -21,9 +21,13 @@
         background-color: var(--type-primary);
         color: var(--base-primary);
     }
-    .active {
+    .finished {
         background-color: var(--graphical-primary);
         color: var(--type-primary);
+    }
+    .active {
+        border: 2px solid var(--graphical-primary);
+        color: var(--graphical-primary);
     }
     .progress_description {
         width: 100%;
@@ -34,10 +38,10 @@
     }
 </style>
 
-<div class="progress_points_wrapper">
+<div id="progress_points_wrapper">
     {% for p_data in progress_data %}
         <a class="progress_point_and_description">
-            <div class="progress_point">
+            <div id="{{p_data.tag_id}}" class="progress_point">
                 <p class="h3_bold">{{ p_data.id }}</p>
             </div>
             <div class="progress_description">
