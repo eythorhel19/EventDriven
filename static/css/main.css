@@ -314,7 +314,8 @@ html, body { height: 100%; }
 body { 
     margin: 0;
     background-color: var(--base-primary);
-    color: var(--type-primary);
+    /* color: var(--type-primary); */
+    /* min-height: 100vh; */
 }
 
 .page_body {
@@ -322,58 +323,6 @@ body {
 }
 
 /* Custom Classes */
-
-/* Navbar */
-.navbar_wrapper {
-    /* Alignment */
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    
-    /* Body */
-    background-color: var(--base-primary);
-    padding: 16px;
-    box-shadow: 0 1px 24px rgba(255, 255, 255, 0.25);
-}
-
-.navbar_right_wrapper {
-    background-color: rgba(0, 0, 0, 0);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 0;
-    gap: 32px;
-}
-
-.navbar_options {
-    background-color: rgba(0, 0, 0, 0);
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    padding: 0;
-    gap: 0;
-    text-align: center;
-}
-
-.navbar_option {
-    background-color: rgba(0, 0, 0, 0);
-    color: var(--type-primary);
-    text-decoration: none;
-    padding: 8px 16px;
-}
-
-.navbar_option:hover {
-    color: var(--type-primary);
-    background-color: var(--base-secondary);
-    border-radius: 8px;
-}
-
-.navbar_option_wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
 /* Buttons */
 .button_outlined {
@@ -450,16 +399,3 @@ a, a:hover, a:focus, a:active {
     color: inherit;
 }
 
-.footer {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    background-color: var(--base-secondary);
-    color: var( --type-primary);
-    text-align: center;
-    display: flex;
-    justify-content: space-between;
-    padding-left: 10px;
-    padding-right: 10px;
-}

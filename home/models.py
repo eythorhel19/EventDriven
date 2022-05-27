@@ -31,7 +31,7 @@ class Location(models.Model):
     map_url = models.CharField(max_length=510, default="")
 
     def __str__(self):
-        return "{}, {}".format(self.name, self.city)
+        return "{}, {}".format(self.name, self.city.name)
 
 #   Address
 

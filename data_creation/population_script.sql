@@ -79,6 +79,8 @@ INSERT INTO entertainers_entertainer (name, description, image_url) VALUES
     'https://api.time.com/wp-content/uploads/2018/09/rihanna-barbados-ambassador.jpg'
 );
 
+insert into home_evententertainer (entertainer_id,event_id)
+values (1,2),(2,2),(3,2),(4,2),(5,2),(1,1),(2,1),(3,1),(4,1),(5,1);
 INSERT INTO home_tickettype (description) VALUES 
 ('Standard'),
 ('VIP');
@@ -89,4 +91,6 @@ INSERT INTO home_eventtickettypeprice (event_id, ticket_type_id, price) VALUES
 (2, 1, 40),
 (2, 2, 60);
 
--- COUNTRIES
+INSERT INTO HOME_EVENTCATEGORY(CATEGORY_ID,EVENT_ID)
+VALUES (1,1),(3,1),(4,2),(3,2),(2,2),(1,2);
+
