@@ -458,7 +458,43 @@
     function handlePostBooking() {
 
         // Formating for post
+        console.log(postData);
+        console.log(eventData);
+        // let postBody;
+        // if (postData.delivery_method == 'E') {
+        //     postBody = {
+        //         'ticket_type': postData.ticket_type_id,
+        //         'event': eventData.id,
+        //         'delivery_method': postData.delivery_method,
+        //         'email': postData.email_delivery_info.email,
+        //         'status': 'S',
+        //         'first_name': postData.email_delivery_info.first_name,
+        //         'last_name': postData.email_delivery_info.last_name
+        //     };
+        // } else if (postData.delivery_method == 'P') {
+        //     postBody = {
+        //         'ticket_type': postData[''],
+        //         'event': postData[''],
+        //         'delivery_method': postData['delivery_method'],
+        //         'email': postData[''],
+        //         'status': postData[''],
+        //         'first_name': postData[''],
+        //         'last_name': postData[''],
+        //         'street_name': postData[''],
+        //         'house_number': postData[''],
+        //         'postal_code': postData['']
+        //     };
+        // }
 
+        // // Posting ticket
+        // const url = BASE_URL + "/api/bookticket";
+        // const res = fetch(url, {
+        //     method: "POST",
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify(postBody)
+        // })
 
         displayContentPage(6);
     }
