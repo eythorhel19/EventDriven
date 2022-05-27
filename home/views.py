@@ -6,9 +6,34 @@ from entertainers.models import Entertainer
 
 
 def index(request):
-    events = Event.objects.all()
 
-    return render(request, "pages/home.html", context={'events': events, 'categories': Category.objects.all()})
+    query_for_cat_hom = '''
+        SELECT HCAT.ID AS CATEGORY_ID, HCAT.NAME AS CATEGORY_NAME, EEV.*
+        FROM EVENTS_EVENT AS EEV
+        JOIN HOME_EVENTCATEGORY AS HEVC ON EEV.ID = HEVC.EVENT_ID
+        JOIN HOME_CATEGORY AS HCAT ON HCAT.ID = HEVC.CATEGORY_ID
+        ORDER BY HEVC.CATEGORY_ID
+        '''
+    events_wit_cat = Event.objects.raw(query_for_cat_hom)
+
+    event_cat_categorised = []
+    current_ev_id_cat = []
+    last_event_cat_id = -1
+    for event_what_cat in events_wit_cat:
+        if event_what_cat.category_id == last_event_cat_id:
+            current_ev_id_cat.append(event_what_cat)
+        else:
+            if last_event_cat_id != -1:
+                event_cat_categorised.append(current_ev_id_cat)
+                current_ev_id_cat = []
+            current_ev_id_cat.append(event_what_cat)
+            last_event_cat_id = event_what_cat.category_id
+
+    # events = Event.objects.all()
+    # for i in events:
+    #     print(i)
+
+    return render(request, "pages/home.html", context={'event_cat_categorised': event_cat_categorised, 'categories': Category.objects.all()})
 
 
 def help(request):
@@ -34,6 +59,10 @@ def search(request):
         search_input_field_events2 = "true"
         search_input_field_events3 = "true"
         search_input_field_events4 = "true"
+        search_input_field_events5 = "true"
+        search_input_field_events6 = "true"
+        search_input_field_events7 = "true"
+        search_input_field_events8 = "true"
     else:
         search_input_field_events = "LOWER(EVEE.TITLE) LIKE LOWER('_{}_')".format(
             search_input_field)
@@ -69,7 +98,7 @@ def search(request):
         FROM ENTERTAINERS_ENTERTAINER AS ENT
         WHERE {} or {} or {} or {}
         '''.format(search_input_field_events5, search_input_field_events6, search_input_field_events7, search_input_field_events8)
-    print(query2)
+
     searched_events_later = Entertainer.objects.raw(query2)
 
     return render(request, 'pages/search.html', context={'searched_events': searched_events, 'searched_events_later': searched_events_later,  'categories': Category.objects.all()})
