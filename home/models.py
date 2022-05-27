@@ -56,13 +56,6 @@ class Category(models.Model):
         'Category',
         name='unique_lower_name_category')
 
-#   User
-
-
-class UserDetails(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_image_url = models.CharField(max_length=9999)
-
 #   Ticket
 
 

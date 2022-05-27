@@ -95,13 +95,13 @@
 
         setProgressPoint(index);
 
-        if (index < 3 || index == 5) {
+        if (index < 3 || index >= 5) {
             hideInfoBar();
         } else {
             displayInfoBar();
         }
 
-        for (let i = 1; i<numberOfPoints + 1; i++) {
+        for (let i = 1; i<numberOfPoints + 2; i++) {
             const id = 'booking_modal_content_' + String(i);
 
             // Setting default state
@@ -153,7 +153,7 @@
         for (let i = 0; i<countryData.length; i++) {
             let option = document.createElement('option');
             option.value = countryData[i].id;
-            option.textContent = countryData[i].name;
+            option.textContent = "(+" + countryData[i].phone_country_code + ") " + countryData[i].name;
             select.appendChild(option);
         }
     }
@@ -455,6 +455,10 @@
         displayConfimationPage();
     }
 
+    function handlePostBooking() {
+        displayContentPage(6);
+    }
+
 </script>
 <style>
     .model_adjuster {
@@ -464,6 +468,7 @@
     }
     .modal_base {
         background-color: var(--base-primary);
+        color: var(--type-primary);
         border: 1px solid var(--type-weak);
         border-radius: 16px;
     }
@@ -535,7 +540,7 @@
         justify-content: center;
         background-color: var(--base-primary);
         border-radius: 16px;
-        height: 500px;
+        height: 532px;
     }
     .bottom_wrapper {
         display: flex;
@@ -701,6 +706,26 @@
     }
     .underline {
         border-bottom: 1px solid var(--type-weak);
+    }
+    .booking_modal_success_wrapper {
+        height: 504px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--type-primary);
+        color: var(--base-primary);
+        border-radius: 16px;
+    }
+    .success_button {
+        color: var(--status-success);
+        border-color: var(--status-success);
+    }
+    .success_button:hover {
+        color: var(--type-primary);
+        background-color: var(--status-success);
     }
 </style>
 <div
@@ -1009,9 +1034,24 @@
                         </div>
                     </div>
 
+                    
                     <div class="booking_modal_back_continue_wrapper">
                         <button class="button_outlined back_button" onclick="handleBack(5)">Back</button>
-                        <button class="button_outlined" onclick="handleSavePaymentInfo()">Confirm</button>
+                        <button class="button_outlined" onclick="handlePostBooking()">Confirm</button>
+                    </div>
+                </div>
+
+                <!-- Content Page 6 -->
+                <div id="booking_modal_content_6" class="booking_modal_main_wrapper">
+                    <div class="booking_modal_success_wrapper">
+                        <img src={% static 'images/success_icon.png' %} alt="Postal delivery icon"/>
+                        <h1 class="h1_light">Your order has been processed!</h1>
+                        <h3 class="h3_light">Thank you for shopping with EventDriven</h3>
+                        <button 
+                            class="button_outlined success_button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#booking_modal"
+                        >Finish</button>
                     </div>
                 </div>
             </div>
