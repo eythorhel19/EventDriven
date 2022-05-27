@@ -145,4 +145,28 @@ def search(request):
 
 
 def dashboard(request):
-    return render(request, 'pages/dashboard.html')
+
+    query_dashboard_user_tickets = '''
+        SELECT HT.*, EEVE.TITLE AS EVENT_TITLE, EEVE.START_DATE AS EVENT_START_DATE, EEVE.MAIN_IMAGE_URL, HLOC.NAME AS EVENT_LOCATION_NAME
+        FROM HOME_TICKET AS HT 
+        JOIN EVENTS_EVENT AS EEVE ON HT.EVENT_ID = EEVE.ID
+        JOIN HOME_LOCATION AS HLOC ON HLOC.ID = EEVE.LOCATION_ID
+        WHERE HT.USER_ID = {}
+        '''.format(request.user.id)
+    query_dashboard_user_tickets_results = Event.objects.raw(
+        query_dashboard_user_tickets)
+
+    query_dashboard_user_fav_cat_ent_events = '''
+        SELECT DISTINCT(EEVE.*)
+        FROM EVENTS_EVENT AS EEVE
+        JOIN HOME_EVENTCATEGORY AS HEVECAT ON HEVECAT.EVENT_ID = EEVE.ID
+        WHERE EEVE.ID IN
+            (SELECT HUFC.ID
+                FROM HOME_USERFAVORITECATEGORY AS HUFC
+                WHERE HUFC.USER_ID = {})
+        '''.format(request.user.id)
+
+    query_dashboard_user_fav_cat_ent_events_res = Event.objects.raw(
+        query_dashboard_user_fav_cat_ent_events)
+
+    return render(request, 'pages/dashboard.html', context={'query_dashboard_user_tickets_results': query_dashboard_user_tickets_results, "query_dashboard_user_fav_cat_ent_events_res": query_dashboard_user_fav_cat_ent_events_res})
