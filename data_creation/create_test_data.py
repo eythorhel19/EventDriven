@@ -33,27 +33,40 @@ def main():
     sql_str = ""
 
     # Country
-    with open('data_creation/raw_data/countries.csv', 'r') as f:
-        columns = []
-        countries = []
+    # with open('data_creation/raw_data/countries.csv', 'r') as f:
+    #     columns = []
+    #     countries = []
 
-        for i, line in enumerate(f):
-            if i == 0:
-                columns = list(line.split(','))
-            else:
-                data = line.split(',')
-                if data[columns.index('UNTERM English Short')] == '' or data[columns.index('Dial')] == '':
-                    continue
-                else:
-                    countries.append({
-                        'id': "'{}'".format(data[columns.index('ISO3166-1-Alpha-3')]),
-                        'name': "'{}'".format(data[columns.index('UNTERM English Short')].replace('"', '').replace("'", "''")),
-                        'phone_country_code': "'{}'".format(data[columns.index('Dial')])
-                    })
+    #     for i, line in enumerate(f):
+    #         if i == 0:
+    #             columns = list(line.split(','))
+    #         else:
+    #             data = line.split(',')
+    #             if data[columns.index('UNTERM English Short')] == '' or data[columns.index('Dial')] == '':
+    #                 continue
+    #             else:
+    #                 countries.append({
+    #                     'iso3_code': "'{}'".format(data[columns.index('ISO3166-1-Alpha-3')]),
+    #                     'name': "'{}'".format(data[columns.index('UNTERM English Short')].replace('"', '').replace("'", "''")),
+    #                     'phone_country_code': "'{}'".format(data[columns.index('Dial')])
+    #                 })
 
-        sql_str += create_sql_insert_str(countries, 'Country')
+    #     sql_str += create_sql_insert_str(countries, 'Country')
+
 
     # Cities
+
+    #  Getting country ids
+    country_id_map = {}
+    f = open('data_creation/raw_data/country_id_to_iso3.csv', 'r')
+    for i, line in enumerate(f):
+        if i == 0:
+            continue
+        data = line.strip().split(';')
+        country_id_map[data[1]] = data[0]
+    
+    print(country_id_map)
+
     with open('data_creation/raw_data/worldcities.csv', 'r') as f:
         columns = None
         
@@ -64,12 +77,13 @@ def main():
                 columns = data
                 continue
 
-            cities.append({
-                'name': "'{}'".format(data[columns.index('city_ascii')].replace("'","''")),
-                'country_id': "'{}'".format(data[columns.index('iso3')])
-            })
+            if data[columns.index('iso3')] in country_id_map:
+                cities.append({
+                    'name': "'{}'".format(data[columns.index('city_ascii')].replace("'","''")),
+                    'country_id': "'{}'".format(country_id_map[data[columns.index('iso3')]])
+                })
 
-        sql_str += "\n\n\n" +  create_sql_insert_str(cities, 'City')
+        sql_str += "\n\n\n" +  create_sql_insert_str(cities, 'home_city')
         
     with open('data_creation/location_data.sql', 'w') as f:
         f.write(sql_str)

@@ -1,12 +1,9 @@
-from django.shortcuts import render
-import json
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.forms.models import model_to_dict
-from django.core import serializers
 
 from events.models import Event
 from home.models import Ticket, TicketType
-from home.models import Country
+from home.models import Country, City
 
 from rest_framework.decorators import api_view
 
@@ -83,6 +80,24 @@ def countries(request):
         country_list.append(elem)
 
     return JsonResponse(country_list, safe=False)
+
+@api_view(['GET'])
+def cities(request):
+    
+    country_id = request.GET.get("country_id", -1)
+
+    print(country_id)
+    
+    if country_id == -1:
+        c = City.objects.values()
+    else:
+        c = City.objects.filter(country_id=country_id).values()
+
+    city_list = []
+    for elem in c:
+        city_list.append(elem)
+
+    return JsonResponse(city_list, safe=False)
 
 @api_view(['POST'])
 def book_ticket(request):

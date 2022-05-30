@@ -31,7 +31,18 @@
         return data;
     }
 
-    function populateData(eventData) {
+    async function getCityData() {
+        const url = BASE_URL + "/api/city";
+        const res = await fetch(url);
+
+        if (res.status != 200) {
+            return;
+        }
+        const data = await res.json();
+        return data;
+    }
+
+    function populateEventData(eventData) {
         document.getElementById("booking_modal_image").src = eventData.main_image_url;
         document.getElementById("booking_modal_title").textContent = eventData.title;
         document.getElementById("booking_modal_description").textContent = eventData.description;
@@ -136,15 +147,51 @@
         document.getElementById('booking_modal_order_info_total_price').textContent = totalPrice;
     }
 
-    function hideInfoBar () {
+    function hideInfoBar() {
         document.getElementById('booking_modal_order_info').style.display = 'none';
     }
 
-    function displayPostalInfo() {
+    async function populatePostalCity(countryID) {
+        const cityData = await getCityData();
+        
+        cityData = cityData.sort((a, b) => {
+            return a.name > b.name;
+        })
+
+        const citySelect = document.getElementById("booking_modal_p_city");
+        citySelect.innerHTML = "";
+        for (let i = 0; i<cityData.length; i++) {
+            let option = document.createElement('option');
+            option.value = cityData[i].id;
+            option.textContent = cityData[i].name;
+            citySelect.appendChild(option);
+        }
+    }
+
+    function populationPostalInfo(countryData) {
+        const countrySelect = document.getElementById("booking_modal_p_country");
+        countrySelect.innerHTML = "";
+        for (let i = 0; i<countryData.length; i++) {
+            let option = document.createElement('option');
+            option.value = countryData[i].id;
+            option.textContent = countryData[i].name;
+            countrySelect.appendChild(option);
+        }
+    }
+
+    async function displayPostalInfo() {
         displayContentPage(3);
         document.getElementById('booking_modal_content_3_p').style.display = 'flex';
         document.getElementById('booking_modal_content_3_e').style.display = 'none';
-        
+
+        countryData = await getCountryData();
+
+        // Sorting the country data
+        countryData = countryData.sort((a, b) => {
+            return a.name > b.name;
+        })
+
+        populationPostalInfo(countryData);
     }
 
     function populateEmailInfo(countryData) {
@@ -153,7 +200,7 @@
         for (let i = 0; i<countryData.length; i++) {
             let option = document.createElement('option');
             option.value = countryData[i].id;
-            option.textContent = "(+" + countryData[i].phone_country_code + ") " + countryData[i].name;
+            option.textContent = countryData[i].name + " (+" + countryData[i].phone_country_code + ")";
             select.appendChild(option);
         }
     }
@@ -165,6 +212,11 @@
         startLoading();
 
         countryData = await getCountryData();
+
+        // Sorting the country data
+        countryData = countryData.sort((a, b) => {
+            return a.name > b.name;
+        })
 
         populateEmailInfo(countryData);
 
@@ -269,7 +321,7 @@
         eventData = await getEventData(eventID);
 
         // Populating Booking Modal
-        populateData(eventData);
+        populateEventData(eventData);
 
         // Stop loading
         stopLoading();
@@ -884,25 +936,25 @@
                                     <div class="entry_field_description">
                                         <p class="label_light">Country</p>
                                     </div>
-                                    <select id="" class="entry_field_body"></select>
+                                    <select id="booking_modal_p_country" class="entry_field_body"></select>
                                 </div>
                                 <div class="entry_field_main_wrapper">
                                     <div class="entry_field_description">
                                         <p class="label_light">City</p>
                                     </div>
-                                    <select id="" class="entry_field_body"></select>
+                                    <select id="booking_modal_p_city" class="entry_field_body" disabled></select>
                                 </div>
                                 <div class="entry_field_main_wrapper">
                                     <div class="entry_field_description">
                                         <p class="label_light">Street name</p>
                                     </div>
-                                    <input id="" class="entry_field_body"></input>
+                                    <input id="booking_modal_p_street_name" class="entry_field_body"></input>
                                 </div>
                                 <div class="entry_field_main_wrapper">
                                     <div class="entry_field_description">
                                         <p class="label_light">House Number</p>
                                     </div>
-                                    <input id="" class="entry_field_body"></input>
+                                    <input id="booking_modal_p_house_number" class="entry_field_body"></input>
                                 </div>
                             </div>
                             <div class="booking_modal_entry_field_stack">
@@ -910,19 +962,19 @@
                                     <div class="entry_field_description">
                                         <p class="label_light">Phone Country Code</p>
                                     </div>
-                                    <select id="" class="entry_field_body"></select>
+                                    <select id="booking_modal_p_phone_country_code" class="entry_field_body"></select>
                                 </div>
                                 <div class="entry_field_main_wrapper">
                                     <div class="entry_field_description">
                                         <p class="label_light">Phone Number</p>
                                     </div>
-                                    <input id="" class="entry_field_body"></input>
+                                    <input id="booking_modal_p_phone_number" class="entry_field_body"></input>
                                 </div>
                                 <div class="entry_field_main_wrapper">
                                     <div class="entry_field_description">
                                         <p class="label_light">Email</p>
                                     </div>
-                                    <input id="" class="entry_field_body" type="email"></input>
+                                    <input id="booking_modal_p_email" class="entry_field_body" type="email"></input>
                                 </div>
                             </div>
                         </div>
