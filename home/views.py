@@ -14,7 +14,7 @@ def index(request):
         FROM EVENTS_EVENT AS EEV
         JOIN HOME_EVENTCATEGORY AS HEVC ON EEV.ID = HEVC.EVENT_ID
         JOIN HOME_CATEGORY AS HCAT ON HCAT.ID = HEVC.CATEGORY_ID
-        ORDER BY HEVC.CATEGORY_ID
+        ORDER BY HEVC.CATEGORY_ID, EEV.START_DATE
         '''
     events_wit_cat = Event.objects.raw(query_for_cat_hom)
 
@@ -104,37 +104,40 @@ def search(request):
             search_input_field)
         search_input_field_events10 = "LOWER(HCITY.NAME) = LOWER('{}')".format(
             search_input_field)
-        search_input_field_events11 = "LOWER(HSTATE.NAME) = LOWER('{}')".format(
-            search_input_field)
+
         search_input_field_events12 = "LOWER(HCONT.NAME) = LOWER('{}')".format(
             search_input_field)
 
     query = '''   
         SELECT DISTINCT(EVEE.*)
         FROM (  
-            SELECT *
+            SELECT EVEE.*
             FROM EVENTS_EVENT AS EVEE
             JOIN HOME_EVENTCATEGORY AS HEC  ON EVEE.ID = HEC.EVENT_ID
             JOIN HOME_CATEGORY AS HCAT ON HCAT.ID = HEC.CATEGORY_ID
 			JOIN HOME_LOCATION AS HLC ON HLC.ID = EVEE.LOCATION_ID
 			JOIN HOME_CITY AS HCITY ON HCITY.ID = HLC.CITY_ID
-			JOIN HOME_STATE AS HSTATE ON HSTATE.ID = HCITY.STATE_ID
-			JOIN HOME_COUNTRY AS HCONT ON HCONT.ID = HSTATE.COUNTRY_ID
-            WHERE {} AND {} AND ({} OR {} OR {} OR {} OR {} OR {} OR {} OR {})
+			JOIN HOME_COUNTRY AS HCONT ON HCONT.ID = HCITY.COUNTRY_ID
+            WHERE {} AND {} AND ({} OR {} OR {} OR {} OR {} OR {} OR {})
             ORDER BY EVEE.START_DATE
             ) AS EVEE
-        '''.format(categories_events, date_options_events, search_input_field_events, search_input_field_events2, search_input_field_events3, search_input_field_events4, search_input_field_events9, search_input_field_events10, search_input_field_events11, search_input_field_events12)
+        '''.format(categories_events, date_options_events, search_input_field_events, search_input_field_events2, search_input_field_events3, search_input_field_events4, search_input_field_events9, search_input_field_events10, search_input_field_events12)
 
     print('query', query)
 
     searched_events = Event.objects.raw(query)
 
     query2 = '''
-        SELECT ENT.*
+        SELECT ENT.*, MIN(EEVE.START_DATE) AS NEXT_EVENT_DATE, HLOC.NAME AS LOCATION_NAME
         FROM ENTERTAINERS_ENTERTAINER AS ENT
-        WHERE {} or {} or {} or {}
+        JOIN HOME_EVENTENTERTAINER AS HEVENT ON ENT.ID = HEVENT.EVENT_ID
+        JOIN EVENTS_EVENT AS EEVE ON EEVE.ID = HEVENT.EVENT_ID
+        JOIN HOME_LOCATION AS HLOC ON HLOC.ID = EEVE.LOCATION_ID
+        GROUP BY (ENT.ID, ENT.NAME, ENT.DESCRIPTION, ENT.IMAGE_URL, HLOC.NAME)
+        HAVING {} or {} or {} or {}
         '''.format(search_input_field_events5, search_input_field_events6, search_input_field_events7, search_input_field_events8)
 
+    print('query2', query2)
     searched_events_later = Entertainer.objects.raw(query2)
 
     return render(request, 'pages/search.html', context={'searched_events': searched_events, 'searched_events_later': searched_events_later,  'categories': Category.objects.all()})
@@ -155,17 +158,17 @@ def dashboard(request):
 
     query_dashboard_user_fav_cat_ent_events = '''
 
-SELECT DISTINCT(EEVE.*)
-FROM EVENTS_EVENT AS EEVE
-JOIN HOME_EVENTCATEGORY AS HEVECAT ON HEVECAT.EVENT_ID = EEVE.ID
-JOIN HOME_EVENTENTERTAINER AS HEENT ON HEENT.EVENT_ID = EEVE.ID
-WHERE HEVECAT.ID IN
-		(SELECT HUFC.CATEGORY_ID
-FROM HOME_USERFAVORITECATEGORY AS HUFC
-WHERE HUFC.USER_ID = {}) OR HEENT.ENTERTAINER_ID IN(SELECT HUFENT.ENTERTAINER_ID
-												 FROM HOME_USERFAVORITEENTERTAINER AS HUFENT
-												 WHERE HUFENT.USER_ID = {})
-			
+    SELECT DISTINCT(EEVE.*)
+    FROM EVENTS_EVENT AS EEVE
+    JOIN HOME_EVENTCATEGORY AS HEVECAT ON HEVECAT.EVENT_ID = EEVE.ID
+    JOIN HOME_EVENTENTERTAINER AS HEENT ON HEENT.EVENT_ID = EEVE.ID
+    WHERE HEVECAT.ID IN
+            (SELECT HUFC.CATEGORY_ID
+    FROM HOME_USERFAVORITECATEGORY AS HUFC
+    WHERE HUFC.USER_ID = {}) OR HEENT.ENTERTAINER_ID IN(SELECT HUFENT.ENTERTAINER_ID
+                                                    FROM HOME_USERFAVORITEENTERTAINER AS HUFENT
+                                                    WHERE HUFENT.USER_ID = {})
+                
         '''.format(request.user.id, request.user.id)
 
     query_dashboard_user_fav_cat_ent_events_res = Event.objects.raw(
