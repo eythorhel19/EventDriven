@@ -309,10 +309,14 @@ def user_categories(request):
     if request.headers['Content-Type'] != 'application/json':
         return HttpResponse('Request body should be of type json!', status=400)
 
-    UserFavoriteCategory.objects.filter(user=request.user).delete()
+    UserFavoriteCategory.objects.filter(user_id=request.user.id).delete()
 
     req_body = json.loads(request.body)
-    print('req_body', req_body.users_fav_cat_selected)
+    for i in req_body["users_fav_cat_selected"]:
+        UserFavoriteCategory.objects.create(
+            user_id=request.user.id,
+            category_id=i['id']
+        )
 
     return JsonResponse(status=200, data={'message': 'OK'})
 
@@ -323,10 +327,14 @@ def user_entertainers(request):
     if request.headers['Content-Type'] != 'application/json':
         return HttpResponse('Request body should be of type json!', status=400)
 
-    UserFavoriteEntertainer.objects.filter(user=request.user).delete()
-
+    UserFavoriteEntertainer.objects.filter(user_id=request.user.id).delete()
     req_body = json.loads(request.body)
-    print('req_body', req_body.select_entertainers)
 
-    UserFavoriteEntertainer.objects.filter(user=request.user).delete()
+    for i in req_body["select_entertainers"]:
+        print('i', i)
+        UserFavoriteEntertainer.objects.create(
+            user_id=request.user.id,
+            entertainer_id=i['id']
+        )
+
     return JsonResponse(status=200, data={'message': 'OK'})
