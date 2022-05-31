@@ -1,13 +1,23 @@
-from django.http import JsonResponse
+import json
+
+from django.http import JsonResponse, HttpResponse
 from django.forms.models import model_to_dict
 
 from events.models import Event
-from home.models import Ticket, TicketType
-from home.models import Country, City
+from home.models import Ticket, TicketType, EventTicketTypePrice, Country, City
 
 from rest_framework.decorators import api_view
 
-# Create your views here.
+
+def check_required_fields(req_body, required_fields):
+    for key in required_fields:
+        if key not in req_body:
+            return 400, 'Request body missing field "{}"!'.format(key)
+
+    if len(req_body.keys()) != len(required_fields):
+        return 400, 'Request body includes to many fields!'
+
+    return 200, ''
 
 
 @api_view(['GET'])
@@ -105,13 +115,186 @@ def cities(request):
 
 
 @api_view(['POST'])
-def book_ticket(request):
-    ticket = Ticket.objects.create(
+def generate_tickets(request):
+    if request.headers['Content-Type'] != 'application/json':
+        return JsonResponse(status=400, data={'message': 'Request body should be of type json!'})
 
-    )
+    req_body = json.loads(request.body)
 
-    return JsonResponse({"it": "works!"})
+    required_fields = ['event_id', 'ticket_type_id', 'quantity']
+    status, msg = check_required_fields(req_body, required_fields)
+    if status != 200:
+        return JsonResponse(status=status, data={'message': msg})
 
+    # Checks for event id
+    if not isinstance(req_body['event_id'], int):
+        return JsonResponse(status=400, data={'message': 'Field "event_id" should be an integer!'})
+
+    the_event = Event.objects.filter(pk=req_body['event_id']).first()
+
+    if the_event is None:
+        return JsonResponse(status=400, data={'message': 'Event with id {} not found!'.format(req_body['event_id'])})
+
+    # Checks for ticket type id
+    if not isinstance(req_body['ticket_type_id'], int):
+        return JsonResponse(status=400, data={'message': 'Field "ticket_type_id" should be an integer!'})
+
+    ticket_type = EventTicketTypePrice.objects.filter(
+        event_id=req_body['event_id'],
+        ticket_type_id=req_body['ticket_type_id']
+    ).first()
+
+    if ticket_type is None:
+        return HttpResponse('Ticket type {} is not defined for event {}'.format(
+            req_body['ticket_type_id'],
+            req_body['event_id'])
+        )
+
+    # Checks for quantity
+    if not isinstance(req_body['quantity'], int):
+        return JsonResponse(status=400, data={'message': 'Field "quantity" should be an integer'})
+
+    current_ticket_count = len(Ticket.objects.filter(event_id=req_body['event_id']))
+
+    if req_body['quantity'] > (the_event.maximum_capacity - current_ticket_count):
+        return JsonResponse(status=400, data={'message': 'Tickets not available, maximum tickets available are {}'.format(
+            the_event.maximum_capacity - current_ticket_count)})
+
+    # Creating the tickets
+    for i in range(req_body['quantity']):
+        t = Ticket(
+            ticket_type_id=req_body['ticket_type_id'],
+            event_id=req_body['event_id']
+        )
+        t.save()
+
+    return JsonResponse(status=200, data={'message': 'Successfully created {} tickets'.format(req_body['quantity'])})
+
+
+@api_view(['PATCH'])
+def release_tickets(request):
+    if request.headers['Content-Type'] != 'application/json':
+        return HttpResponse('Request body should be of type json!', status=400)
+
+    req_body = json.loads(request.body)
+
+    required_fields = ['event_id']
+    status, msg = check_required_fields(req_body, required_fields)
+    if status != 200:
+        return HttpResponse(msg, status=status)
+
+    # Checks for event id
+    if not isinstance(req_body['event_id'], int):
+        return HttpResponse('Field "event_id" should be an integer!', status=400)
+
+    the_event = Event.objects.filter(pk=req_body['event_id']).first()
+
+    if the_event is None:
+        return HttpResponse('Event with id {} not found!'.format(req_body['event_id']), status=400)
+
+    the_tickets = Ticket.objects.filter(event_id=req_body['event_id'], status='U')
+
+    for t in the_tickets:
+        t.status = 'R'
+        t.save()
+
+    return HttpResponse('Successfully released {} tickets!'.format(len(the_tickets)), status=200)
+
+
+@api_view(['PATCH'])
+def book_tickets(request):
+    # Finding a ticket for the event
+    if request.headers['Content-Type'] != 'application/json':
+        return HttpResponse('Request body should be of type json!', status=400)
+
+    req_body = json.loads(request.body)
+
+    if 'delivery_method' not in req_body:
+        return HttpResponse('Request body missing field "delivery_method"!', status=400)
+    
+    if req_body['delivery_method'] == 'E':
+        required_fields = ['ticket_type_id', 'event_id', 'delivery_method', 'email', 'first_name', 'last_name', 'quantity']
+        status, msg = check_required_fields(req_body, required_fields)
+        if status != 200:
+            return HttpResponse(msg, status=status)
+
+        available_tickets = Ticket.objects.filter(
+            event_id=req_body['event_id'],
+            ticket_type_id=req_body['ticket_type_id'],
+            status='R'
+        )
+
+        if req_body['quantity'] > 10:
+            return HttpResponse('Quantity is too large, only a maximum of 10 tickets can be bought!', status=400)
+
+        if len(available_tickets) < req_body['quantity']:
+            return HttpResponse('Quantity is too large, only {} tickets available.'.format(
+                len(available_tickets)), status=400
+            )
+
+        booked_tickets = []
+        for i, t in enumerate(available_tickets):
+            if i > req_body['quantity']:
+                break
+            else:
+                t.delivery_method = req_body['delivery_method']
+                t.email = req_body['email']
+                t.status = 'S'
+                t.first_name = req_body['first_name']
+                t.last_name = req_body['last_name']
+                t.save()
+                booked_tickets.append(t)
+
+        return_dict = []
+        for ticket in booked_tickets:
+            return_dict.append(model_to_dict(ticket))
+
+        return JsonResponse(return_dict, safe=False)
+
+    elif req_body['delivery_method'] == 'P':
+        required_fields = ['ticket_type_id', 'event_id', 'delivery_method', 'email', 'first_name', 'last_name', 'street_name', 'house_number', 'postal_code', 'quantity']
+        status, msg = check_required_fields(req_body, required_fields)
+        if status != 200:
+            return HttpResponse(msg, status=status)
+
+        available_tickets = Ticket.objects.filter(
+            event_id=req_body['event_id'],
+            ticket_type_id=req_body['ticket_type_id'],
+            status='R'
+        )
+
+        if req_body['quantity'] > 10:
+            return HttpResponse('Quantity is too large, only a maximum of 10 tickets can be bought!', status=400)
+
+        if len(available_tickets) < req_body['quantity']:
+            return HttpResponse('Quantity is too large, only {} tickets available.'.format(
+                len(available_tickets)), status=400
+            )
+
+        booked_tickets = []
+        for i, t in enumerate(available_tickets):
+            if i > req_body['quantity']:
+                break
+            else:
+                t.delivery_method = req_body['delivery_method']
+                t.email = req_body['email']
+                t.status = 'S'
+                t.first_name = req_body['first_name']
+                t.last_name = req_body['last_name']
+                t.street_name = req_body['street_name']
+                t.house_number = req_body['house_number']
+                t.postal_code = req_body['postal_code']
+                t.save()
+                booked_tickets.append(t)
+
+        return_dict = []
+        for ticket in booked_tickets:
+            return_dict.append(model_to_dict(ticket))
+
+        return JsonResponse(return_dict, safe=False)
+    
+    else:
+        return HttpResponse('Delivery method "{}" not available!'.format(req_body['delivery_method']))
 
 @api_view(['PUT'])
 def user_categories(request):

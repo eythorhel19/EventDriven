@@ -3,6 +3,7 @@
     let eventData;
     let postData = {};
     let countryData;
+    let cityData;
 
     const sourceParts = window.location.href.split('/');
     const BASE_URL = sourceParts[0] + '//' + sourceParts[2];
@@ -31,8 +32,8 @@
         return data;
     }
 
-    async function getCityData() {
-        const url = BASE_URL + "/api/city";
+    async function getCityData(countryID) {
+        const url = BASE_URL + "/api/city?country_id=" + countryID;
         const res = await fetch(url);
 
         if (res.status != 200) {
@@ -112,7 +113,7 @@
             displayInfoBar();
         }
 
-        for (let i = 1; i<numberOfPoints + 2; i++) {
+        for (let i = 1; i<numberOfPoints + 3; i++) {
             const id = 'booking_modal_content_' + String(i);
 
             // Setting default state
@@ -151,14 +152,17 @@
         document.getElementById('booking_modal_order_info').style.display = 'none';
     }
 
-    async function populatePostalCity(countryID) {
-        const cityData = await getCityData();
-        
-        cityData = cityData.sort((a, b) => {
+    async function populatePostalCity() {
+        const countryID = document.getElementById("booking_modal_p_country").value;
+
+        cityData = await getCityData(countryID);
+
+        cityData.sort((a, b) => {
             return a.name > b.name;
         })
 
         const citySelect = document.getElementById("booking_modal_p_city");
+        citySelect.disabled = false;
         citySelect.innerHTML = "";
         for (let i = 0; i<cityData.length; i++) {
             let option = document.createElement('option');
@@ -166,17 +170,34 @@
             option.textContent = cityData[i].name;
             citySelect.appendChild(option);
         }
+
+        if (document.getElementById('booking_modal_p_phone_country_code').value == "") {
+            document.getElementById('booking_modal_p_phone_country_code').value = countryID;
+        }
     }
 
     function populationPostalInfo(countryData) {
         const countrySelect = document.getElementById("booking_modal_p_country");
-        countrySelect.innerHTML = "";
+        countrySelect.innerHTML = "<option disabled selected value> -- Select an option -- </option>";
+
         for (let i = 0; i<countryData.length; i++) {
             let option = document.createElement('option');
             option.value = countryData[i].id;
             option.textContent = countryData[i].name;
             countrySelect.appendChild(option);
         }
+
+        const phoneCountrySelect = document.getElementById("booking_modal_p_phone_country_code");
+
+        phoneCountrySelect.innerHTML = "<option disabled selected value> -- Select an option -- </option>";
+
+        for (let i = 0; i<countryData.length; i++) {
+            let option = document.createElement('option');
+            option.value = countryData[i].id;
+            option.textContent = countryData[i].name + " (+" + countryData[i].phone_country_code + ")";
+            phoneCountrySelect.appendChild(option);
+        }
+
     }
 
     async function displayPostalInfo() {
@@ -249,23 +270,63 @@
         document.getElementById('booking_modal_confirm_date').textContent = eventData.date_description;
         
         document.getElementById('booking_modal_confirm_delivery_method').textContent = 'Via ' + postData.delivery_method_description;
-        const delivery_details =  document.getElementById('booking_modal_confirm_delivery_details');
-        delivery_details.innerHTML = "";
+        const deliveryDetails =  document.getElementById('booking_modal_confirm_delivery_details');
+        deliveryDetails.innerHTML = "";
 
         
         // Delivery Info
         if (postData.delivery_method == 'P') {
 
+            console.log(postData.postal_delivery_info);
+
+            const nameTag = document.createElement('p');
+            nameTag.textContent = postData.postal_delivery_info.first_name + ' ' + postData.postal_delivery_info.last_name;
+            nameTag.classList.add('p_light');
+            deliveryDetails.appendChild(nameTag);
+
+            let countryCode = '';
+            let countryName = '';
+            for (let i = 0; i<countryData.length; i++) {
+                if (countryData[i].id === postData.postal_delivery_info.phone_country) {
+                    countryCode = countryData[i].phone_country_code;
+                }
+                if (countryData[i].id === postData.postal_delivery_info.country_id) {
+                    countryName = countryData[i].name;
+                }
+            }
+
+            const phoneTag = document.createElement('p');
+            phoneTag.textContent = '+' + countryCode + ' ' + postData.postal_delivery_info.phone_number;
+            phoneTag.classList.add('p_light');
+            deliveryDetails.appendChild(phoneTag);
+
+            const streetNameTag = document.createElement('p');
+            streetNameTag.textContent = postData.postal_delivery_info.street_name + ' ' + postData.postal_delivery_info.house_number;
+            streetNameTag.classList.add('p_light');
+            deliveryDetails.appendChild(streetNameTag);
+
+            let cityName = '';
+            for (let i = 0; i<cityData.length; i++) {
+                if (cityData[i].id === postData.postal_delivery_info.city_id) {
+                    cityName = cityData[i].name;
+                }
+            }
+
+            const cityCountryTag = document.createElement('p');
+            cityCountryTag.textContent = postData.postal_delivery_info.postal_code + " " + cityName + ', ' + countryName;
+            cityCountryTag.classList.add('p_light');
+            deliveryDetails.appendChild(cityCountryTag);
+
         } else if (postData.delivery_method == 'E') {
             const nameTag = document.createElement('p');
             nameTag.textContent = postData.email_delivery_info.first_name + ' ' + postData.email_delivery_info.last_name;
             nameTag.classList.add('p_light');
-            delivery_details.appendChild(nameTag);
+            deliveryDetails.appendChild(nameTag);
 
             const emailTag = document.createElement('p');
             emailTag.textContent = postData.email_delivery_info.email;
             emailTag.classList.add('p_light');
-            delivery_details.appendChild(emailTag);
+            deliveryDetails.appendChild(emailTag);
 
             let countryCode = '';
             for (let i = 0; i<countryData.length; i++) {
@@ -277,7 +338,7 @@
             const phoneTag = document.createElement('p');
             phoneTag.textContent = '+' + countryCode + ' ' + postData.email_delivery_info.phone_number;
             phoneTag.classList.add('p_light');
-            delivery_details.appendChild(phoneTag);
+            deliveryDetails.appendChild(phoneTag);
         }
 
         // Payment Info
@@ -371,6 +432,97 @@
         return false;
     }
 
+    function autoFillNameOnCard(firstName, lastName) {
+        const nameOnCard = document.getElementById('booking_modal_name_on_card');
+        if (nameOnCard.value.length === 0) {
+            nameOnCard.value = firstName + ' ' + lastName;
+        }
+    }
+
+    function handleSavePostDeliveryInfo() {
+        closeErrorMessage();
+
+        const countryID = document.getElementById('booking_modal_p_country').value;
+        if (isNaN(countryID)) {
+            showErrorMessage('Please enter a valid country ID.');
+            return;
+        }
+
+        const cityID = document.getElementById('booking_modal_p_city').value;
+        if (isNaN(cityID)) {
+            showErrorMessage('Please enter a valid city ID.');
+            return;
+        }
+
+        const postalCode = document.getElementById('booking_modal_p_postal_code').value;
+        if (postalCode.length > 16) {
+            showErrorMessage('Please enter a valid postal code.');
+            return;
+        }
+
+        const streetName = document.getElementById('booking_modal_p_street_name').value;
+        if (streetName == '') {
+            showErrorMessage('Please enter the street name.')
+            return;
+        }
+
+        const houseNumber = document.getElementById('booking_modal_p_house_number').value;
+        if (isNaN(houseNumber)) {
+            showErrorMessage('Please enter a valid house number. House number should only include digits.');
+            return;
+        }
+
+        const firstName = document.getElementById('booking_modal_p_first_name').value;
+        if (firstName == '') {
+            showErrorMessage('Please enter your first name.');
+            return;
+        }
+
+        const lastName = document.getElementById('booking_modal_p_last_name').value;
+        if (lastName == '') {
+            showErrorMessage('Please enter your last name.');
+            return;
+        }
+
+        const phoneCountry = document.getElementById('booking_modal_p_phone_country_code').value;
+        if (isNaN(phoneCountry)) {
+            showErrorMessage('Please enter a valid phone country code.');
+            return;
+        }
+
+        const phoneNumber = document.getElementById('booking_modal_p_phone_number').value;
+        if (phoneNumber == '') {
+            showErrorMessage('Please enter your phone number.')
+            return;
+        } else if (isNaN(phoneNumber)) {
+            showErrorMessage('Please enter a valid phone number. It should only include digits.')
+            return;
+        }
+
+        const email = document.getElementById('booking_modal_p_email').value;
+        if (!validateEmail(email)) {
+            showErrorMessage('Please enter a valid email address.');
+            return;
+        }
+
+        postData['postal_delivery_info'] = {
+            'country_id': Number(countryID),
+            'city_id': Number(cityID),
+            'postal_code': postalCode,
+            'street_name': streetName,
+            'house_number': Number(houseNumber),
+            'first_name': firstName,
+            'last_name': lastName,
+            'phone_country': Number(phoneCountry),
+            'phone_number': Number(phoneNumber),
+            'email': email
+        }
+
+        autoFillNameOnCard(firstName, lastName);
+
+        displayContentPage(4);
+    }
+
     function handleSaveEmailDeliveryInfo() {
         closeErrorMessage();
 
@@ -393,6 +545,10 @@
         }
 
         const phoneCountry = Number(document.getElementById('booking_modal_e_phone_country_code').value);
+        if (isNaN(phoneCountry)) {
+            showErrorMessage('Please enter a valid phone country code.');
+            return;
+        }
 
         const phoneNumber = document.getElementById('booking_modal_e_phone_number').value;
 
@@ -412,15 +568,8 @@
             'phone_number': Number(phoneNumber)
         }
 
-        // Autofill Name
-        const nameOnCard = document.getElementById('booking_modal_name_on_card');
-        if (nameOnCard.value.length === 0) {
-            if (postData.delivery_method == 'P') {
-                nameOnCard.value = postData.postal_delivery_info.first_name + ' ' + postData.postal_delivery_info.last_name;
-            } else if (postData.delivery_method == 'E') {
-                nameOnCard.value = postData.email_delivery_info.first_name + ' ' + postData.email_delivery_info.last_name;
-            }
-        }
+        autoFillNameOnCard(firstName, lastName);
+
         displayContentPage(4);
     }
 
@@ -507,48 +656,61 @@
         displayConfimationPage();
     }
 
-    function handlePostBooking() {
-
+    async function handlePostBooking(e) {
+        e.preventDefault();
+        const token = $('input[name="csrfmiddlewaretoken"]').val();
+        
         // Formating for post
-        console.log(postData);
-        console.log(eventData);
-        // let postBody;
-        // if (postData.delivery_method == 'E') {
-        //     postBody = {
-        //         'ticket_type': postData.ticket_type_id,
-        //         'event': eventData.id,
-        //         'delivery_method': postData.delivery_method,
-        //         'email': postData.email_delivery_info.email,
-        //         'status': 'S',
-        //         'first_name': postData.email_delivery_info.first_name,
-        //         'last_name': postData.email_delivery_info.last_name
-        //     };
-        // } else if (postData.delivery_method == 'P') {
-        //     postBody = {
-        //         'ticket_type': postData[''],
-        //         'event': postData[''],
-        //         'delivery_method': postData['delivery_method'],
-        //         'email': postData[''],
-        //         'status': postData[''],
-        //         'first_name': postData[''],
-        //         'last_name': postData[''],
-        //         'street_name': postData[''],
-        //         'house_number': postData[''],
-        //         'postal_code': postData['']
-        //     };
-        // }
 
-        // // Posting ticket
-        // const url = BASE_URL + "/api/bookticket";
-        // const res = fetch(url, {
-        //     method: "POST",
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(postBody)
-        // })
+        let patchBody;
+        if (postData.delivery_method == 'E') {
+            patchBody = {
+                'ticket_type_id': postData.ticket_type_id,
+                'event_id': eventData.id,
+                'delivery_method': postData.delivery_method,
+                'email': postData.email_delivery_info.email,
+                'first_name': postData.email_delivery_info.first_name,
+                'last_name': postData.email_delivery_info.last_name,
+                'quantity': postData.ticket_quantity
+            };
+        } else if (postData.delivery_method == 'P') {
+            patchBody = {
+                'ticket_type_id': postData.ticket_type_id,
+                'event_id': eventData.id,
+                'delivery_method': postData.delivery_method,
+                'email': postData.postal_delivery_info.email,
+                'first_name': postData.postal_delivery_info.first_name,
+                'last_name': postData.postal_delivery_info.last_name,
+                'street_name': postData.postal_delivery_info.street_name,
+                'house_number': postData.postal_delivery_info.house_number,
+                'postal_code': postData.postal_delivery_info.postal_code,
+                'quantity': postData.ticket_quantity
+            };
+        }
 
-        displayContentPage(6);
+        // Booking tickets
+        const url = BASE_URL + "/api/booktickets";
+        console.log(url);
+        const res = await fetch(url, {
+            method: "PATCH",
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': token
+            },
+            body: JSON.stringify(patchBody)
+        })
+
+        if (res.status != 200) {
+            const data = await res.json();
+            console.log(data);
+            displayErrorPage()
+            displayContentPage(7);
+        } else {
+            displayContentPage(6);
+        }
+
+        return false;
     }
 
 </script>
@@ -688,7 +850,7 @@
         display: flex;
         background-color: var(--type-primary);
         border-radius: 16px;
-        height: 500px;
+        height: calc(500px - 47px - 16px);
         align-items: center;
         justify-content: center;
     }
@@ -819,6 +981,15 @@
         color: var(--type-primary);
         background-color: var(--status-success);
     }
+    #booking_modal_content_2 {
+        flex-direction: column;
+        gap: 16px;
+    }
+    .booking_modal_delivery_method_container {
+        display: flex;
+        flex-direction: row;
+        gap: 4%;
+    }
 </style>
 <div
     class="modal fade"
@@ -911,18 +1082,23 @@
 
                 <!-- Content Page 2 -->
                 <div id="booking_modal_content_2" class="booking_modal_main_wrapper">
-                    <a class="booking_modal_delivery_method_wrapper" onclick="handleDeliveryMethod('postal')">
-                        <div class="booking_modal_delivery_method_content">
-                            <img src={% static 'images/postal_icon.png' %} alt="Postal delivery icon"/>
-                            <h1 class="h1_regular">Get tickets via post mail</h1>
-                        </div>
-                    </a>
-                    <a class="booking_modal_delivery_method_wrapper" onclick="handleDeliveryMethod('email')">
-                        <div class="booking_modal_delivery_method_content">
-                            <img src={% static 'images/email_icon.png' %} alt="Email delivery icon"/>
-                            <h1 class="h1_regular">Get tickets via email</h1>
-                        </div>
-                    </a>
+                    <div class="booking_modal_delivery_method_container">
+                        <a class="booking_modal_delivery_method_wrapper" onclick="handleDeliveryMethod('postal')">
+                            <div class="booking_modal_delivery_method_content">
+                                <img src={% static 'images/postal_icon.png' %} alt="Postal delivery icon"/>
+                                <h1 class="h1_regular">Get tickets via post mail</h1>
+                            </div>
+                        </a>
+                        <a class="booking_modal_delivery_method_wrapper" onclick="handleDeliveryMethod('email')">
+                            <div class="booking_modal_delivery_method_content">
+                                <img src={% static 'images/email_icon.png' %} alt="Email delivery icon"/>
+                                <h1 class="h1_regular">Get tickets via email</h1>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="booking_modal_back_continue_wrapper">
+                        <button class="button_outlined back_button" onclick="handleBack(2)">Back</button>
+                    </div>
                 </div>
 
                 <!-- Content Page 3 -->
@@ -936,13 +1112,19 @@
                                     <div class="entry_field_description">
                                         <p class="label_light">Country</p>
                                     </div>
-                                    <select id="booking_modal_p_country" class="entry_field_body"></select>
+                                    <select id="booking_modal_p_country" class="entry_field_body" onchange="populatePostalCity()"></select>
                                 </div>
                                 <div class="entry_field_main_wrapper">
                                     <div class="entry_field_description">
                                         <p class="label_light">City</p>
                                     </div>
                                     <select id="booking_modal_p_city" class="entry_field_body" disabled></select>
+                                </div>
+                                <div class="entry_field_main_wrapper">
+                                    <div class="entry_field_description">
+                                        <p class="label_light">Postal code</p>
+                                    </div>
+                                    <input id="booking_modal_p_postal_code" class="entry_field_body"></input>
                                 </div>
                                 <div class="entry_field_main_wrapper">
                                     <div class="entry_field_description">
@@ -958,6 +1140,18 @@
                                 </div>
                             </div>
                             <div class="booking_modal_entry_field_stack">
+                                <div class="entry_field_main_wrapper">
+                                    <div class="entry_field_description">
+                                        <p class="label_light">First Name</p>
+                                    </div>
+                                    <input id="booking_modal_p_first_name" class="entry_field_body"></input>
+                                </div>
+                                <div class="entry_field_main_wrapper">
+                                    <div class="entry_field_description">
+                                        <p class="label_light">Last Name</p>
+                                    </div>
+                                    <input id="booking_modal_p_last_name" class="entry_field_body"></input>
+                                </div>
                                 <div class="entry_field_main_wrapper">
                                     <div class="entry_field_description">
                                         <p class="label_light">Phone Country Code</p>
@@ -980,7 +1174,7 @@
                         </div>
                         <div class="booking_modal_back_continue_wrapper">
                             <button class="button_outlined back_button" onclick="handleBack(3)">Back</button>
-                            <button class="button_outlined" >Continue</button>
+                            <button class="button_outlined" onclick="handleSavePostDeliveryInfo()">Continue</button>
                         </div>
                     </div>
 
@@ -1110,12 +1304,12 @@
 
                                 <div>
                                     <div class="booking_modal_line_item">
-                                        <p class="label_light">Quantity</p>
-                                        <p id="booking_modal_confirm_quantity" class="p_light"></p>
+                                        <p class="label_light">Ticket Price</p>
+                                        <p id="booking_modal_confirm_ticket_price" class="p_light"></p>
                                     </div>
                                     <div class="booking_modal_line_item">
-                                        <p class="label_light">Price</p>
-                                        <p id="booking_modal_confirm_ticket_price" class="p_light"></p>
+                                        <p class="label_light">Quantity</p>
+                                        <p id="booking_modal_confirm_quantity" class="p_light"></p>
                                     </div>
                                     <div class="booking_modal_line_item" style="border-top: 1px solid var(--type-primary);">
                                         <p class="label_bold">Total Price</p>
@@ -1129,11 +1323,14 @@
                     
                     <div class="booking_modal_back_continue_wrapper">
                         <button class="button_outlined back_button" onclick="handleBack(5)">Back</button>
-                        <button class="button_outlined" onclick="handlePostBooking()">Confirm</button>
+                        <form action="POST" id="confirm-form" onsubmit="return handlePostBooking(event)">
+                            {% csrf_token %}
+                            <input class="button_outlined" type="submit" value="Confirm">
+                        </form>
                     </div>
                 </div>
 
-                <!-- Content Page 6 -->
+                <!-- Content Page 6: Success Page -->
                 <div id="booking_modal_content_6" class="booking_modal_main_wrapper">
                     <div class="booking_modal_success_wrapper">
                         <img src={% static 'images/success_icon.png' %} alt="Postal delivery icon"/>
@@ -1146,6 +1343,12 @@
                         >Finish</button>
                     </div>
                 </div>
+
+                <!-- Content Page 7: Error Page -->
+                <div id="booking_modal_content_7" class="booking_modal_main_wrapper">
+                    <h1>Error!</h1>
+                </div>
+
             </div>
         </div>
     </div>
