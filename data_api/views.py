@@ -8,12 +8,13 @@ from home.models import Country, City
 from rest_framework.decorators import api_view
 
 # Create your views here.
+
+
 @api_view(['GET'])
 def event(request, event_id):
 
     if not event_id.isdigit():
         return JsonResponse(status=400, data={'message': 'event_id must be a integer!'})
-
 
     events = Event.objects.raw('''
         SELECT
@@ -63,13 +64,15 @@ def event(request, event_id):
         event_dict['ticket_types'] = ticket_types
 
         if events[0].start_date == events[0].end_date:
-            event_dict['date_description'] = "{}".format(events[0].start_date.strftime("%d. %B"))
+            event_dict['date_description'] = "{}".format(
+                events[0].start_date.strftime("%d. %B"))
         else:
             event_dict['date_description'] = "{} to {}".format(
-                events[0].start_date.strftime("%d. %B"), 
+                events[0].start_date.strftime("%d. %B"),
                 events[0].end_date.strftime("%d. %B")
             )
         return JsonResponse(event_dict)
+
 
 @api_view(['GET'])
 def countries(request):
@@ -81,13 +84,14 @@ def countries(request):
 
     return JsonResponse(country_list, safe=False)
 
+
 @api_view(['GET'])
 def cities(request):
-    
+
     country_id = request.GET.get("country_id", -1)
 
     print(country_id)
-    
+
     if country_id == -1:
         c = City.objects.values()
     else:
@@ -99,11 +103,25 @@ def cities(request):
 
     return JsonResponse(city_list, safe=False)
 
+
 @api_view(['POST'])
 def book_ticket(request):
     ticket = Ticket.objects.create(
-        
+
     )
 
-
     return JsonResponse({"it": "works!"})
+
+
+@api_view(['PUT'])
+def user_categories(request):
+    print('posting_new_users_fav_categories', request)
+
+    return JsonResponse(status=200, data={'message': 'OK'})
+
+
+@api_view(['PUT'])
+def posting_new_users_fav_entertainers(request):
+    print('posting_new_users_fav_entertainers', request)
+
+    return JsonResponse(200, data={'message': 'OK'})

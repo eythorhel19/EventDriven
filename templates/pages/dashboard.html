@@ -40,11 +40,84 @@
         padding-bottom: 20px;
     }
 </style>
+<script>
+    const sourceParts = window.location.href.split("/");
+    const BASE_URL = sourceParts[0] + "//" + sourceParts[2];
+
+    $(document).ready(function () {
+        $(".js-example-basic-multiple").select2();
+    });
+    async function funcForUersFavCatSelected() {
+        console.log("test", $("#users_fav_cat_selected").select2("data"));
+        const url = BASE_URL + "/api/user_categories";
+        const res = await fetch(url, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                users_fav_cat_selected: $("#users_fav_cat_selected").select2(
+                    "data"
+                ),
+            }),
+        });
+    }
+    function func_for_users_fav_ent_selected() {
+        console.log("test", $("#select_entertainers").select2("data"));
+    }
+</script>
+
 <div class="dashboard_body">
     <div class="ticket_and_favorites">
         <div class="all_users_favorites">
-            <p>fav categories</p>
             <p>fav entertainers</p>
+
+            <div style="color: black; width: 100%">
+                <select
+                    class="js-example-basic-multiple"
+                    name="states[]"
+                    multiple="multiple"
+                    style="width: 100%"
+                    id="select_entertainers"
+                >
+                    {% for entertainer in user_fav_ent %}
+                    <option value="{{entertainer.id}}" selected>
+                        {{entertainer.name}}
+                    </option>
+                    {% endfor %} {% for entertainer in rest_fav_ent %}
+                    <option value="{{entertainer.id}}">
+                        {{entertainer.name}}
+                    </option>
+                    {% endfor %}
+                </select>
+                <button onclick="func_for_users_fav_ent_selected()">
+                    Save changes
+                </button>
+            </div>
+            <p>fav categories</p>
+
+            <p>{{user_fav_cat_list}}</p>
+            <div style="color: black; width: 100%">
+                <select
+                    id="users_fav_cat_selected"
+                    class="js-example-basic-multiple"
+                    name="states[]"
+                    multiple="multiple"
+                    style="width: 100%"
+                    id="select_categories"
+                >
+                    {% for category in user_fav_cate %}
+                    <option value="{{category.id}}" selected>
+                        {{category.name}}
+                    </option>
+                    {% endfor %} {% for category in rest_fav_cate %}
+                    <option value="{{category.id}}">{{category.name}}</option>
+                    {% endfor %}
+                </select>
+                <button onclick="funcForUersFavCatSelected()">
+                    Save changes
+                </button>
+            </div>
         </div>
         <div class="all_users_tickets">
             <p class="h3_regular">Your tickets</p>
