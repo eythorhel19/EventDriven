@@ -29,19 +29,6 @@ class Location(models.Model):
     def __str__(self):
         return "{}, {}".format(self.name, self.city.name)
 
-#   Address
-
-
-class PostalCode(models.Model):
-    postal_code = models.CharField(max_length=16)
-    city = models.ForeignKey(City, on_delete=models.CASCADE)
-    country = models.ForeignKey(Country, on_delete=models.CASCADE)
-    description = models.CharField(max_length=255)
-    models.UniqueConstraint(
-        name='unique_postal_code',
-        fields=['postal_code', 'country']
-    )
-
 #   Category
 
 
@@ -50,7 +37,8 @@ class Category(models.Model):
     models.UniqueConstraint(
         models.functions.Lower('name').desc(),
         'Category',
-        name='unique_lower_name_category')
+        name='unique_lower_name_category'
+    )
 
 #   Ticket
 
@@ -62,7 +50,7 @@ class TicketType(models.Model):
 class Ticket(models.Model):
     ticket_type = models.ForeignKey(TicketType, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
 
     DELIVERY_METHODS = [
         ('E', 'Electronic'),
@@ -72,7 +60,7 @@ class Ticket(models.Model):
         max_length=1, choices=DELIVERY_METHODS, default='E'
     )
 
-    email = models.EmailField(max_length=255)
+    email = models.EmailField(max_length=255, blank=True, null=True)
 
     TICKET_STATUS = [
         ('U', 'Unreleased'),
@@ -81,12 +69,12 @@ class Ticket(models.Model):
     ]
     status = models.CharField(max_length=1, choices=TICKET_STATUS, default='U')
 
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255, blank=True, null=True)
+    last_name = models.CharField(max_length=255, blank=True, null=True)
 
     street_name = models.CharField(max_length=255, blank=True, null=True)
     house_number = models.IntegerField(blank=True, null=True)
-    postal_code = models.ForeignKey(PostalCode, on_delete=models.CASCADE, blank=True, null=True)
+    postal_code = models.CharField(max_length=16, blank=True, null=True)
 
 
 # RELATION TABLES
