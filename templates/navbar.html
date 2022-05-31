@@ -13,26 +13,6 @@
         padding: 16px;
         box-shadow: 0 1px 24px rgba(255, 255, 255, 0.25);
     }
-    @media only screen and (max-width: 800px) {
-        .navbar_wrapper {
-            /* Alignment */
-            height: 120px;
-
-            display: flex;
-            flex-wrap: wrap;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-
-            /* Body */
-            background-color: var(--base-primary);
-            box-shadow: 0 1px 24px rgba(255, 255, 255, 0.25);
-            padding-left: 8px;
-            padding-right: 8px;
-            padding-bottom: 0px;
-        }
-    }
 
     .navbar_navbar_logo_login {
         display: flex;
@@ -41,30 +21,12 @@
         width: 100%;
         padding: 0;
     }
-    @media only screen and (max-width: 800px) {
-        .navbar_navbar_logo_login {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            width: 800px;
-            padding: 0;
-            gap: 0px;
-        }
-    }
 
     .navbar_options {
         position: absolute;
         margin-top: 40px;
         left: 50%;
         transform: translate(-50%, -50%);
-    }
-    @media only screen and (max-width: 800px) {
-        .navbar_options {
-            position: relative;
-            width: 100%;
-            justify-content: center;
-            margin-top: 25px;
-        }
     }
 
     .navbar_option {
@@ -88,6 +50,38 @@
     }
 
     @media only screen and (max-width: 800px) {
+        .navbar_wrapper {
+            /* Alignment */
+            height: 120px;
+
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+
+            /* Body */
+            background-color: var(--base-primary);
+            box-shadow: 0 1px 24px rgba(255, 255, 255, 0.25);
+            padding-left: 8px;
+            padding-right: 8px;
+            padding-bottom: 0px;
+        }
+        .navbar_navbar_logo_login {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 800px;
+            padding: 0;
+            gap: 0px;
+        }
+        .navbar_options {
+            position: relative;
+            width: 100%;
+            justify-content: center;
+            margin-top: 25px;
+        }
         .button_outlined {
             /* Alignment */
             display: flex;
@@ -102,6 +96,15 @@
             border-radius: 8px;
             color: var(--type-primary);
             font-size: 18px;
+        }
+        .the_options {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            overflow-x: scroll;
+            padding-bottom: 20px;
+            padding-top: 20px;
         }
     }
 </style>

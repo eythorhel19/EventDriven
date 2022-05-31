@@ -4,6 +4,7 @@
         display: flex;
         flex-direction: row;
         width: 100%;
+        height: 100%;
         justify-content: center;
     }
     .cat_dropdown {
@@ -18,51 +19,30 @@
         height: 50px;
         color: var(--base-primary);
     }
-    @media only screen and (max-width: 1200px) {
-        .the_bars_with {
-            display: flex;
-            flex-direction: row;
-            width: 100%;
-            justify-content: center;
-            height: 50px;
-            color: var(--base-primary);
-        }
-    }
-
     .cat_options {
         width: 20%;
         border-radius: 0%;
-        height: 100%;
+        height: 50px;
         border: 0px;
         border-radius: 16px 0px 0px 16px;
         color: var(--base-primary);
     }
     .date_options {
         width: 20%;
-        height: 100%;
+        height: 50px;
+        border-radius: 0px;
     }
-    @media only screen and (max-width: 600px) {
-        .date_options {
-            width: 30%;
-            height: 100%;
-        }
-    }
+
     .search_input_field {
         width: 60%;
-        height: 100%;
+        height: 50px;
 
         background-color: var(--type-primary);
         color: var(--base-primary);
     }
-    @media only screen and (max-width: 600px) {
-        .date_options {
-            width: 50%;
-            height: 100%;
-        }
-    }
     .search_button {
         width: 10%;
-        height: 100%;
+        height: 50px;
         background-color: var(--type-primary);
         border-radius: 0px 16px 16px 0px;
         border: 0px;
@@ -78,6 +58,44 @@
     }
     #chose_date_range_type {
         display: flex;
+    }
+    .search_input_wit_button {
+        display: flex;
+        flex-direction: row;
+        height: 100%;
+    }
+    @media only screen and (max-width: 600px) {
+        .date_options {
+            width: 50%;
+            border-radius: 0px 16px 16px 0px;
+        }
+        .search_input_field {
+            width: 80%;
+            border-radius: 16px 0px 0px 16px;
+            border: 0px;
+            background-color: var(--type-primary);
+            color: var(--base-primary);
+        }
+        .search_input_wit_button {
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+            min-width: 310px;
+            width: 100%;
+            justify-content: center;
+        }
+        .the_bars_with {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            width: 100%;
+            justify-content: center;
+            height: 100%;
+            color: var(--base-primary);
+        }
+        .cat_options {
+            width: 50%;
+        }
     }
 </style>
 {% include 'components/booking_modal.html' with progress_data=progress_data%}
@@ -113,6 +131,7 @@
             } else {
                 if (ele.elements.chose_date_range_type.value === "") {
                     url.searchParams.append("date_to", "All");
+                    url.searchParams.append("date_from", "All");
                 } else if (
                     ele.elements.chose_date_range_type.value === "today"
                 ) {
@@ -207,28 +226,26 @@
             class="form-select date_options"
             aria-label="categories"
             onchange="isItSpecificDate(this)"
-            style="border-radius: 0px 0px 0px 0px"
         >
             <option value="" selected>All dates</option>
             <option value="today">Today</option>
             <option value="this week">This week</option>
             <option value="specific date">Specific date</option>
         </select>
-        <!-- <input id="search_input_field" /> -->
-        <input
-            id="search_input_field"
-            type="text"
-            class="search_input_field"
-            placeholder="Search for an event or entertainer"
-        />
+        <div class="search_input_wit_button">
+            <input
+                id="search_input_field"
+                type="text"
+                class="search_input_field"
+                placeholder="Search for an event or entertainer"
+            />
 
-        <!-- <script>
-            $(function () {
-                $("#search_input_field").datepicker();
-            });
-        </script> -->
-        <button class="icon_large search_button" onclick="button_bool_true()">
-            search
-        </button>
+            <button
+                class="icon_large search_button"
+                onclick="button_bool_true()"
+            >
+                search
+            </button>
+        </div>
     </form>
 </div>

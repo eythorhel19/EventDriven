@@ -5,29 +5,30 @@
     }
     .ticket_and_favorites {
         display: flex;
-        flex-direction: row;
-        justify-content: space-between;
         align-items: center;
-        width: 100%;
-        padding: 0;
+        flex-direction: row;
+        flex-wrap: wrap-reverse;
+        gap: 50px;
     }
     .all_users_tickets {
         display: flex;
         flex-direction: column;
-        width: 50%;
-        max-width: 50%;
+        width: 100%;
         height: 100%;
         padding: 0;
     }
+
+
+
     .all_users_favorites {
         display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        width: 50%;
-        max-width: 50%;
+        flex-direction: row;
+        width: 100%;
         height: 100%;
         padding: 0;
+        gap: 50px;
+        flex-wrap: wrap;
+        margin-bottom: 32px;
     }
     .row_of_tickets {
         display: flex;
@@ -39,6 +40,49 @@
         overflow-x: scroll;
         padding-bottom: 20px;
     }
+    .form_fro_favorite {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        padding: 0px;
+        margin: 0px;
+        color: var(--base-primary);
+        width: 100%"
+
+    }
+    .favorite_type_container {
+        display: flex;
+        flex-direction: column;
+        width: 47%;
+        max-width: 700px;
+        padding: 0;
+        min-width: 310px;
+    }
+    .select2-container--default .select2-selection--multiple {
+        background-color: transparent;
+        border: 1.5px solid var(--type-primary);
+        border-radius: 8px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        background-color: var(--graphical-primary);
+        border: transparent;
+        color: var(--type-primary);
+        border-radius: 8px;
+
+    }
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+        color: var(--type-primary);
+    }
+    @media screen and (max-width: 900px) {
+        .favorite_type_container {
+            width: 100%;
+        }
+    }
+    .select2-container--default .select2-search--inline .select2-search__field {
+        color: var(--type-primary);
+    }
 </style>
 <script>
     const sourceParts = window.location.href.split("/");
@@ -47,13 +91,18 @@
     $(document).ready(function () {
         $(".js-example-basic-multiple").select2();
     });
-    async function funcForUersFavCatSelected() {
-        console.log("test", $("#users_fav_cat_selected").select2("data"));
+
+    async function funcForUersFavCatSelected(event) {
+        event.preventDefault();
+
+        const token = $('input[name="csrfmiddlewaretoken"]').val();
+
         const url = BASE_URL + "/api/user_categories";
         const res = await fetch(url, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                "X-CSRFToken": token,
             },
             body: JSON.stringify({
                 users_fav_cat_selected: $("#users_fav_cat_selected").select2(
@@ -62,61 +111,88 @@
             }),
         });
     }
-    function func_for_users_fav_ent_selected() {
-        console.log("test", $("#select_entertainers").select2("data"));
+    async function funcForUsersFavEntSelected(event) {
+        event.preventDefault();
+
+        const token = $('input[name="csrfmiddlewaretoken"]').val();
+
+        const url = BASE_URL + "/api/user_entertainers";
+        const res = await fetch(url, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": token,
+            },
+            body: JSON.stringify({
+                select_entertainers: $("#select_entertainers").select2("data"),
+            }),
+        });
     }
 </script>
 
 <div class="dashboard_body">
     <div class="ticket_and_favorites">
         <div class="all_users_favorites">
-            <p>fav entertainers</p>
-
-            <div style="color: black; width: 100%">
-                <select
-                    class="js-example-basic-multiple"
-                    name="states[]"
-                    multiple="multiple"
-                    style="width: 100%"
-                    id="select_entertainers"
+            <div class="favorite_type_container">
+                <p class="h3_regular">Your favorite entertainers:</p>
+                <form
+                    class="form_fro_favorite"
+                    onsubmit="return funcForUsersFavEntSelected(event)"
                 >
-                    {% for entertainer in user_fav_ent %}
-                    <option value="{{entertainer.id}}" selected>
-                        {{entertainer.name}}
-                    </option>
-                    {% endfor %} {% for entertainer in rest_fav_ent %}
-                    <option value="{{entertainer.id}}">
-                        {{entertainer.name}}
-                    </option>
-                    {% endfor %}
-                </select>
-                <button onclick="func_for_users_fav_ent_selected()">
-                    Save changes
-                </button>
+                    {% csrf_token %}
+
+                    <select
+                        class="js-example-basic-multiple"
+                        name="states[]"
+                        multiple="multiple"
+                        style="width: 100%"
+                        id="select_entertainers"
+                    >
+                        {% for entertainer in user_fav_ent %}
+                        <option value="{{entertainer.id}}" selected>
+                            {{entertainer.name}}
+                        </option>
+                        {% endfor %} {% for entertainer in rest_fav_ent %}
+                        <option value="{{entertainer.id}}">
+                            {{entertainer.name}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <button class="button_outlined" style="margin-top: 10px">
+                        Save changes
+                    </button>
+                </form>
             </div>
-            <p>fav categories</p>
-
-            <p>{{user_fav_cat_list}}</p>
-            <div style="color: black; width: 100%">
-                <select
-                    id="users_fav_cat_selected"
-                    class="js-example-basic-multiple"
-                    name="states[]"
-                    multiple="multiple"
-                    style="width: 100%"
-                    id="select_categories"
+            <div class="favorite_type_container">
+                <p class="h3_regular">Your favorite categories:</p>
+                <form
+                    onsubmit="return funcForUersFavCatSelected(event)"
+                    class="form_fro_favorite"
                 >
-                    {% for category in user_fav_cate %}
-                    <option value="{{category.id}}" selected>
-                        {{category.name}}
-                    </option>
-                    {% endfor %} {% for category in rest_fav_cate %}
-                    <option value="{{category.id}}">{{category.name}}</option>
-                    {% endfor %}
-                </select>
-                <button onclick="funcForUersFavCatSelected()">
-                    Save changes
-                </button>
+                    {% csrf_token %}
+
+                    <select
+                        id="users_fav_cat_selected"
+                        class="js-example-basic-multiple"
+                        name="states[]"
+                        multiple="multiple"
+                        style="width: 100%"
+                        id="select_categories"
+                    >
+                        {% for category in user_fav_cate %}
+                        <option value="{{category.id}}" selected>
+                            {{category.name}}
+                        </option>
+                        {% endfor %} {% for category in rest_fav_cate %}
+                        <option value="{{category.id}}">
+                            {{category.name}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <button class="button_outlined" style="margin-top: 10px">
+                        Save changes
+                    </button>
+                </form>
             </div>
         </div>
         <div class="all_users_tickets">
