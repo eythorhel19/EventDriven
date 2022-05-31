@@ -330,6 +330,14 @@ VALUES ('E', 'arona19@ru.is', 'S', 'aron', 'asmundsson', 'blikanes', 6, 1, 2, 2,
 INSERT INTO HOME_USERFAVORITECATEGORY(CATEGORY_ID,USER_ID)
 VALUES (1,2),(2,2)
 
+INSERT INTO EVENTS_EVENT(TITLE, DESCRIPTION, MAXIMUM_CAPACITY, START_DATE, END_DATE, LOCATION_ID, MAIN_IMAGE_URL)
+VALUES ('Skepta', 'Skepta is bringing the british grime to Icelend, this is his first of two concerts in Iceland.', 4000, '2022-05-06', '2022-05-06', 3, 'https://i.guim.co.uk/img/media/05d40829197a54e67e8bde4bcaffe35d5da1fe46/0_250_3414_2048/master/3414.jpg?width=465&quality=45&auto=format&fit=max&dpr=2&s=7d23a70263bfc696fa3dd09aba7c778c')
+
+INSERT INTO HOME_EVENTCATEGORY(CATEGORY_ID,EVENT_ID)
+VALUES (1,3),(2,3),(3,3),(4,3)
+
+INSERT INTO HOME_EVENTENTERTAINER(ENTERTAINER_ID,EVENT_ID)
+VALUES (1,3),(2,3),(3,3),(4,3),(5,3)
 
 
 INSERT INTO home_city (state_id, name) VALUES (4, 'Reykjavik');

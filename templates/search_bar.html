@@ -70,7 +70,10 @@
         justify-content: center;
         color: var(--base-primary);
     }
-    #date_options {
+    #date_to_div {
+        display: none;
+    }
+    #date_from_div {
         display: none;
     }
     #chose_date_range_type {
@@ -101,32 +104,27 @@
                 "categories",
                 ele.elements.categories.value
             );
-
-            if (ele.elements.date_options.value !== "") {
-                console.log("first", ele.elements.date_options.value);
+            if (ele.elements.date_to.value !== "") {
+                url.searchParams.append("date_to", ele.elements.date_to.value);
                 url.searchParams.append(
-                    "date_options",
-                    ele.elements.date_options.value
+                    "date_from",
+                    ele.elements.date_from.value
                 );
             } else {
                 if (ele.elements.chose_date_range_type.value === "") {
-                    url.searchParams.append("date_options", "All");
+                    url.searchParams.append("date_to", "All");
                 } else if (
                     ele.elements.chose_date_range_type.value === "today"
                 ) {
-                    console.log(
-                        "right",
-                        ele.elements.chose_date_range_type.value
-                    );
                     yourDate = new Date();
                     const offset = yourDate.getTimezoneOffset();
                     yourDate = new Date(
                         yourDate.getTime() - offset * 60 * 1000
                     );
                     the_date = yourDate.toISOString().split("T")[0];
-                    console.log("the_date", the_date);
-                    console.log("yourDate", yourDate);
-                    url.searchParams.append("date_options", the_date);
+
+                    url.searchParams.append("date_to", the_date);
+                    url.searchParams.append("date_from", the_date);
                 } else if (
                     ele.elements.chose_date_range_type.value === "this week"
                 ) {
@@ -136,12 +134,13 @@
                         yourDate.getTime() - offset * 60 * 1000
                     );
                     the_date = yourDate.toISOString().split("T")[0];
+                    url.searchParams.append("date_from", the_date);
                     var firstDay = new Date(the_date);
                     var the_date = new Date(
                         firstDay.getTime() + 7 * 24 * 60 * 60 * 1000
                     );
                     the_date = the_date.toISOString().split("T")[0];
-                    url.searchParams.append("date_options", the_date);
+                    url.searchParams.append("date_to", the_date);
                 }
             }
 
@@ -157,13 +156,12 @@
         }
     }
     function isItSpecificDate(ele) {
-        console.log("ele", ele.value);
         if (ele.value === "specific date") {
-            console.log("here");
-
-            theInputField = document.getElementById("date_options");
+            theInputField = document.getElementById("date_to_div");
+            theInputField2 = document.getElementById("date_from_div");
             theSelectField = document.getElementById("chose_date_range_type");
             theInputField.style.display = "flex";
+            theInputField2.style.display = "flex";
             theSelectField.style.display = "none";
             // this.style.display = "none";
         } else {
@@ -188,7 +186,22 @@
             <option value="{{category.name}}">{{category.name}}</option>
             {% endfor %}
         </select>
-        <input id="date_options" type="date" class="date_options" value="" />
+        <div
+            id="date_from_div"
+            class="date_options"
+            style="flex-direction: column; background-color: white"
+        >
+            <label for="date_from">Date from</label>
+            <input id="date_from" type="date" value="" />
+        </div>
+        <div
+            id="date_to_div"
+            class="date_options"
+            style="flex-direction: column; background-color: white"
+        >
+            <label for="date_to">Date to</label>
+            <input id="date_to" type="date" value="" />
+        </div>
         <select
             id="chose_date_range_type"
             class="form-select date_options"

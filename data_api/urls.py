@@ -7,5 +7,6 @@ urlpatterns = [
     path('city', views.cities, name="get cities"),
     path('generatetickets', views.generate_tickets, name="generating tickets"),
     path('releasetickets', views.release_tickets, name="release tickets"),
-    path('booktickets', views.book_tickets, name="booking a tickets")
+    path('booktickets', views.book_tickets, name="booking a tickets"),
+    path('user_categories', views.user_categories, name="posting new users fav categories")
 ]
