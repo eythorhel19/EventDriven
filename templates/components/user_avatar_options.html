@@ -1,0 +1,26 @@
+<style>
+    #user_avatar_option_wrapper {
+        position: absolute;
+        display: none;
+        flex-direction: column;
+        border: 1px solid white;
+        border-radius: 8px;
+        background-color: var(--base-primary);
+        width: 120px;
+        top: 52px;
+        right: 16px;
+        padding: 8px 16px;
+    }
+    .user_avatar_option {
+        color: var(--type-primary);
+    }
+    .user_avatar_option:hover {
+        color: var(--type-primary);
+        font-weight: 600;
+    }
+</style>
+
+<div id="user_avatar_option_wrapper">
+    <a class="user_avatar_option" href="/user/profile">My profile</a>
+    <a class="user_avatar_option" href="{% url 'logout' %}">Logout</a>
+</div>

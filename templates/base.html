@@ -48,7 +48,8 @@
             color: black;
         }
     </style>
-    {% include 'navbar.html' %}
+    {% include 'navbar.html' with user_details=user_details %}
+    {% include 'components/user_avatar_options.html' %}
     <body>
         <div class="page_body">{% block content%} {% endblock %}</div>
         <script
@@ -57,5 +58,5 @@
             crossorigin="anonymous"
         ></script>
     </body>
-    {%include 'footer.html'%}
+    {%include 'components/footer.html' %}
 </html>

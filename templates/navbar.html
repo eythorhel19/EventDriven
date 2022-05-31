@@ -113,7 +113,7 @@
         </a>
         <div>
             {% if user.is_authenticated %}
-            <a class="button_outlined" href="{% url 'logout' %}">Logout</a>
+                {% include 'components/user_avatar.html' %}
             {% else %}
             <a class="button_outlined" href="{% url 'login' %}"
                 >Login / Register</a

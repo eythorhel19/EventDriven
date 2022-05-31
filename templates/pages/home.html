@@ -11,7 +11,7 @@
 <p class="h2_regular categorie_name">{{events.0.category_name}}</p>
 <div class="row-of-cards">
     {% for event in events %}
-    <div>{% include 'info_card.html' with event=event %}</div>
+    <div>{% include 'components/info_card.html' with event=event %}</div>
     {% endfor %}
 </div>
 {% endfor %} {% endblock %}

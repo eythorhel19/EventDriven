@@ -2,12 +2,14 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from entertainers.models import Entertainer
 from home.models import Category
+from user.models import UserDetails
+from user.views import get_user_details
 
 # Create your views here.
 
 
 def entertainers(request):
-    # entertainer = Entertainer.objects.all()
+    user_details = get_user_details(request.user)
 
     query_for_entertainers_card = '''
         SELECT *
@@ -24,10 +26,17 @@ def entertainers(request):
     entertainer = Entertainer.objects.raw(query_for_entertainers_card)
     for i in entertainer:
         print(i.next_event_date)
-    return render(request, 'pages/entertainers/index.html', context={"entertainer": entertainer, 'categories': Category.objects.all()})
+    
+    return render(request, 'pages/entertainers/index.html', context={
+        "entertainer": entertainer, 
+        "categories": Category.objects.all(),
+        "user_details": user_details
+    })
 
 
 def entertainer(request, entertainer_id):
+    user_details = get_user_details(request.user)
+    
     if not entertainer_id.isdigit():
         return HttpResponse(status=400, content="Invalid ID")
 
@@ -41,4 +50,9 @@ def entertainer(request, entertainer_id):
         ORDER BY EVE.START_DATE'''.format(entertainer_id)
     )
     entertainer_info = Entertainer.objects.get(pk=entertainer_id)
-    return render(request, 'pages/entertainers/entertainer.html', context={'entertainer_info': entertainer_info, "entertainer_events": entertainer_events})
+    
+    return render(request, 'pages/entertainers/entertainer.html', context={
+        'entertainer_info': entertainer_info, 
+        "entertainer_events": entertainer_events,
+        "user_details": user_details
+    })

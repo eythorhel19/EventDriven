@@ -1,0 +1,56 @@
+<!-- <a class="button_outlined" href="{% url 'logout' %}">Logout</a> -->
+
+<script>
+    function displayUserOptions() {
+        const tag = document.getElementById('user_avatar_option_wrapper');
+
+        if (tag.style.display == 'flex') {
+            tag.style.display = 'none';
+        } else {
+            tag.style.display = 'flex';
+        }
+    }
+</script>
+
+<style>
+    .user_avatar_main_wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        gap: 16px;
+    }
+    .user_avatar_image_wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        width: 40px;
+        height: 40px;
+        border-radius: 20vw;
+    }
+    .user_avatar_image_wrapper:hover {
+        width: 42px;
+        height: 42px;
+    }
+    .user_avatar_image_wrapper img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+<a class="user_avatar_main_wrapper" onclick="displayUserOptions()">
+    <p class="p_light" >{{user.first_name}} {{user.last_name}}</p>
+    <div class="user_avatar_image_wrapper">
+        {% if user_details == None %}
+            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="user image">
+        {% else %}
+            {% if user_details.profile_img_url == "" %}
+                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="user image">
+            {% else %}
+                <img src="{{user_details.profile_image_url}}" alt="user image">
+            {% endif %}
+        {% endif %}
+    </div>
+</a>

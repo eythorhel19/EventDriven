@@ -1,15 +1,12 @@
-from asyncio import constants
-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from events.models import Event
-from home.models import Category
 from entertainers.models import Entertainer
-from home.models import UserFavoriteCategory
-from home.models import UserFavoriteEntertainer
-
+from home.models import Category, UserFavoriteCategory, UserFavoriteEntertainer
+from user.views import get_user_details
 
 def index(request):
+    user_details = get_user_details(request.user)
 
     query_for_cat_hom = '''
         SELECT HCAT.ID AS CATEGORY_ID, HCAT.NAME AS CATEGORY_NAME, EEV.*
@@ -46,15 +43,21 @@ def index(request):
     return render(request, "pages/home.html", context={
         'event_cat_categorised': event_cat_categorised,
         'progress_data': progress_data,
-        'categories': Category.objects.all()
+        'categories': Category.objects.all(),
+        'user_details': user_details
     })
 
 
 def help(request):
-    return render(request, 'pages/help.html')
+    user_details = get_user_details(request.user)
+    return render(request, 'pages/help.html', context={
+        'user_details': user_details
+    })
 
 
 def search(request):
+    user_details = get_user_details(request.user)
+
     categories = request.GET["categories"]
     date_to = request.GET["date_to"]
     date_from = request.GET["date_from"]
@@ -139,11 +142,17 @@ def search(request):
 
     searched_events_later = Entertainer.objects.raw(query2)
 
-    return render(request, 'pages/search.html', context={'searched_events': searched_events, 'searched_events_later': searched_events_later,  'categories': Category.objects.all()})
+    return render(request, 'pages/search.html', context={
+        'searched_events': searched_events, 
+        'searched_events_later': searched_events_later,  
+        'categories': Category.objects.all(),
+        'user_details': user_details
+    })
 
 
 @login_required
 def dashboard(request):
+    user_details = get_user_details(request.user)
 
     query_dashboard_user_tickets = '''
         SELECT HT.*, EEVE.TITLE AS EVENT_TITLE, EEVE.START_DATE AS EVENT_START_DATE, EEVE.MAIN_IMAGE_URL, HLOC.NAME AS EVENT_LOCATION_NAME
@@ -202,4 +211,12 @@ def dashboard(request):
         else:
             rest_fav_ent.append(i)
 
-    return render(request, 'pages/dashboard.html', context={'query_dashboard_user_tickets_results': query_dashboard_user_tickets_results, "query_dashboard_user_fav_cat_ent_events_res": query_dashboard_user_fav_cat_ent_events_res, "user_fav_cate": user_fav_cate, "rest_fav_cate": rest_fav_cate, "user_fav_ent": user_fav_ent, "rest_fav_ent": rest_fav_ent})
+    return render(request, 'pages/dashboard.html', context={
+        'query_dashboard_user_tickets_results': query_dashboard_user_tickets_results, 
+        "query_dashboard_user_fav_cat_ent_events_res": query_dashboard_user_fav_cat_ent_events_res, 
+        "user_fav_cate": user_fav_cate, 
+        "rest_fav_cate": rest_fav_cate, 
+        "user_fav_ent": user_fav_ent, 
+        "rest_fav_ent": rest_fav_ent,
+        "user_details": user_details
+    })

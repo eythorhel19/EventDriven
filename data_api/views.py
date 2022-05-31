@@ -161,12 +161,15 @@ def generate_tickets(request):
             the_event.maximum_capacity - current_ticket_count)})
 
     # Creating the tickets
-    for i in range(req_body['quantity']):
+    tickets = []
+    for _ in range(req_body['quantity']):
         t = Ticket(
             ticket_type_id=req_body['ticket_type_id'],
             event_id=req_body['event_id']
         )
-        t.save()
+        tickets.append(t)
+    
+    Ticket.objects.bulk_create(tickets)
 
     return JsonResponse(status=200, data={'message': 'Successfully created {} tickets'.format(req_body['quantity'])})
 
@@ -174,7 +177,7 @@ def generate_tickets(request):
 @api_view(['PATCH'])
 def release_tickets(request):
     if request.headers['Content-Type'] != 'application/json':
-        return HttpResponse('Request body should be of type json!', status=400)
+        return JsonResponse(status=400, data={'message': 'Request body should be of type json!'})
 
     req_body = json.loads(request.body)
 
@@ -185,38 +188,39 @@ def release_tickets(request):
 
     # Checks for event id
     if not isinstance(req_body['event_id'], int):
-        return HttpResponse('Field "event_id" should be an integer!', status=400)
+        return JsonResponse(status=400, data={'message': 'Field "event_id" should be an integer!'})
 
     the_event = Event.objects.filter(pk=req_body['event_id']).first()
 
     if the_event is None:
-        return HttpResponse('Event with id {} not found!'.format(req_body['event_id']), status=400)
+        return JsonResponse(status=400, data={'message': 'Event with id {} not found!'.format(req_body['event_id'])})
 
     the_tickets = Ticket.objects.filter(event_id=req_body['event_id'], status='U')
 
     for t in the_tickets:
         t.status = 'R'
-        t.save()
+    
+    Ticket.objects.bulk_update(the_tickets, fields=['status'])
 
-    return HttpResponse('Successfully released {} tickets!'.format(len(the_tickets)), status=200)
+    return JsonResponse(status=200, data={'message': 'Successfully released {} tickets!'.format(len(the_tickets))})
 
 
 @api_view(['PATCH'])
 def book_tickets(request):
     # Finding a ticket for the event
     if request.headers['Content-Type'] != 'application/json':
-        return HttpResponse('Request body should be of type json!', status=400)
+        return JsonResponse(status=400, data={'message': 'Request body should be of type json!'})
 
     req_body = json.loads(request.body)
 
     if 'delivery_method' not in req_body:
-        return HttpResponse('Request body missing field "delivery_method"!', status=400)
+        return JsonResponse(status=400, data={'message': 'Request body missing field "delivery_method"!'})
     
     if req_body['delivery_method'] == 'E':
         required_fields = ['ticket_type_id', 'event_id', 'delivery_method', 'email', 'first_name', 'last_name', 'quantity']
         status, msg = check_required_fields(req_body, required_fields)
         if status != 200:
-            return HttpResponse(msg, status=status)
+            return JsonResponse(status=status, data={'message': msg })
 
         available_tickets = Ticket.objects.filter(
             event_id=req_body['event_id'],
@@ -225,11 +229,11 @@ def book_tickets(request):
         )
 
         if req_body['quantity'] > 10:
-            return HttpResponse('Quantity is too large, only a maximum of 10 tickets can be bought!', status=400)
+            return JsonResponse(status=400, data={'message': 'Quantity is too large, only a maximum of 10 tickets can be bought!' })
 
         if len(available_tickets) < req_body['quantity']:
-            return HttpResponse('Quantity is too large, only {} tickets available.'.format(
-                len(available_tickets)), status=400
+            return JsonResponse(status=400, data={'message': 'Quantity is too large, only {} tickets available.'.format(
+                len(available_tickets))}
             )
 
         booked_tickets = []
@@ -242,6 +246,8 @@ def book_tickets(request):
                 t.status = 'S'
                 t.first_name = req_body['first_name']
                 t.last_name = req_body['last_name']
+                # t.phone_country = req_body['phone_country']
+                # t.phone_number = req_body['phone_number']
                 t.save()
                 booked_tickets.append(t)
 
@@ -264,12 +270,11 @@ def book_tickets(request):
         )
 
         if req_body['quantity'] > 10:
-            return HttpResponse('Quantity is too large, only a maximum of 10 tickets can be bought!', status=400)
+            return JsonResponse(status=400, data={'message': 'Quantity is too large, only a maximum of 10 tickets can be bought!'})
 
         if len(available_tickets) < req_body['quantity']:
-            return HttpResponse('Quantity is too large, only {} tickets available.'.format(
-                len(available_tickets)), status=400
-            )
+            return JsonResponse(status=400, data={'message': 'Quantity is too large, only {} tickets available.'.format(
+                len(available_tickets))})
 
         booked_tickets = []
         for i, t in enumerate(available_tickets):
@@ -284,6 +289,8 @@ def book_tickets(request):
                 t.street_name = req_body['street_name']
                 t.house_number = req_body['house_number']
                 t.postal_code = req_body['postal_code']
+                # t.phone_country = req_body['phone_country']
+                # t.phone_number = req_body['phone_number']
                 t.save()
                 booked_tickets.append(t)
 
@@ -294,7 +301,7 @@ def book_tickets(request):
         return JsonResponse(return_dict, safe=False)
     
     else:
-        return HttpResponse('Delivery method "{}" not available!'.format(req_body['delivery_method']))
+        return JsonResponse(status=400, data={'message': 'Delivery method "{}" not available!'.format(req_body['delivery_method'])})
 
 @api_view(['PUT'])
 def user_categories(request):

@@ -1,10 +1,11 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from events.models import Event
-# from entertainers.models import Entertainers
-# Create your views here.
+from user.views import get_user_details
 
 
 def event(request, event_id):
+    user_details = get_user_details(request.user)
 
     the_event = Event.objects.get(pk=event_id)
     day_month = the_event.start_date.strftime("%d %b")
@@ -13,7 +14,7 @@ def event(request, event_id):
     # the_artists = Entertainers.objects.filter(event=the_event)
 
     if not event_id.isdigit():
-        return HttpResponse(status=400, content="Invalid ID")
+        return JsonResponse(status=400, data={"message": "Invalid ID"})
 
     events_entertainers = Event.objects.raw('''
         SELECT *
@@ -38,4 +39,12 @@ def event(request, event_id):
 
     map_url = event_map_url[0].map_url
 
-    return render(request, "pages/event/index.html", context={'event': the_event, "day_month": day_month, "hour": hour, "year": year, "events_entertainers": events_entertainers, "map_url": map_url})
+    return render(request, "pages/event/index.html", context={
+        "event": the_event, 
+        "day_month": day_month, 
+        "hour": hour, 
+        "year": year, 
+        "events_entertainers": events_entertainers, 
+        "map_url": map_url,
+        "user_details": user_details
+    })

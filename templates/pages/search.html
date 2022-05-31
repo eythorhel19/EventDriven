@@ -9,7 +9,7 @@
 <p class="h2_regular event_or_ent_header">Events matching your search result</p>
 <div class="row-of-cards">
     {% for event in searched_events %}
-    <div>{% include 'info_card.html' with event=event %}</div>
+    <div>{% include 'components/info_card.html' with event=event %}</div>
     {% endfor %}
 </div>
 <p class="h2_regular event_or_ent_header">
@@ -18,7 +18,7 @@
 <div class="row-of-cards">
     {% for entertainer in searched_events_later %}
     <div>
-        {% include 'entertainers_info_card.html' with entertainer=entertainer %}
+        {% include 'components/entertainers_info_card.html' with entertainer=entertainer %}
     </div>
     {% endfor %}
 </div>

@@ -68,6 +68,8 @@ class Ticket(models.Model):
         ('S', 'Sold'),
     ]
     status = models.CharField(max_length=1, choices=TICKET_STATUS, default='U')
+    phone_country = models.ForeignKey(Country, null=True, on_delete=models.SET_NULL)
+    phone_number = models.CharField(max_length=32)
 
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
@@ -85,19 +87,27 @@ class Ticket(models.Model):
 class EventCategory(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    models.UniqueConstraint(
-        name='unique_event_category',
-        fields=['event', 'category']
-    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                name='unique_event_category',
+                fields=['event', 'category']
+            )
+        ]
 
 
 class EventEntertainer(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     entertainer = models.ForeignKey(Entertainer, on_delete=models.CASCADE)
-    models.UniqueConstraint(
-        name='unique_event_entertainer',
-        fields=['event', 'entertainer']
-    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                name='unique_event_entertainer',
+                fields=['event', 'entertainer']
+            )
+        ]
 
 # Ticket
 
@@ -106,10 +116,14 @@ class EventTicketTypePrice(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     ticket_type = models.ForeignKey(TicketType, on_delete=models.CASCADE)
     price = models.FloatField()
-    models.UniqueConstraint(
-        name='unique_event_ticket_type',
-        fields=['event', 'ticket_type']
-    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                name='unique_event_ticket_type',
+                fields=['event', 'ticket_type']
+            )
+        ]
 
 #    User
 
@@ -117,15 +131,24 @@ class EventTicketTypePrice(models.Model):
 class UserFavoriteCategory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    models.UniqueConstraint(
-        name='unique_user_category',
-        fields=['user', 'category']
-    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                name='unique_user_category',
+                fields=['user', 'category']
+            )
+        ]
+
 
 class UserFavoriteEntertainer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     entertainer = models.ForeignKey(Entertainer, on_delete=models.CASCADE)
-    models.UniqueConstraint(
-        name='unique_user_category',
-        fields=['user', 'category']
-    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                name='unique_user_favorite_entertainer',
+                fields=['user', 'entertainer']
+            )
+        ]
