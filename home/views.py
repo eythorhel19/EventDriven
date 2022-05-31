@@ -5,6 +5,7 @@ from entertainers.models import Entertainer
 from home.models import Category, UserFavoriteCategory, UserFavoriteEntertainer
 from user.views import get_user_details
 
+
 def index(request):
     user_details = get_user_details(request.user)
 
@@ -143,8 +144,8 @@ def search(request):
     searched_events_later = Entertainer.objects.raw(query2)
 
     return render(request, 'pages/search.html', context={
-        'searched_events': searched_events, 
-        'searched_events_later': searched_events_later,  
+        'searched_events': searched_events,
+        'searched_events_later': searched_events_later,
         'categories': Category.objects.all(),
         'user_details': user_details
     })
@@ -212,11 +213,11 @@ def dashboard(request):
             rest_fav_ent.append(i)
 
     return render(request, 'pages/dashboard.html', context={
-        'query_dashboard_user_tickets_results': query_dashboard_user_tickets_results, 
-        "query_dashboard_user_fav_cat_ent_events_res": query_dashboard_user_fav_cat_ent_events_res, 
-        "user_fav_cate": user_fav_cate, 
-        "rest_fav_cate": rest_fav_cate, 
-        "user_fav_ent": user_fav_ent, 
+        'query_dashboard_user_tickets_results': query_dashboard_user_tickets_results,
+        "query_dashboard_user_fav_cat_ent_events_res": query_dashboard_user_fav_cat_ent_events_res,
+        "user_fav_cate": user_fav_cate,
+        "rest_fav_cate": rest_fav_cate,
+        "user_fav_ent": user_fav_ent,
         "rest_fav_ent": rest_fav_ent,
         "user_details": user_details
     })
