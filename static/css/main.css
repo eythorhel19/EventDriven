@@ -354,9 +354,9 @@ body {
     flex-direction: column;
     padding-bottom: 16px;
     justify-content: space-between;
-    width: 350px;
-    min-width: 350px;
-    max-width: 350px;
+    width: 320px;
+    min-width: 320px;
+    max-width: 320px;
     background:  var(--base-secondary);
     border-radius: 8px;
 }
@@ -378,7 +378,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     padding: 16px;
-    width: 350px;
+    width: 100%;
     color: var(--type-primary);
 }
 

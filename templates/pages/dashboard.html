@@ -47,13 +47,17 @@
     $(document).ready(function () {
         $(".js-example-basic-multiple").select2();
     });
-    async function funcForUersFavCatSelected() {
-        console.log("test", $("#users_fav_cat_selected").select2("data"));
+    async function funcForUersFavCatSelected(event) {
+        event.preventDefault();
+
+        const token = $('input[name="csrfmiddlewaretoken"]').val();
+
         const url = BASE_URL + "/api/user_categories";
         const res = await fetch(url, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                "X-CSRFToken": token,
             },
             body: JSON.stringify({
                 users_fav_cat_selected: $("#users_fav_cat_selected").select2(
@@ -62,13 +66,17 @@
             }),
         });
     }
-    async function funcForUsersFavEntSelected() {
-        console.log("test", $("#select_entertainers").select2("data"));
+    async function funcForUsersFavEntSelected(event) {
+        event.preventDefault();
+
+        const token = $('input[name="csrfmiddlewaretoken"]').val();
+
         const url = BASE_URL + "/api/user_entertainers";
         const res = await fetch(url, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                "X-CSRFToken": token,
             },
             body: JSON.stringify({
                 select_entertainers: $("#select_entertainers").select2("data"),
@@ -81,7 +89,12 @@
     <div class="ticket_and_favorites">
         <div class="all_users_favorites">
             <p>fav entertainers</p>
-            <form style="color: black; width: 100%">
+            <form
+                style="color: black; width: 100%"
+                onsubmit="return funcForUsersFavEntSelected(event)"
+            >
+                {% csrf_token %}
+
                 <select
                     class="js-example-basic-multiple"
                     name="states[]"
@@ -99,14 +112,17 @@
                     </option>
                     {% endfor %}
                 </select>
-                <button onclick="funcForUsersFavEntSelected()">
-                    Save changes
-                </button>
+                <button>Save changes</button>
             </form>
             <p>fav categories</p>
 
             <p>{{user_fav_cat_list}}</p>
-            <form style="color: black; width: 100%">
+            <form
+                style="color: black; width: 100%"
+                onsubmit="return funcForUersFavCatSelected(event)"
+            >
+                {% csrf_token %}
+
                 <select
                     id="users_fav_cat_selected"
                     class="js-example-basic-multiple"
@@ -123,9 +139,7 @@
                     <option value="{{category.id}}">{{category.name}}</option>
                     {% endfor %}
                 </select>
-                <button onclick="funcForUersFavCatSelected()">
-                    Save changes
-                </button>
+                <button>Save changes</button>
             </form>
         </div>
         <div class="all_users_tickets">

@@ -8,6 +8,9 @@ from home.models import Ticket, TicketType, EventTicketTypePrice, Country, City
 
 from rest_framework.decorators import api_view
 
+from home.models import UserFavoriteCategory
+from home.models import UserFavoriteEntertainer
+
 
 def check_required_fields(req_body, required_fields):
     for key in required_fields:
@@ -154,7 +157,8 @@ def generate_tickets(request):
     if not isinstance(req_body['quantity'], int):
         return JsonResponse(status=400, data={'message': 'Field "quantity" should be an integer'})
 
-    current_ticket_count = len(Ticket.objects.filter(event_id=req_body['event_id']))
+    current_ticket_count = len(
+        Ticket.objects.filter(event_id=req_body['event_id']))
 
     if req_body['quantity'] > (the_event.maximum_capacity - current_ticket_count):
         return JsonResponse(status=400, data={'message': 'Tickets not available, maximum tickets available are {}'.format(
@@ -192,7 +196,8 @@ def release_tickets(request):
     if the_event is None:
         return HttpResponse('Event with id {} not found!'.format(req_body['event_id']), status=400)
 
-    the_tickets = Ticket.objects.filter(event_id=req_body['event_id'], status='U')
+    the_tickets = Ticket.objects.filter(
+        event_id=req_body['event_id'], status='U')
 
     for t in the_tickets:
         t.status = 'R'
@@ -211,9 +216,10 @@ def book_tickets(request):
 
     if 'delivery_method' not in req_body:
         return HttpResponse('Request body missing field "delivery_method"!', status=400)
-    
+
     if req_body['delivery_method'] == 'E':
-        required_fields = ['ticket_type_id', 'event_id', 'delivery_method', 'email', 'first_name', 'last_name', 'quantity']
+        required_fields = ['ticket_type_id', 'event_id', 'delivery_method',
+                           'email', 'first_name', 'last_name', 'quantity']
         status, msg = check_required_fields(req_body, required_fields)
         if status != 200:
             return HttpResponse(msg, status=status)
@@ -252,7 +258,8 @@ def book_tickets(request):
         return JsonResponse(return_dict, safe=False)
 
     elif req_body['delivery_method'] == 'P':
-        required_fields = ['ticket_type_id', 'event_id', 'delivery_method', 'email', 'first_name', 'last_name', 'street_name', 'house_number', 'postal_code', 'quantity']
+        required_fields = ['ticket_type_id', 'event_id', 'delivery_method', 'email',
+                           'first_name', 'last_name', 'street_name', 'house_number', 'postal_code', 'quantity']
         status, msg = check_required_fields(req_body, required_fields)
         if status != 200:
             return HttpResponse(msg, status=status)
@@ -292,19 +299,34 @@ def book_tickets(request):
             return_dict.append(model_to_dict(ticket))
 
         return JsonResponse(return_dict, safe=False)
-    
+
     else:
         return HttpResponse('Delivery method "{}" not available!'.format(req_body['delivery_method']))
 
+
 @api_view(['PUT'])
 def user_categories(request):
-    print('user_categories', request)
+    if request.headers['Content-Type'] != 'application/json':
+        return HttpResponse('Request body should be of type json!', status=400)
+
+    UserFavoriteCategory.objects.filter(user=request.user).delete()
+
+    req_body = json.loads(request.body)
+    print('req_body', req_body.users_fav_cat_selected)
 
     return JsonResponse(status=200, data={'message': 'OK'})
 
 
 @api_view(['PUT'])
 def user_entertainers(request):
-    print('user_entertainers', request)
 
-    return JsonResponse(200, data={'message': 'OK'})
+    if request.headers['Content-Type'] != 'application/json':
+        return HttpResponse('Request body should be of type json!', status=400)
+
+    UserFavoriteEntertainer.objects.filter(user=request.user).delete()
+
+    req_body = json.loads(request.body)
+    print('req_body', req_body.select_entertainers)
+
+    UserFavoriteEntertainer.objects.filter(user=request.user).delete()
+    return JsonResponse(status=200, data={'message': 'OK'})
