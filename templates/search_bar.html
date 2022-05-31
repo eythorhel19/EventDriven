@@ -113,6 +113,7 @@
             } else {
                 if (ele.elements.chose_date_range_type.value === "") {
                     url.searchParams.append("date_to", "All");
+                    url.searchParams.append("date_from", "All");
                 } else if (
                     ele.elements.chose_date_range_type.value === "today"
                 ) {

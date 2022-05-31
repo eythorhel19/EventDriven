@@ -62,8 +62,18 @@
             }),
         });
     }
-    function func_for_users_fav_ent_selected() {
+    async function funcForUsersFavEntSelected() {
         console.log("test", $("#select_entertainers").select2("data"));
+        const url = BASE_URL + "/api/user_entertainers";
+        const res = await fetch(url, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                select_entertainers: $("#select_entertainers").select2("data"),
+            }),
+        });
     }
 </script>
 
@@ -71,8 +81,7 @@
     <div class="ticket_and_favorites">
         <div class="all_users_favorites">
             <p>fav entertainers</p>
-
-            <div style="color: black; width: 100%">
+            <form style="color: black; width: 100%">
                 <select
                     class="js-example-basic-multiple"
                     name="states[]"
@@ -90,14 +99,14 @@
                     </option>
                     {% endfor %}
                 </select>
-                <button onclick="func_for_users_fav_ent_selected()">
+                <button onclick="funcForUsersFavEntSelected()">
                     Save changes
                 </button>
-            </div>
+            </form>
             <p>fav categories</p>
 
             <p>{{user_fav_cat_list}}</p>
-            <div style="color: black; width: 100%">
+            <form style="color: black; width: 100%">
                 <select
                     id="users_fav_cat_selected"
                     class="js-example-basic-multiple"
@@ -117,7 +126,7 @@
                 <button onclick="funcForUersFavCatSelected()">
                     Save changes
                 </button>
-            </div>
+            </form>
         </div>
         <div class="all_users_tickets">
             <p class="h3_regular">Your tickets</p>

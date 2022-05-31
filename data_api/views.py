@@ -115,13 +115,13 @@ def book_ticket(request):
 
 @api_view(['PUT'])
 def user_categories(request):
-    print('posting_new_users_fav_categories', request)
+    print('user_categories', request)
 
     return JsonResponse(status=200, data={'message': 'OK'})
 
 
 @api_view(['PUT'])
-def posting_new_users_fav_entertainers(request):
-    print('posting_new_users_fav_entertainers', request)
+def user_entertainers(request):
+    print('user_entertainers', request)
 
     return JsonResponse(200, data={'message': 'OK'})
