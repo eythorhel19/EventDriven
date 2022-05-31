@@ -14,6 +14,7 @@ def index(request):
         FROM EVENTS_EVENT AS EEV
         JOIN HOME_EVENTCATEGORY AS HEVC ON EEV.ID = HEVC.EVENT_ID
         JOIN HOME_CATEGORY AS HCAT ON HCAT.ID = HEVC.CATEGORY_ID
+        WHERE EEV.START_DATE >= CURRENT_DATE
         ORDER BY HEVC.CATEGORY_ID, EEV.START_DATE
         '''
     events_wit_cat = Event.objects.raw(query_for_cat_hom)
@@ -124,7 +125,7 @@ def search(request):
 			JOIN HOME_LOCATION AS HLC ON HLC.ID = EVEE.LOCATION_ID
 			JOIN HOME_CITY AS HCITY ON HCITY.ID = HLC.CITY_ID
 			JOIN HOME_COUNTRY AS HCONT ON HCONT.ID = HCITY.COUNTRY_ID
-            WHERE {} AND {} AND ({} OR {} OR {} OR {} OR {} OR {} OR {})
+            WHERE {} AND {} AND ({} OR {} OR {} OR {} OR {} OR {} OR {}) AND EVEE.START_DATE >= CURRENT_DATE
             ORDER BY EVEE.START_DATE
             ) AS EVEE
         '''.format(categories_events, date_to_events, search_input_field_events, search_input_field_events2, search_input_field_events3, search_input_field_events4, search_input_field_events9, search_input_field_events10, search_input_field_events12)
@@ -138,7 +139,7 @@ def search(request):
         JOIN EVENTS_EVENT AS EVEE ON EVEE.ID = HEVENT.EVENT_ID
         JOIN HOME_LOCATION AS HLOC ON HLOC.ID = EVEE.LOCATION_ID
         GROUP BY (ENT.ID, ENT.NAME, ENT.DESCRIPTION, ENT.IMAGE_URL, HLOC.NAME, EVEE.START_DATE)
-        HAVING ({} or {} or {} or {}) AND {}
+        HAVING ({} or {} or {} or {}) AND {} AND EVEE.START_DATE >= CURRENT_DATE
         '''.format(search_input_field_events5, search_input_field_events6, search_input_field_events7, search_input_field_events8, date_to_events)
 
     searched_events_later = Entertainer.objects.raw(query2)
@@ -171,7 +172,7 @@ def dashboard(request):
     FROM EVENTS_EVENT AS EEVE
     JOIN HOME_EVENTCATEGORY AS HEVECAT ON HEVECAT.EVENT_ID = EEVE.ID
     JOIN HOME_EVENTENTERTAINER AS HEENT ON HEENT.EVENT_ID = EEVE.ID
-    WHERE HEVECAT.CATEGORY_ID IN
+    WHERE EVEE.START_DATE >= CURRENT_DATE AND HEVECAT.CATEGORY_ID IN
             (SELECT HUFC.CATEGORY_ID
     FROM HOME_USERFAVORITECATEGORY AS HUFC
     WHERE HUFC.USER_ID = {}) OR HEENT.ENTERTAINER_ID IN(SELECT HUFENT.ENTERTAINER_ID

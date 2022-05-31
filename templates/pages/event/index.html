@@ -34,18 +34,6 @@
         width: 100%;
         height: 100%;
     }
-    @media only screen and (max-width: 900px) {
-        .image_wrapper_info_card {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            width: 100%;
-            height: 40vw;
-            border-radius: 16px;
-        }
-    }
-    
 
     .info_and_book_wrapper {
         display: flex;
@@ -53,15 +41,6 @@
         height: 100%;
         flex-direction: column;
         justify-content: space-between;
-    }
-    @media only screen and (max-width: 900px) {
-        .info_and_book_wrapper {
-        display: flex;
-        width: 100%;
-        height: 100%;
-        flex-direction: column;
-        justify-content: space-between;
-    }
     }
     
     .info_wrapper {
@@ -93,7 +72,23 @@
         width: 45%;
         height: 100%;
     }
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: 900px) {
+        .image_wrapper_info_card {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            width: 100%;
+            height: 40vw;
+            border-radius: 16px;
+        }
+        .info_and_book_wrapper {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+        justify-content: space-between;
+    }
         .the_map_wrapper {
         display: flex;
         flex-direction: column;
@@ -138,7 +133,7 @@
         </div>
         <div class="the_map_wrapper">
             <p>Date</p>
-            <p>{{event.start_date}}</p>
+            <p>{{event.start_date}} to {{event.end_date}}</p>
                 <style>
                     .the_calander_icon_wrapper {
                         display: flex;
@@ -165,12 +160,12 @@
                 </style>
                 <div class="the_calander_icon_wrapper">
                     <div class="the_calander_icon_month">
-                        <h2 style="font-size: 6rem">{{year}}</h2>
+                        <h2 style="font-size: 3rem">{{year}} to {{year_to}}</h2>
                     </div>
                     <div class="the_calander_icon_date_week">
-                        <h1 style="color: var(--base-primary); font-size: 4rem;font-family: 'Chakra Petch';font-size: 100px;
-                        ">{{hour}}</h1>
-                        <h3 style="color: orange ; font-size: 6rem" >{{day_month}}</h3>
+                        <h1 style="color: var(--base-primary); font-size: 3rem;font-family: 'Chakra Petch';
+                        ">{{hour}} to {{hour_to}}</h1>
+                        <h3 style="color: orange ; font-size: 3rem" >{{day_month}} to {{day_month_to}}</h3>
                     </div>
                     
                 </div>
