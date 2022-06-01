@@ -186,9 +186,16 @@
         </div>
         
     </div>
+    <p class="h3_regular" style="color:var(--type-primary)">Entertainers appearing in this event</p>
     <div class="row-of-cards">
         {% for entertainer in events_entertainers %}
         <div>{% include 'components/entertainers_info_card.html' with entertainer=entertainer %}</div>
+        {% endfor %}
+    </div>
+    <p class="h3_regular" style="color:var(--type-primary)">Similar events</p>
+    <div class="row-of-cards">
+        {% for event in most_similar_events %}
+        <div>{% include 'components/info_card.html' with event=event %}</div>
         {% endfor %}
     </div>
     

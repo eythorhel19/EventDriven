@@ -32,6 +32,7 @@ def index(request):
                 current_ev_id_cat = []
             current_ev_id_cat.append(event_what_cat)
             last_event_cat_id = event_what_cat.category_id
+    event_cat_categorised.append(current_ev_id_cat)
 
     return render(request, "pages/home.html", context={
         'event_cat_categorised': event_cat_categorised,
