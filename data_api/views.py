@@ -223,7 +223,7 @@ def book_tickets(request):
     
     if req_body['delivery_method'] == 'E':
         required_fields = ['ticket_type_id', 'event_id', 'delivery_method',
-                           'email', 'first_name', 'last_name', 'quantity']
+                           'email', 'first_name', 'last_name', 'quantity', 'phone_country', 'phone_number']
         status, msg = check_required_fields(req_body, required_fields)
         if status != 200:
             return JsonResponse(status=status, data={'message': msg })
@@ -252,8 +252,8 @@ def book_tickets(request):
                 t.status = 'S'
                 t.first_name = req_body['first_name']
                 t.last_name = req_body['last_name']
-                # t.phone_country = req_body['phone_country']
-                # t.phone_number = req_body['phone_number']
+                t.phone_country_id = req_body['phone_country']
+                t.phone_number = req_body['phone_number']
                 t.save()
                 booked_tickets.append(t)
 
@@ -265,7 +265,7 @@ def book_tickets(request):
 
     elif req_body['delivery_method'] == 'P':
         required_fields = ['ticket_type_id', 'event_id', 'delivery_method', 'email',
-                           'first_name', 'last_name', 'street_name', 'house_number', 'postal_code', 'quantity']
+                           'first_name', 'last_name', 'street_name', 'house_number', 'postal_code', 'quantity', 'phone_country', 'phone_number']
         status, msg = check_required_fields(req_body, required_fields)
         if status != 200:
             return HttpResponse(msg, status=status)
@@ -296,8 +296,8 @@ def book_tickets(request):
                 t.street_name = req_body['street_name']
                 t.house_number = req_body['house_number']
                 t.postal_code = req_body['postal_code']
-                # t.phone_country = req_body['phone_country']
-                # t.phone_number = req_body['phone_number']
+                t.phone_country_id = req_body['phone_country']
+                t.phone_number = req_body['phone_number']
                 t.save()
                 booked_tickets.append(t)
 

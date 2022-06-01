@@ -59,6 +59,7 @@ function populateEventData(eventData) {
 }
 
 function startLoading(loadingTag, contentTag) {
+    displayContentPage(-1);
     document.getElementById('booking_modal_loading').style.display = 'flex';
 }
 
@@ -226,7 +227,6 @@ function populateEmailInfo(countryData) {
 
 async function displayEmailInfo() {
     
-    displayContentPage(-1);
     setProgressPoint(2);
     startLoading();
 
@@ -374,7 +374,6 @@ function displayErrorPage(message) {
 async function handleBookNow(eventID) {
     // Initilizing
     closeErrorMessage();
-    displayContentPage(-1);
     eventData = undefined;
     postData = {};
 
@@ -662,6 +661,8 @@ function handleSavePaymentInfo() {
 async function handlePostBooking(e) {
     e.preventDefault();
     
+    startLoading();
+
     const token = $('input[name="csrfmiddlewaretoken"]').val();
     
     // Formating for post
@@ -691,8 +692,8 @@ async function handlePostBooking(e) {
             'house_number': postData.postal_delivery_info.house_number,
             'postal_code': postData.postal_delivery_info.postal_code,
             'quantity': postData.ticket_quantity,
-            'phone_country': postData.email_delivery_info.phone_country,
-            'phone_number': postData.email_delivery_info.phone_number
+            'phone_country': postData.postal_delivery_info.phone_country,
+            'phone_number': postData.postal_delivery_info.phone_number
         };
     }
 
@@ -707,6 +708,8 @@ async function handlePostBooking(e) {
         },
         body: JSON.stringify(patchBody)
     })
+
+    stopLoading();
 
     if (res.status != 200) {
         const data = await res.json();

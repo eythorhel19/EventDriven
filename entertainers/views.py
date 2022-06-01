@@ -2,8 +2,8 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from entertainers.models import Entertainer
 from home.models import Category
-from user.models import UserDetails
 from user.views import get_user_details
+from constants import progress_data
 
 # Create your views here.
 
@@ -55,5 +55,6 @@ def entertainer(request, entertainer_id):
     return render(request, 'pages/entertainers/entertainer.html', context={
         'entertainer_info': entertainer_info,
         "entertainer_events": entertainer_events,
-        "user_details": user_details
+        "user_details": user_details,
+        "progress_data": progress_data
     })

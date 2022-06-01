@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from events.models import Event
 from user.views import get_user_details
+from constants import progress_data
 
 
 def event(request, event_id):
@@ -61,5 +62,6 @@ def event(request, event_id):
         "events_entertainers": events_entertainers,
         "map_url": map_url,
         "user_details": user_details,
-        "event_price_and_ticket_type": event_price_and_ticket_type
+        "event_price_and_ticket_type": event_price_and_ticket_type,
+        'progress_data': progress_data
     })
