@@ -1,0 +1,122 @@
+<div id="booking_modal_content_3" class="booking_modal_main_wrapper">
+                    
+    <!-- Postal Delivery -->
+    <div id="booking_modal_content_3_p">
+        <div class="booking_modal_entry_field_stack_wrapper">
+            <div class="booking_modal_entry_field_stack">
+                <div class="entry_field_main_wrapper">
+                    <div class="entry_field_description">
+                        <p class="label_light">Country</p>
+                    </div>
+                    <select id="booking_modal_p_country" onchange="populatePostalCity()"></select>
+                </div>
+                <div class="entry_field_main_wrapper">
+                    <div class="entry_field_description">
+                        <p class="label_light">City</p>
+                    </div>
+                    <select id="booking_modal_p_city" disabled></select>
+                </div>
+                <div class="entry_field_main_wrapper">
+                    <div class="entry_field_description">
+                        <p class="label_light">Postal code</p>
+                    </div>
+                    <input id="booking_modal_p_postal_code"></input>
+                </div>
+                <div class="entry_field_main_wrapper">
+                    <div class="entry_field_description">
+                        <p class="label_light">Street name</p>
+                    </div>
+                    <input id="booking_modal_p_street_name"></input>
+                </div>
+                <div class="entry_field_main_wrapper">
+                    <div class="entry_field_description">
+                        <p class="label_light">House Number</p>
+                    </div>
+                    <input id="booking_modal_p_house_number"></input>
+                </div>
+            </div>
+            <div class="booking_modal_entry_field_stack">
+                <div class="entry_field_main_wrapper">
+                    <div class="entry_field_description">
+                        <p class="label_light">First Name</p>
+                    </div>
+                    <input id="booking_modal_p_first_name"></input>
+                </div>
+                <div class="entry_field_main_wrapper">
+                    <div class="entry_field_description">
+                        <p class="label_light">Last Name</p>
+                    </div>
+                    <input id="booking_modal_p_last_name"></input>
+                </div>
+                <div class="entry_field_main_wrapper">
+                    <div class="entry_field_description">
+                        <p class="label_light">Phone Country Code</p>
+                    </div>
+                    <select id="booking_modal_p_phone_country_code"></select>
+                </div>
+                <div class="entry_field_main_wrapper">
+                    <div class="entry_field_description">
+                        <p class="label_light">Phone Number</p>
+                    </div>
+                    <input id="booking_modal_p_phone_number"></input>
+                </div>
+                <div class="entry_field_main_wrapper">
+                    <div class="entry_field_description">
+                        <p class="label_light">Email</p>
+                    </div>
+                    <input id="booking_modal_p_email" type="email"></input>
+                </div>
+            </div>
+        </div>
+        <div class="booking_modal_back_continue_wrapper">
+            <button class="button_outlined back_button" onclick="handleBack(3)">Back</button>
+            <button class="button_outlined" onclick="handleSavePostDeliveryInfo()">Continue</button>
+        </div>
+    </div>
+
+    <!-- Email Delivery -->
+    <div id="booking_modal_content_3_e">
+        <div class="booking_modal_entry_field_stack_wrapper">
+            <div class="booking_modal_entry_field_stack">
+                <div class="entry_field_main_wrapper">
+                    <div class="entry_field_description">
+                        <p class="label_light">First Name</p>
+                    </div>
+                    <input id="booking_modal_e_first_name"></input>
+                </div>
+                <div class="entry_field_main_wrapper">
+                    <div class="entry_field_description">
+                        <p class="label_light">Last Name</p>
+                    </div>
+                    <input id="booking_modal_e_last_name"></input>
+                </div>
+                <div class="entry_field_main_wrapper">
+                    <div class="entry_field_description">
+                        <p class="label_light">Email</p>
+                    </div>
+                    <input id="booking_modal_e_email" type="email"></input>
+                </div>
+            </div>
+
+            <div class="booking_modal_entry_field_stack">
+                <div class="entry_field_main_wrapper">
+                    <div class="entry_field_description">
+                        <p class="label_light">Phone Country Code</p>
+                    </div>
+                    <select id="booking_modal_e_phone_country_code">
+                    </select>
+                </div>
+                <div class="entry_field_main_wrapper">
+                    <div class="entry_field_description">
+                        <p class="label_light">Phone Number</p>
+                    </div>
+                    <input id="booking_modal_e_phone_number"></input>
+                </div>
+            </div>
+        </div>
+        <div class="booking_modal_back_continue_wrapper">
+            <button class="button_outlined back_button" onclick="handleBack(3)">Back</button>
+            <button class="button_outlined" onclick="handleSaveEmailDeliveryInfo()">Continue</button>
+        </div>
+    </div>
+</div>

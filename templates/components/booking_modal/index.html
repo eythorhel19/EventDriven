@@ -1,0 +1,48 @@
+{% load static %}
+<script src="{% static 'js/booking_modal.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/booking_modal.css' %}">
+<div
+    class="modal fade"
+    id="booking_modal"
+    tabindex="-1"
+>
+    <div class="modal-dialog model_adjuster">
+        <div class="modal-content model_adjuster">
+            <div class="modal_base">
+                <div id="booking_modal_error_wrapper">
+                    <p class="icon_large">error</p>
+                    <p id="booking_modal_error_message" class="p_light">Error message!</p>
+                </div>
+                {% include 'components/progress_points.html' with progress_data=progress_data%}
+                
+                {% include 'components/booking_modal/order_info_bar.html' %}
+
+                <!-- Loading -->
+                <div id="booking_modal_loading">
+                    <div class="lds-dual-ring"></div>
+                </div>
+
+                <!-- Content Page 1 -->
+                {% include 'components/booking_modal/page1_event_info.html' %}
+
+                <!-- Content Page 2 -->
+                {% include 'components/booking_modal/page2_delivery_method.html' %}
+
+                <!-- Content Page 3 -->
+                {% include 'components/booking_modal/page3_delivery_info.html' %}
+
+                <!-- Content Page 4 -->
+                {% include 'components/booking_modal/page4_payment_info.html' %}
+
+                <!-- Content Page 5 -->
+                {% include 'components/booking_modal/page5_confirm_page.html' %}
+
+                <!-- Content Page 6: Success Page -->
+                {% include 'components/booking_modal/page6_success_page.html' %}
+
+                <!-- Content Page 7: Error Page -->
+                {% include 'components/booking_modal/page7_error_page.html' %}
+            </div>
+        </div>
+    </div>
+</div>
