@@ -43,6 +43,13 @@ def event(request, event_id):
 
     map_url = event_map_url[0].map_url
 
+    event_price_and_ticket_type = Event.objects.raw('''
+    SELECT *
+    FROM HOME_EVENTTICKETTYPEPRICE AS HETT
+    JOIN HOME_TICKETTYPE AS HTT ON HTT.ID = HETT.TICKET_TYPE_ID
+    WHERE HETT.EVENT_ID = {}
+    '''.format(event_id))
+
     return render(request, "pages/event/index.html", context={
         "event": the_event,
         "day_month": day_month,
@@ -53,5 +60,6 @@ def event(request, event_id):
         "year_to": year_to,
         "events_entertainers": events_entertainers,
         "map_url": map_url,
-        "user_details": user_details
+        "user_details": user_details,
+        "event_price_and_ticket_type": event_price_and_ticket_type
     })
