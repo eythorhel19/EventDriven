@@ -6,6 +6,7 @@ from home.models import Category, UserFavoriteCategory, UserFavoriteEntertainer
 from user.views import get_user_details
 from constants import progress_data
 
+
 def index(request):
     user_details = get_user_details(request.user)
 
@@ -14,6 +15,7 @@ def index(request):
         FROM EVENTS_EVENT AS EEV
         JOIN HOME_EVENTCATEGORY AS HEVC ON EEV.ID = HEVC.EVENT_ID
         JOIN HOME_CATEGORY AS HCAT ON HCAT.ID = HEVC.CATEGORY_ID
+        WHERE EEV.START_DATE >= CURRENT_DATE
         ORDER BY HEVC.CATEGORY_ID, EEV.START_DATE
         '''
     events_wit_cat = Event.objects.raw(query_for_cat_hom)
@@ -114,7 +116,7 @@ def search(request):
 			JOIN HOME_LOCATION AS HLC ON HLC.ID = EVEE.LOCATION_ID
 			JOIN HOME_CITY AS HCITY ON HCITY.ID = HLC.CITY_ID
 			JOIN HOME_COUNTRY AS HCONT ON HCONT.ID = HCITY.COUNTRY_ID
-            WHERE {} AND {} AND ({} OR {} OR {} OR {} OR {} OR {} OR {})
+            WHERE {} AND {} AND ({} OR {} OR {} OR {} OR {} OR {} OR {}) AND EVEE.START_DATE >= CURRENT_DATE
             ORDER BY EVEE.START_DATE
             ) AS EVEE
         '''.format(categories_events, date_to_events, search_input_field_events, search_input_field_events2, search_input_field_events3, search_input_field_events4, search_input_field_events9, search_input_field_events10, search_input_field_events12)
@@ -128,14 +130,14 @@ def search(request):
         JOIN EVENTS_EVENT AS EVEE ON EVEE.ID = HEVENT.EVENT_ID
         JOIN HOME_LOCATION AS HLOC ON HLOC.ID = EVEE.LOCATION_ID
         GROUP BY (ENT.ID, ENT.NAME, ENT.DESCRIPTION, ENT.IMAGE_URL, HLOC.NAME, EVEE.START_DATE)
-        HAVING ({} or {} or {} or {}) AND {}
+        HAVING ({} or {} or {} or {}) AND {} AND EVEE.START_DATE >= CURRENT_DATE
         '''.format(search_input_field_events5, search_input_field_events6, search_input_field_events7, search_input_field_events8, date_to_events)
 
     searched_events_later = Entertainer.objects.raw(query2)
 
     return render(request, 'pages/search.html', context={
-        'searched_events': searched_events, 
-        'searched_events_later': searched_events_later,  
+        'searched_events': searched_events,
+        'searched_events_later': searched_events_later,
         'categories': Category.objects.all(),
         'user_details': user_details
     })
@@ -161,7 +163,7 @@ def dashboard(request):
     FROM EVENTS_EVENT AS EEVE
     JOIN HOME_EVENTCATEGORY AS HEVECAT ON HEVECAT.EVENT_ID = EEVE.ID
     JOIN HOME_EVENTENTERTAINER AS HEENT ON HEENT.EVENT_ID = EEVE.ID
-    WHERE HEVECAT.CATEGORY_ID IN
+    WHERE EVEE.START_DATE >= CURRENT_DATE AND HEVECAT.CATEGORY_ID IN
             (SELECT HUFC.CATEGORY_ID
     FROM HOME_USERFAVORITECATEGORY AS HUFC
     WHERE HUFC.USER_ID = {}) OR HEENT.ENTERTAINER_ID IN(SELECT HUFENT.ENTERTAINER_ID
@@ -203,11 +205,11 @@ def dashboard(request):
             rest_fav_ent.append(i)
 
     return render(request, 'pages/dashboard.html', context={
-        'query_dashboard_user_tickets_results': query_dashboard_user_tickets_results, 
-        "query_dashboard_user_fav_cat_ent_events_res": query_dashboard_user_fav_cat_ent_events_res, 
-        "user_fav_cate": user_fav_cate, 
-        "rest_fav_cate": rest_fav_cate, 
-        "user_fav_ent": user_fav_ent, 
+        'query_dashboard_user_tickets_results': query_dashboard_user_tickets_results,
+        "query_dashboard_user_fav_cat_ent_events_res": query_dashboard_user_fav_cat_ent_events_res,
+        "user_fav_cate": user_fav_cate,
+        "rest_fav_cate": rest_fav_cate,
+        "user_fav_ent": user_fav_ent,
         "rest_fav_ent": rest_fav_ent,
         "user_details": user_details
     })
