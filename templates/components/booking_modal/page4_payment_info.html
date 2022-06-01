@@ -1,0 +1,42 @@
+<div id="booking_modal_content_4" class="booking_modal_main_wrapper">
+    <div class="booking_modal_payment_wrapper">
+        <div class="booking_modal_entry_field_stack_wrapper">
+            <div class="booking_modal_entry_field_stack">
+
+                <div class="entry_field_main_wrapper">
+                    <div class="entry_field_description">
+                        <p class="label_light">Name on card</p>
+                    </div>
+                    <input id="booking_modal_name_on_card"></input>
+                </div>
+                
+                <div class="entry_field_main_wrapper">
+                    <div class="entry_field_description">
+                        <p class="label_light">Card Number</p>
+                    </div>
+                    <input id="booking_modal_card_number" type="tel" name="credit-number"></input>
+                </div>
+            </div>
+
+            <div class="booking_modal_entry_field_stack">
+                <div class="entry_field_main_wrapper">
+                    <div class="entry_field_description">
+                        <p class="label_light">Expiration Date</p>
+                    </div>
+                    <input id="booking_modal_expiration_date"></input>
+                </div>
+                <div class="entry_field_main_wrapper">
+                    <div class="entry_field_description">
+                        <p class="label_light">CVC</p>
+                    </div>
+                    <input id="booking_modal_cvc"></input>
+                </div>
+            </div>
+        </div>
+
+        <div class="booking_modal_back_continue_wrapper">
+            <button class="button_outlined back_button" onclick="handleBack(4)">Back</button>
+            <button class="button_outlined" onclick="handleSavePaymentInfo()">Continue</button>
+        </div>
+    </div>
+</div>

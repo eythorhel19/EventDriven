@@ -108,13 +108,20 @@
     flex-direction: column;
     justify-content: flex-start;
 }
-.entry_field_description {
-    display: flex;
+.entry_field_main_wrapper select {
+    padding: 8px 16px;
+    height: 40px;
+    border-radius: 8px;
+    border: 0;
+    background-color: var(--type-primary);
 }
-.entry_field_body {
+.entry_field_main_wrapper input {
     padding: 8px 16px;
     border-radius: 8px;
     border: 0;
+}
+.entry_field_description {
+    display: flex;
 }
 #booking_modal_error_wrapper {
     position: absolute;

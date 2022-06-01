@@ -1,0 +1,59 @@
+<div id="booking_modal_content_5" class="booking_modal_main_wrapper">
+    <div class="booking_modal_confirm_wrapper">
+        <div class="booking_modal_confirm_column">
+            <h2 class="h3_semibold underline">Event</h2>
+            <div class="booking_modal_confirm_event_info_wrapper">
+                <p id="booking_modal_confirm_event_title" class="p_light">lalalala</p>
+                <p id="booking_modal_confirm_location" class="p_light">lalalala</p>
+                <p id="booking_modal_confirm_date" class="p_light">lalalala</p>
+            </div>
+
+            <h2 class="h3_semibold underline">Delivery</h2>
+            <div class="booking_modal_confirm_event_info_wrapper">
+                <p id="booking_modal_confirm_delivery_method" class="p_semibold"></p>
+                <div id="booking_modal_confirm_delivery_details"></div>
+            </div>
+        </div>
+        <div class="booking_modal_confirm_column">
+            <h2 class="h3_semibold underline">Payment</h2>
+            <div class="booking_modal_confirm_event_info_wrapper">
+                <p id="booking_modal_confirm_card_name" class="p_light"></p>
+                <p id="booking_modal_confirm_card_number" class="p_light"></p>
+                <p id="booking_modal_confirm_expiration_date" class="p_light"></p>
+                <p id="booking_modal_confirm_cvc" class="p_light"></p>
+            </div>
+
+            <h2 class="h3_semibold underline">Amount</h2>
+            <div class="booking_modal_confirm_payment_info_wrapper">
+                <div>
+                    <p class="label_light">Ticket Type</p>
+                    <p id="booking_modal_confirm_ticket_type" class="p_light"></p>
+                </div>
+
+                <div>
+                    <div class="booking_modal_line_item">
+                        <p class="label_light">Ticket Price</p>
+                        <p id="booking_modal_confirm_ticket_price" class="p_light"></p>
+                    </div>
+                    <div class="booking_modal_line_item">
+                        <p class="label_light">Quantity</p>
+                        <p id="booking_modal_confirm_quantity" class="p_light"></p>
+                    </div>
+                    <div class="booking_modal_line_item" style="border-top: 1px solid var(--type-primary);">
+                        <p class="label_bold">Total Price</p>
+                        <p id="booking_modal_confirm_total_price" class="p_bold"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="booking_modal_back_continue_wrapper">
+        <button class="button_outlined back_button" onclick="handleBack(5)">Back</button>
+        <form action="POST" id="confirm-form" onsubmit="return handlePostBooking(event)">
+            {% csrf_token %}
+            <input class="button_outlined" type="submit" value="Confirm">
+        </form>
+    </div>
+</div>

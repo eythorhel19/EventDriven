@@ -216,7 +216,7 @@ async function displayPostalInfo() {
 
 function populateEmailInfo(countryData) {
     const select = document.getElementById("booking_modal_e_phone_country_code");
-    select.innerHTML = "";
+    select.innerHTML = "<option disabled selected value> -- Select an option -- </option>";
     for (let i = 0; i<countryData.length; i++) {
         let option = document.createElement('option');
         option.value = countryData[i].id;
@@ -547,7 +547,11 @@ function handleSaveEmailDeliveryInfo() {
     }
 
     const phoneCountry = Number(document.getElementById('booking_modal_e_phone_country_code').value);
-    if (isNaN(phoneCountry)) {
+    if (phoneCountry == 0) {
+        showErrorMessage('Please select the phone country code.');
+        return;
+    }
+    else if (isNaN(phoneCountry)) {
         showErrorMessage('Please enter a valid phone country code.');
         return;
     }

@@ -1,0 +1,20 @@
+{% load static %}
+<div id="booking_modal_content_2" class="booking_modal_main_wrapper">
+    <div class="booking_modal_delivery_method_container">
+        <a class="booking_modal_delivery_method_wrapper" onclick="handleDeliveryMethod('postal')">
+            <div class="booking_modal_delivery_method_content">
+                <img src={% static 'images/postal_icon.png' %} alt="Postal delivery icon"/>
+                <h1 class="h1_regular">Get tickets via post mail</h1>
+            </div>
+        </a>
+        <a class="booking_modal_delivery_method_wrapper" onclick="handleDeliveryMethod('email')">
+            <div class="booking_modal_delivery_method_content">
+                <img src={% static 'images/email_icon.png' %} alt="Email delivery icon"/>
+                <h1 class="h1_regular">Get tickets via email</h1>
+            </div>
+        </a>
+    </div>
+    <div class="booking_modal_back_continue_wrapper">
+        <button class="button_outlined back_button" onclick="handleBack(2)">Back</button>
+    </div>
+</div>

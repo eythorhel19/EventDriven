@@ -1,0 +1,41 @@
+<div id="booking_modal_content_1" class="booking_modal_main_wrapper">
+<div class="img_wrapper">
+    <img id="booking_modal_image" alt="event image">
+</div>
+<div class="info_and_button_wrapper">
+    <div class="info_wrapper">
+        <h1 id="booking_modal_title" class="h1_semibold" style="font-size: 64px"></h1>
+        <p id="booking_modal_description" class="p_light">Event Description</p>
+
+        <div class="icon_info_wrapper">
+            <div class="icon_and_text">
+                <p class="icon_large">pin_drop</p>
+                <h3 id="booking_modal_location" class="h3_regular"></h3>
+            </div>
+            <div class="icon_and_text">
+                <p class="icon_large">calendar_month</p>
+                <h3 id="booking_modal_date" class="h3_regular"></h3>
+            </div>
+        </div>
+    </div>
+    <div class="bottom_wrapper">
+        <div class="entry_fields_wrapper">
+            <div class="entry_field_main_wrapper">
+                <div class="entry_field_description">
+                    <p class="label_light">Ticket Type</p>
+                </div>
+                <select id="ticket_type_select"></select>
+            </div>
+            <div class="entry_field_main_wrapper">
+                <div class="entry_field_description">
+                    <p class="label_light">Ticket Quantity</p>
+                </div>
+                <input id="ticket_amount_entry_field" type="number" min=1 max=10 value=1></input>
+            </div>
+        </div>
+        <div>
+            <button class="button_outlined" onclick="handleDeliveryMethodPage()">Continue</button>
+        </div>
+    </div>
+</div>
+</div>

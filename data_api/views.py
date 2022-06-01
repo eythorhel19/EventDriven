@@ -2,14 +2,11 @@ import json
 
 from django.http import JsonResponse, HttpResponse
 from django.forms.models import model_to_dict
-
-from events.models import Event
-from home.models import Ticket, TicketType, EventTicketTypePrice, Country, City
-
+from django.contrib.auth.models import AnonymousUser
 from rest_framework.decorators import api_view
 
-from home.models import UserFavoriteCategory
-from home.models import UserFavoriteEntertainer
+from events.models import Event
+from home.models import Ticket, TicketType, EventTicketTypePrice, Country, City, UserFavoriteCategory, UserFavoriteEntertainer
 
 
 def check_required_fields(req_body, required_fields):
@@ -212,6 +209,11 @@ def release_tickets(request):
 
 @api_view(['PATCH'])
 def book_tickets(request):
+    if isinstance(request.user, AnonymousUser):
+        user = None
+    else:
+        user = request.user
+
     # Finding a ticket for the event
     if request.headers['Content-Type'] != 'application/json':
         return JsonResponse(status=400, data={'message': 'Request body should be of type json!'})
@@ -247,6 +249,9 @@ def book_tickets(request):
             if i > req_body['quantity']:
                 break
             else:
+                if user != None:
+                    t.user = user
+
                 t.delivery_method = req_body['delivery_method']
                 t.email = req_body['email']
                 t.status = 'S'
@@ -288,6 +293,8 @@ def book_tickets(request):
             if i > req_body['quantity']:
                 break
             else:
+                if user != None:
+                    t.user = user
                 t.delivery_method = req_body['delivery_method']
                 t.email = req_body['email']
                 t.status = 'S'
