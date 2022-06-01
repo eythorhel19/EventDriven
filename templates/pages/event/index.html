@@ -120,7 +120,12 @@
                 </div>
             </div>
 
-            <button class="button_outlined button_large">Book Now</button>
+            <button 
+                data-bs-toggle="modal"
+                data-bs-target="#booking_modal"
+                class="button_outlined button_large"
+                onclick="handleBookNow({{ event.id }})"
+            >Book Now</button>
         </div>
     </div>
     <div class="map_and_calander_wrapper">

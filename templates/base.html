@@ -50,6 +50,7 @@
     </style>
     {% include 'navbar.html' with user_details=user_details %}
     {% include 'components/user_avatar_options.html' %}
+    {% include 'components/booking_modal.html' with progress_data=progress_data%}
     <body>
         <div class="page_body">{% block content%} {% endblock %}</div>
         <script

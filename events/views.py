@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from events.models import Event
 from user.views import get_user_details
+from constants import progress_data
 
 
 def event(request, event_id):
@@ -27,7 +28,7 @@ def event(request, event_id):
         GROUP BY EENT.ID, EENT.NAME, EENT.DESCRIPTION, EENT.IMAGE_URL, HLOC.NAME, EVE.ID, EVE.START_DATE
         HAVING EVE.ID = {}) AS FRO_GROUP_BY
         ORDER BY FRO_GROUP_BY.NEXT_EVENT_DATE'''.format(event_id)
-                                            )
+    )
 
     event_map_url = ('''
         SELECT *
@@ -41,7 +42,8 @@ def event(request, event_id):
 
     return render(request, "pages/event/index.html", context={
         "event": the_event, 
-        "day_month": day_month, 
+        "day_month": day_month,
+        'progress_data': progress_data,
         "hour": hour, 
         "year": year, 
         "events_entertainers": events_entertainers, 
