@@ -200,8 +200,7 @@
             <div class="row_of_tickets">
                 {% for ticket in query_dashboard_user_tickets_results %}
                 <div>
-                    {% include 'components/ticket_info_card.html' with
-                    ticket=ticket %}
+                    {% include 'ticket_info_card.html' with ticket=ticket %}
                 </div>
                 {% endfor %}
             </div>

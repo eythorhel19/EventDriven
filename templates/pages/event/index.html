@@ -113,6 +113,14 @@
                     <p class="label_light">Maximum Capacity</p>
                     <p class="h3_regular">{{ event.maximum_capacity }}</p>
                 </div>
+                <div class="max_cap_wrapper">
+                    <p class="label_light">Price</p>
+                    <select name="price" id="price">
+                        {% for price_type in event_price_and_ticket_type %}
+                        <option value="{{price.price}}">Ticket type: {{price_type.description}}, Price: {{price_type.price}} USD</option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
 
             <button 
