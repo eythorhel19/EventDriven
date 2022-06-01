@@ -8,18 +8,27 @@
 <div>{% include 'search_bar.html' with categories=categories %}</div>
 <p class="h2_regular event_or_ent_header">Events matching your search result</p>
 <div class="row-of-cards">
-    {% for event in searched_events %}
+    {% if searched_events %} {% for event in searched_events %}
     <div>{% include 'components/info_card.html' with event=event %}</div>
-    {% endfor %}
+    {% endfor %} {% else %}
+    <p class="h1_regular" style="color: gray">
+        No events found matching your search
+    </p>
+    {% endif %}
 </div>
 <p class="h2_regular event_or_ent_header">
     Entertainers matching your search result
 </p>
 <div class="row-of-cards">
-    {% for entertainer in searched_events_later %}
+    {% if searched_events_later %} {% for entertainer in searched_events_later%}
     <div>
-        {% include 'components/entertainers_info_card.html' with entertainer=entertainer %}
+        {% include 'components/entertainers_info_card.html' with
+        entertainer=entertainer %}
     </div>
-    {% endfor %}
+    {% endfor %} {% else %}
+    <p class="h1_regular" style="color: gray">
+        No entertainers found matching your search
+    </p>
+    {% endif %}
 </div>
 {% endblock %}

@@ -40,17 +40,25 @@ class Category(models.Model):
         name='unique_lower_name_category'
     )
 
+    def __str__(self):
+        return self.name
+
+
 #   Ticket
 
 
 class TicketType(models.Model):
     description = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.description
+
 
 class Ticket(models.Model):
     ticket_type = models.ForeignKey(TicketType, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, blank=True, null=True)
 
     DELIVERY_METHODS = [
         ('E', 'Electronic'),
@@ -68,7 +76,8 @@ class Ticket(models.Model):
         ('S', 'Sold'),
     ]
     status = models.CharField(max_length=1, choices=TICKET_STATUS, default='U')
-    phone_country = models.ForeignKey(Country, null=True, on_delete=models.SET_NULL)
+    phone_country = models.ForeignKey(
+        Country, null=True, on_delete=models.SET_NULL)
     phone_number = models.CharField(max_length=32)
 
     first_name = models.CharField(max_length=255, blank=True, null=True)
@@ -124,6 +133,7 @@ class EventTicketTypePrice(models.Model):
                 fields=['event', 'ticket_type']
             )
         ]
+
 
 #    User
 

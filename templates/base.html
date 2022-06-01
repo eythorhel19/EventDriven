@@ -58,7 +58,7 @@
     <body>
         <div class="page_body">{% block content%} {% endblock %}</div>
     </body>
-    {% include 'components/booking_modal.html' with progress_data=progress_data%}
+    {% include 'components/booking_modal/index.html' with progress_data=progress_data%}
     {% include 'components/user_avatar_options.html' %}
     
     {%include 'components/footer.html' %}

@@ -188,15 +188,24 @@
     </div>
     <p class="h3_regular" style="color:var(--type-primary)">Entertainers appearing in this event</p>
     <div class="row-of-cards">
-        {% for entertainer in events_entertainers %}
-        <div>{% include 'components/entertainers_info_card.html' with entertainer=entertainer %}</div>
-        {% endfor %}
+        {% if events_entertainers %}
+            {% for entertainer in events_entertainers %}
+            <div>{% include 'components/entertainers_info_card.html' with entertainer=entertainer %}</div>
+            {% endfor %}
+        {% else %}
+            <p class="h1_regular" style="color:gray">No entertainers found for this event</p>
+        {% endif %}
     </div>
     <p class="h3_regular" style="color:var(--type-primary)">Similar events</p>
     <div class="row-of-cards">
-        {% for event in most_similar_events %}
-        <div>{% include 'components/info_card.html' with event=event %}</div>
-        {% endfor %}
+        {% if most_similar_events %}
+            {% for event in most_similar_events %}
+
+            <div>{% include 'components/info_card.html' with event=event %}</div>
+            {% endfor %}
+        {% else %}
+            <p class="h1_regular" style="color:gray">No similar events found</p>
+        {% endif %}
     </div>
     
 </div>
