@@ -11,5 +11,6 @@ urlpatterns = [
     path('user_categories', views.user_categories,
          name="posting new users fav categories"),
     path('user_entertainers', views.user_entertainers,
-         name="posting new users fav entertainer")
+         name="posting new users fav entertainer"),
+    path('user_info', views.user_info, name="get user info")
 ]

@@ -11,11 +11,7 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        gap: 10px;
-    }
-    .for-hower-clow {
-        background: #ffffff;
-        border-radius: 10px;
+        gap: 8px;
     }
     .image_wrapper {
         display: flex;
@@ -36,7 +32,7 @@
         height: 48px;
     }
 </style>
-<div class="for-hower-clow">
+<div class="for_hover_glow">
     <div class="card">
         <a href="/event/{{ticket.event_id}}">
             <div class="image_wrapper">
@@ -57,11 +53,12 @@
                     <p class="icon_large">calendar_month</p>
                     <h3 class="h3_regular">{{ticket.event_start_date}}</h3>
                 </div>
+                <div class="icon-and-text">
+                    <p class="icon_large">fingerprint</p>
+                    <h3 class="h3_regular">ID: {{ticket.id}}</h3>
+                </div>
             </div>
         </a>
-        <h1 class="h2_semibold" style="margin-left: 8px">
-            Ticket id: {{ticket.id}}
-        </h1>
     </div>
     <!-- this is for the popup window -->
 </div>

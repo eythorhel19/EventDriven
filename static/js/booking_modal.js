@@ -1,4 +1,5 @@
 let eventData;
+let userInfo;
 let postData = {};
 let countryData;
 let cityData;
@@ -37,6 +38,18 @@ async function getCityData(countryID) {
     if (res.status != 200) {
         return;
     }
+    const data = await res.json();
+    return data;
+}
+
+async function getUserInfo() {
+    const url = BASE_URL + "/api/user_info";
+    const res = await fetch(url);
+
+    if (res.status != 200) {
+        return undefined;
+    }
+    
     const data = await res.json();
     return data;
 }
@@ -175,7 +188,7 @@ async function populatePostalCity() {
     }
 }
 
-function populationPostalInfo(countryData) {
+async function populationPostalInfo(countryData) {
     const countrySelect = document.getElementById("booking_modal_p_country");
     countrySelect.innerHTML = "<option disabled selected value> -- Select an option -- </option>";
 
@@ -195,6 +208,21 @@ function populationPostalInfo(countryData) {
         option.value = countryData[i].id;
         option.textContent = countryData[i].name + " (+" + countryData[i].phone_country_code + ")";
         phoneCountrySelect.appendChild(option);
+    }
+
+    if (userInfo !== undefined) {
+        document.getElementById('booking_modal_p_first_name').value = userInfo.first_name
+        document.getElementById('booking_modal_p_last_name').value = userInfo.last_name
+        document.getElementById('booking_modal_p_email').value = userInfo.email
+        document.getElementById('booking_modal_p_phone_country_code').value = userInfo.phone_country
+        document.getElementById('booking_modal_p_phone_number').value = userInfo.phone_number
+        document.getElementById('booking_modal_p_country').value = userInfo.postal_country
+        document.getElementById('booking_modal_p_postal_code').value = userInfo.postal_code
+        document.getElementById('booking_modal_p_street_name').value = userInfo.street_name
+        document.getElementById('booking_modal_p_house_number').value = userInfo.house_number
+        
+        await populatePostalCity();
+        document.getElementById('booking_modal_p_city').value = userInfo.postal_city
     }
 
 }
@@ -222,6 +250,14 @@ function populateEmailInfo(countryData) {
         option.value = countryData[i].id;
         option.textContent = countryData[i].name + " (+" + countryData[i].phone_country_code + ")";
         select.appendChild(option);
+    }
+
+    if (userInfo !== undefined) {
+        document.getElementById('booking_modal_e_first_name').value = userInfo.first_name
+        document.getElementById('booking_modal_e_last_name').value = userInfo.last_name
+        document.getElementById('booking_modal_e_email').value = userInfo.email
+        document.getElementById('booking_modal_e_phone_country_code').value = userInfo.phone_country
+        document.getElementById('booking_modal_e_phone_number').value = userInfo.phone_number
     }
 }
 
@@ -382,6 +418,7 @@ async function handleBookNow(eventID) {
 
     // Getting event data
     eventData = await getEventData(eventID);
+    userInfo = await getUserInfo();
 
     // Populating Booking Modal
     populateEventData(eventData);

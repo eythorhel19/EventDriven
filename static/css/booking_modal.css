@@ -80,6 +80,7 @@
     height: 532px;
 }
 .bottom_wrapper {
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -100,6 +101,7 @@
 }
 .entry_fields_wrapper {
     display: flex;
+    width: 100%;
     gap: 16px;
 }
 .entry_field_main_wrapper {
@@ -287,4 +289,86 @@
     display: flex;
     flex-direction: row;
     gap: 4%;
+}
+#booking_modal_close_button {
+    display: none;
+}
+.booking_modal_button_wrapper {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+/* Mobile view */
+@media only screen and (max-width: 900px) {
+    .model_adjuster {
+        width: 95vw;
+    }
+    .booking_modal_main_wrapper {
+        flex-direction: column;
+    }
+    .img_wrapper {
+        width: 100%;
+        height: 50vh;
+        max-height: none;
+    }
+    .entry_fields_wrapper {
+        flex-wrap: wrap;
+    }
+    .entry_field_main_wrapper {
+        width: 100%;
+    }
+    .info_and_button_wrapper {
+        width: 100%;
+        min-width: 0;
+        height: 100%;
+        padding: 0;
+    }
+    .booking_modal_button_wrapper {
+        justify-content: center;
+        gap: 16px;
+    }
+    .booking_modal_button_wrapper button{
+        width: calc(50% - 8px);
+    }
+    #booking_modal_close_button {
+        display: flex;
+    }
+    .booking_modal_delivery_method_container {
+        flex-direction: column;
+        gap: 16px;
+    }
+    .booking_modal_delivery_method_wrapper {
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+    }
+    .booking_modal_delivery_method_content {
+        text-align: center;
+        padding: 16px 0;
+    }
+    .booking_modal_delivery_method_content img {
+        width: 40vw;
+        height: 40vw;
+    }
+    .booking_modal_entry_field_stack_wrapper {
+        flex-direction: column;
+        gap: 8px;
+    }
+    #booking_modal_content_3_p {
+        height: 100%;
+        gap: 16px;
+    }
+    #booking_modal_error_wrapper {
+        left: auto;
+        bottom: auto;
+        width: 100%;
+        height: 60px;
+        border-radius: 16px 16px 0 0;
+    }
+    .booking_modal_success_wrapper {
+        text-align: center;
+        padding: 16px 16px;
+    }
 }
