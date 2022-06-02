@@ -33,8 +33,14 @@
                 <input id="ticket_amount_entry_field" type="number" min=1 max=10 value=1></input>
             </div>
         </div>
-        <div>
-            <button class="button_outlined" onclick="handleDeliveryMethodPage()">Continue</button>
+        <div class="booking_modal_button_wrapper">
+            <button 
+                id="booking_modal_close_button" 
+                class="button_outlined back_button" 
+                data-bs-toggle="modal"
+                data-bs-target="#booking_modal"
+            >Cancel</button>
+            <button class="button_outlined"  onclick="handleDeliveryMethodPage()">Continue</button>
         </div>
     </div>
 </div>

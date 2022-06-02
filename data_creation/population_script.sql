@@ -265,8 +265,53 @@ INSERT INTO events_event (title, description, maximum_capacity, start_date, end_
     'https://i.guim.co.uk/img/media/05d40829197a54e67e8bde4bcaffe35d5da1fe46/0_250_3414_2048/master/3414.jpg?width=465&quality=45&auto=format&fit=max&dpr=2&s=7d23a70263bfc696fa3dd09aba7c778c'
 );
 
-INSERT INTO events_eventimage(image_url, event_id, description, main) VALUES ('https://coinlive.me/wp-content/uploads/2022/02/Coachella-Music-Festival-opens-for-NFT-sale.jpg', 1, 'Coachella Stage', true);
-INSERT INTO events_eventimage(image_url, event_id, description, main) VALUES ('https://cdn.tix.is/tix/EventImages/Event_13188.jpg?cache=637871210889600000', 2, 'Skepta', true);
+INSERT INTO events_eventimage (image_url, description, event_id) VALUES
+(
+	'https://gothammag.com/get/files/image/galleries/coachella-billy-farrell-bfa-main.jpg',
+	'Coachella people',
+	1
+),
+(
+	'https://media.glamour.com/photos/6254dca536f5904ec3513ffe/master/w_2560%2Cc_limit/1142665368',
+	'Coachella style',
+	1
+),
+(
+	'https://www.insidehook.com/wp-content/uploads/2021/10/GettyImages-1144320973-e1634133770589.jpg?fit=1200%2C800',
+	'Coachella overview',
+	1
+),
+(
+	'https://ichef.bbci.co.uk/images/ic/1200x675/p02rs957.jpg',
+	'Skepta on stage',
+	2
+),
+(
+	'https://cdn2.thelineofbestfit.com/images/made/images/remote/https_cdn2.thelineofbestfit.com/galleries/2014/skepta_govball17_bc_1290_860.jpg',
+	'Skepta in the lights',
+	2
+),
+(
+	'https://ichef.bbci.co.uk/images/ic/1200x675/p04sk1b2.jpg',
+	'Skepta in stage',
+	2
+),
+(
+	'https://ichef.bbci.co.uk/images/ic/1200x675/p02rs957.jpg',
+	'Skepta on stage',
+	3
+),
+(
+	'https://cdn2.thelineofbestfit.com/images/made/images/remote/https_cdn2.thelineofbestfit.com/galleries/2014/skepta_govball17_bc_1290_860.jpg',
+	'Skepta in the lights',
+	3
+),
+(
+	'https://ichef.bbci.co.uk/images/ic/1200x675/p04sk1b2.jpg',
+	'Skepta in stage',
+	3
+);
+
 
 INSERT INTO home_category (name) VALUES 
 ('Rap'), 
@@ -306,6 +351,11 @@ INSERT INTO entertainers_entertainer (name, description, image_url) VALUES
     'Rihanna',
     'Robyn Rihanna Fenty NH is a Barbadian singer, actress, fashion designer, and businesswoman. Born in Saint Michael and raised in Bridgetown, Barbados, Rihanna was discovered by American record producer Evan Rogers who invited her to the United States to record demo tapes.',
     'https://api.time.com/wp-content/uploads/2018/09/rihanna-barbados-ambassador.jpg'
+),
+(
+    'Skepta', 
+    'Joseph Olaitan Adenuga Jr., known professionally as Skepta, is a British grime MC, rapper, songwriter and record producer. Skepta, alongside his younger brother Jme, briefly joined Roll Deep before becoming founding members of Boy Better Know in 2005.', 
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHZXQ-9IIA5Ufq2e-pjIdUOXoZvTcKaxvxyonk6hxOi1VoJzTO'
 );
 
 insert into home_evententertainer (entertainer_id,event_id)

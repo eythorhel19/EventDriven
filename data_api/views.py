@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view
 
 from events.models import Event
 from home.models import Ticket, TicketType, EventTicketTypePrice, Country, City, UserFavoriteCategory, UserFavoriteEntertainer
+from user.views import get_user_details
 
 
 def check_required_fields(req_body, required_fields):
@@ -344,7 +345,7 @@ def user_entertainers(request):
     UserFavoriteEntertainer.objects.filter(user_id=request.user.id).delete()
     req_body = json.loads(request.body)
 
-    for i in req_body["select_entertainers"]:
+    for i in req_body['select_entertainers']:
         print('i', i)
         UserFavoriteEntertainer.objects.create(
             user_id=request.user.id,
@@ -352,3 +353,20 @@ def user_entertainers(request):
         )
 
     return JsonResponse(status=200, data={'message': 'OK'})
+
+
+@api_view(['GET'])
+def user_info(request):
+    user_details = get_user_details(request.user)
+
+    if user_details is None:
+        return JsonResponse(status=404, data={'message': 'User not found!'})
+    else:
+        user_details_dict = model_to_dict(user_details)
+        user_details_dict['first_name'] = request.user.first_name
+        user_details_dict['last_name'] = request.user.last_name
+        user_details_dict['email'] = request.user.email
+        del user_details_dict['id']
+        del user_details_dict['user']
+        del user_details_dict['profile_image_url']
+        return JsonResponse(status=200, data=user_details_dict)

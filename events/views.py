@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import render
-from events.models import Event
+from events.models import Event, EventImage
 from user.views import get_user_details
 from constants import progress_data
 from django.contrib.auth.decorators import login_required
@@ -15,6 +15,7 @@ def event(request, event_id):
     user_details = get_user_details(request.user)
 
     the_event = Event.objects.get(pk=event_id)
+    extra_event_images = EventImage.objects.filter(event = the_event)
     day_month = the_event.start_date.strftime("%d %b")
     hour = the_event.start_date.strftime("%H:%M")
     year = the_event.start_date.strftime("%Y")
@@ -22,6 +23,12 @@ def event(request, event_id):
     hour_to = the_event.end_date.strftime("%H:%M")
     year_to = the_event.end_date.strftime("%Y")
     # the_artists = Entertainers.objects.filter(event=the_event)
+
+    event_images = [the_event.main_image_url]
+    for ei in extra_event_images:
+        event_images.append(ei.image_url)
+    
+    print(event_images)
 
     if not event_id.isdigit():
         return JsonResponse(status=400, data={"message": "Invalid ID"})
@@ -59,27 +66,28 @@ def event(request, event_id):
 
     most_similar_events = Event.objects.raw('''
     SELECT *
-FROM (
-SELECT THIS_EVENT.ID, THIS_EVENT.TITLE, THIS_EVENT.DESCRIPTION, THIS_EVENT.MAXIMUM_CAPACITY, THIS_EVENT.START_DATE, THIS_EVENT.END_DATE, THIS_EVENT.LOCATION_ID, THIS_EVENT.MAIN_IMAGE_URL, COUNT(*)
-FROM EVENTS_EVENT AS THIS_EVENT
-JOIN HOME_EVENTENTERTAINER AS HEENT ON HEENT.EVENT_ID = THIS_EVENT.ID
-JOIN HOME_EVENTCATEGORY AS HECAT ON HECAT.EVENT_ID = THIS_EVENT.ID
-WHERE HEENT.ENTERTAINER_ID IN (SELECT HEENT.ENTERTAINER_ID
-FROM EVENTS_EVENT AS EEVE
-JOIN HOME_EVENTENTERTAINER AS HEENT ON HEENT.EVENT_ID = EEVE.ID
-JOIN HOME_EVENTCATEGORY AS HECAT ON HECAT.EVENT_ID = EEVE.ID
-WHERE EEVE.ID = {}) AND HECAT.CATEGORY_ID IN (SELECT HECAT.CATEGORY_ID
-FROM EVENTS_EVENT AS EEVE
-JOIN HOME_EVENTENTERTAINER AS HEENT ON HEENT.EVENT_ID = EEVE.ID
-JOIN HOME_EVENTCATEGORY AS HECAT ON HECAT.EVENT_ID = EEVE.ID
-WHERE EEVE.ID = {}) AND THIS_EVENT.ID != {}
-GROUP BY THIS_EVENT.ID, THIS_EVENT.TITLE, THIS_EVENT.DESCRIPTION, THIS_EVENT.MAXIMUM_CAPACITY, THIS_EVENT.START_DATE, THIS_EVENT.END_DATE, THIS_EVENT.LOCATION_ID, THIS_EVENT.MAIN_IMAGE_URL
-ORDER BY COUNT DESC) AS MOST_SIMILAR_EVENTS
-JOIN HOME_LOCATION AS HLOC ON HLOC.ID = MOST_SIMILAR_EVENTS.LOCATION_ID
+    FROM (
+    SELECT THIS_EVENT.ID, THIS_EVENT.TITLE, THIS_EVENT.DESCRIPTION, THIS_EVENT.MAXIMUM_CAPACITY, THIS_EVENT.START_DATE, THIS_EVENT.END_DATE, THIS_EVENT.LOCATION_ID, THIS_EVENT.MAIN_IMAGE_URL, COUNT(*)
+    FROM EVENTS_EVENT AS THIS_EVENT
+    JOIN HOME_EVENTENTERTAINER AS HEENT ON HEENT.EVENT_ID = THIS_EVENT.ID
+    JOIN HOME_EVENTCATEGORY AS HECAT ON HECAT.EVENT_ID = THIS_EVENT.ID
+    WHERE HEENT.ENTERTAINER_ID IN (SELECT HEENT.ENTERTAINER_ID
+    FROM EVENTS_EVENT AS EEVE
+    JOIN HOME_EVENTENTERTAINER AS HEENT ON HEENT.EVENT_ID = EEVE.ID
+    JOIN HOME_EVENTCATEGORY AS HECAT ON HECAT.EVENT_ID = EEVE.ID
+    WHERE EEVE.ID = {}) AND HECAT.CATEGORY_ID IN (SELECT HECAT.CATEGORY_ID
+    FROM EVENTS_EVENT AS EEVE
+    JOIN HOME_EVENTENTERTAINER AS HEENT ON HEENT.EVENT_ID = EEVE.ID
+    JOIN HOME_EVENTCATEGORY AS HECAT ON HECAT.EVENT_ID = EEVE.ID
+    WHERE EEVE.ID = {}) AND THIS_EVENT.ID != {}
+    GROUP BY THIS_EVENT.ID, THIS_EVENT.TITLE, THIS_EVENT.DESCRIPTION, THIS_EVENT.MAXIMUM_CAPACITY, THIS_EVENT.START_DATE, THIS_EVENT.END_DATE, THIS_EVENT.LOCATION_ID, THIS_EVENT.MAIN_IMAGE_URL
+    ORDER BY COUNT DESC) AS MOST_SIMILAR_EVENTS
+    JOIN HOME_LOCATION AS HLOC ON HLOC.ID = MOST_SIMILAR_EVENTS.LOCATION_ID
 '''.format(event_id, event_id, event_id))
 
     return render(request, "pages/event/index.html", context={
         "event": the_event,
+        "event_images": event_images,
         "day_month": day_month,
         "hour": hour,
         "year": year,

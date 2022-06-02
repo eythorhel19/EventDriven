@@ -1,117 +1,28 @@
 {% extends "base.html" %} {% block content %}
 
-<style>
-    .main_wrapper {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        color: var(--type-primary);
+{% load static %}
+<script src="{% static 'js/event.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/event.css' %}">
 
-    }
-    .top_wrapper {
-        display: flex;
-        width: 100%;
-        height: 100%;
-        flex-direction: row;
-        align-items: center;
-        padding: 0;
-        gap: 32px;
-        flex-wrap: wrap;
-        justify-content: center;
-
-    }
-    .image_wrapper_info_card {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        width: 66%;
-        height: 40vw;
-        border-radius: 16px;
-    }
-    .image_wrapper_info_card img {
-        object-fit: cover;
-        width: 100%;
-        height: 100%;
-    }
-
-    .info_and_book_wrapper {
-        display: flex;
-        width: 30%;
-        height: 100%;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-    
-    .info_wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 32px;
-        color: var(--type-primary);
-
-    }
-    .max_cap_wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-    }
-    .map_and_calander_wrapper {
-        display: flex;
-        flex-direction: row;
-        gap: 32px;
-        width: 100%;
-        height: 100%;
-        margin-top: 30px;
-        margin-bottom: 30px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .the_map_wrapper {
-        display: flex;
-        flex-direction: column;
-        width: 45%;
-        height: 100%;
-    }
-    @media only screen and (max-width: 900px) {
-        .image_wrapper_info_card {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            width: 100%;
-            height: 40vw;
-            border-radius: 16px;
-        }
-        .info_and_book_wrapper {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .the_map_wrapper {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            height: 100%;
-        }
-    }
-</style>
-<script>
-    function scrollParentDivLeft(event) {
-        event.parentNode.scrollLeft -= 350;
-    }
-    function scrollParentDivRight(event) {
-        event.parentNode.scrollLeft += 350;
-    }
-</script>
+<div hidden>
+{% for img_url in event_images %}
+    <div class="event_image_url">{{img_url}}</div>
+{% endfor %}
+</div>
 <div class="main_wrapper">
     <div class="top_wrapper">
         <div class="image_wrapper_info_card">
             <img
+                id="event_current_image"
                 src="{{event.main_image_url}}"
                 alt="Event image"
             />
+            
+            <div class="event_image_buttons">
+                <button class="icon_large" onclick="loadPrevImage()">arrow_back_ios</button>
+                <button class="icon_large" onclick="loadNextImage()">arrow_forward_ios</button>
+            </div>
+            
         </div>
         <div class="info_and_book_wrapper">
             <div class="info_wrapper">
@@ -122,12 +33,10 @@
                     <p class="h3_regular">{{ event.maximum_capacity }}</p>
                 </div>
                 <div class="max_cap_wrapper">
-                    <p class="label_light">Price</p>
-                    <select name="price" id="price">
-                        {% for price_type in event_price_and_ticket_type %}
-                        <option value="{{price.price}}">Ticket type: {{price_type.description}}, Price: {{price_type.price}} USD</option>
-                        {% endfor %}
-                    </select>
+                    <p class="label_light">Ticket prices</p>
+                    {% for price_type in event_price_and_ticket_type %}
+                    <p class="p_light" value="{{price.price}}">{{price_type.description}}: {{price_type.price}} USD</p>
+                    {% endfor %}
                 </div>
             </div>
 
@@ -155,33 +64,13 @@
         <div class="the_map_wrapper">
             <p>Date</p>
             <p>{{event.start_date}} to {{event.end_date}}</p>
-                <style>
-                    .the_calander_icon_wrapper {
-                        display: flex;
-                        flex-direction: column;
-                        height: 600px;
-                        width: 100%;
-                    }
-                    .the_calander_icon_month {
-                        background-color: orange;
-                        border-radius: 10px 10px 0 0px;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        height: 25%;
-                    }
-                    .the_calander_icon_date_week {
-                        display: flex;
-                        justify-content: center;
-                        flex-direction: column;
-                        align-items: center;
-                        height: 75%;
-                        background-color: white;
-                    }
-                </style>
                 <div class="the_calander_icon_wrapper">
                     <div class="the_calander_icon_month">
-                        <h2 style="font-size: 3rem">{{year}} to {{year_to}}</h2>
+                        {% if year == year_to %}
+                        <h2 style="font-size: 3rem">{{year}}</h2>
+                        {% else %}
+                            <h2 style="font-size: 3rem">{{year}} to {{year_to}}</h2>
+                        {% endif %}
                     </div>
                     <div class="the_calander_icon_date_week">
                         <h1 style="color: var(--base-primary); font-size: 3rem;

@@ -3,7 +3,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <title>EventDriven</title>
+        <title>EventDriven | Where the world buyes their tickets</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -54,12 +54,11 @@
         }
     </style>
     {% include 'navbar.html' with user_details=user_details %}
-    
+    {% include 'components/user_avatar_options.html' %}
     <body>
         <div class="page_body">{% block content%} {% endblock %}</div>
     </body>
     {% include 'components/booking_modal/index.html' with progress_data=progress_data%}
-    {% include 'components/user_avatar_options.html' %}
     
     {%include 'components/footer.html' %}
 </html>

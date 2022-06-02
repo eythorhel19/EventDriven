@@ -366,6 +366,11 @@ body {
     opacity: 0.88;
 }
 
+.for_hover_glow {
+    background: #ffffff;
+    width: 320px;
+    border-radius: 10px;
+}
 
 .card_img {
     width: 100%;

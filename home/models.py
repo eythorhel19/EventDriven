@@ -14,11 +14,16 @@ class Country(models.Model):
     iso3_code = models.CharField(max_length=3)
     phone_country_code = models.CharField(max_length=5)
 
+    def __str__(self):
+        return "{} (+{})".format(self.name, self.phone_country_code)
+
 
 class City(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
 
+    def __str__(self):
+        return "{}".format(self.name)
 
 class Location(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE)
