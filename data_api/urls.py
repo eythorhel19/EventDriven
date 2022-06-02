@@ -12,5 +12,9 @@ urlpatterns = [
          name="posting new users fav categories"),
     path('user_entertainers', views.user_entertainers,
          name="posting new users fav entertainer"),
-    path('user_info', views.user_info, name="get user info")
+    path('user_info', views.user_info, name="get user info"),
+    path('event_categories', views.event_categories,
+         name="create event categories"),
+    path('event_entertainers', views.event_entertainers,
+         name="create event entertainers")
 ]

@@ -1,4 +1,5 @@
 import json
+from unicodedata import category
 
 from django.http import JsonResponse, HttpResponse
 from django.forms.models import model_to_dict
@@ -8,6 +9,8 @@ from rest_framework.decorators import api_view
 from events.models import Event
 from home.models import Ticket, TicketType, EventTicketTypePrice, Country, City, UserFavoriteCategory, UserFavoriteEntertainer
 from user.views import get_user_details
+from home.models import EventCategory, EventEntertainer
+from django.contrib.auth.decorators import login_required
 
 
 def check_required_fields(req_body, required_fields):
@@ -170,7 +173,7 @@ def generate_tickets(request):
             event_id=req_body['event_id']
         )
         tickets.append(t)
-    
+
     Ticket.objects.bulk_create(tickets)
 
     return JsonResponse(status=200, data={'message': 'Successfully created {} tickets'.format(req_body['quantity'])})
@@ -202,7 +205,7 @@ def release_tickets(request):
 
     for t in the_tickets:
         t.status = 'R'
-    
+
     Ticket.objects.bulk_update(the_tickets, fields=['status'])
 
     return JsonResponse(status=200, data={'message': 'Successfully released {} tickets!'.format(len(the_tickets))})
@@ -223,13 +226,13 @@ def book_tickets(request):
 
     if 'delivery_method' not in req_body:
         return JsonResponse(status=400, data={'message': 'Request body missing field "delivery_method"!'})
-    
+
     if req_body['delivery_method'] == 'E':
         required_fields = ['ticket_type_id', 'event_id', 'delivery_method',
                            'email', 'first_name', 'last_name', 'quantity', 'phone_country', 'phone_number']
         status, msg = check_required_fields(req_body, required_fields)
         if status != 200:
-            return JsonResponse(status=status, data={'message': msg })
+            return JsonResponse(status=status, data={'message': msg})
 
         available_tickets = Ticket.objects.filter(
             event_id=req_body['event_id'],
@@ -238,7 +241,7 @@ def book_tickets(request):
         )
 
         if req_body['quantity'] > 10:
-            return JsonResponse(status=400, data={'message': 'Quantity is too large, only a maximum of 10 tickets can be bought!' })
+            return JsonResponse(status=400, data={'message': 'Quantity is too large, only a maximum of 10 tickets can be bought!'})
 
         if len(available_tickets) < req_body['quantity']:
             return JsonResponse(status=400, data={'message': 'Quantity is too large, only {} tickets available.'.format(
@@ -346,7 +349,6 @@ def user_entertainers(request):
     req_body = json.loads(request.body)
 
     for i in req_body['select_entertainers']:
-        print('i', i)
         UserFavoriteEntertainer.objects.create(
             user_id=request.user.id,
             entertainer_id=i['id']
@@ -370,3 +372,43 @@ def user_info(request):
         del user_details_dict['user']
         del user_details_dict['profile_image_url']
         return JsonResponse(status=200, data=user_details_dict)
+
+
+@api_view(['PUT'])
+@login_required
+def event_categories(request):
+
+    if request.headers['Content-Type'] != 'application/json':
+        return HttpResponse('Request body should be of type json!', status=400)
+
+    req_body = json.loads(request.body)
+    EventCategory.objects.filter(event_id=req_body['event_id']).delete()
+
+    for i in req_body['event_categories']:
+        EventCategory.objects.create(
+            event_id=req_body['event_id'],
+            category_id=i['id']
+        )
+
+    return JsonResponse(status=200, data={'message': 'OK'})
+
+
+@api_view(['PUT'])
+@login_required
+def event_entertainers(request):
+
+    if request.headers['Content-Type'] != 'application/json':
+        return HttpResponse('Request body should be of type json!', status=400)
+
+    req_body = json.loads(request.body)
+    EventEntertainer.objects.filter(event_id=req_body['event_id']).delete()
+
+    print('event_id', req_body['event_id'])
+    for i in req_body['event_entertainers']:
+        print("i: ", i)
+        EventEntertainer.objects.create(
+            event_id=req_body['event_id'],
+            entertainer_id=i['id']
+        )
+
+    return JsonResponse(status=200, data={'message': 'OK'})

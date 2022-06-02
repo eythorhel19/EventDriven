@@ -150,7 +150,6 @@
                     onchange="return funcForUsersFavEntSelected(event)"
                 >
                     {% csrf_token %}
-
                     <select
                         class="js-example-basic-multiple"
                         name="states[]"
@@ -168,9 +167,6 @@
                         </option>
                         {% endfor %}
                     </select>
-                    <!-- <button class="button_outlined" style="margin-top: 10px">
-                        Save changes
-                    </button> -->
                 </form>
             </div>
             <div class="favorite_type_container">
@@ -199,9 +195,6 @@
                         </option>
                         {% endfor %}
                     </select>
-                    <!-- <button class="button_outlined" style="margin-top: 10px">
-                        Save changes
-                    </button> -->
                 </form>
             </div>
         </div>

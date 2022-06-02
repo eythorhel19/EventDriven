@@ -5,17 +5,19 @@ from user.views import get_user_details
 from constants import progress_data
 from django.contrib.auth.decorators import login_required
 from events.forms.event_form import EventForm
-from events.forms.event_category_form import EventCategory
-from events.forms.event_entertainers_form import EventEntertainer
+# from events.forms.event_category_form import EventCategory
+# from events.forms.event_entertainers_form import EventEntertainer
 from events.forms.event_ticket_price_form import EventTicketTypePrice
 from django.shortcuts import redirect
+from home.models import Category, EventCategory, EventEntertainer
+from entertainers.models import Entertainer
 
 
 def event(request, event_id):
     user_details = get_user_details(request.user)
 
     the_event = Event.objects.get(pk=event_id)
-    extra_event_images = EventImage.objects.filter(event = the_event)
+    extra_event_images = EventImage.objects.filter(event=the_event)
     day_month = the_event.start_date.strftime("%d %b")
     hour = the_event.start_date.strftime("%H:%M")
     year = the_event.start_date.strftime("%Y")
@@ -27,7 +29,7 @@ def event(request, event_id):
     event_images = [the_event.main_image_url]
     for ei in extra_event_images:
         event_images.append(ei.image_url)
-    
+
     print(event_images)
 
     if not event_id.isdigit():
@@ -167,29 +169,61 @@ def create_event_more_info(request, event_id):
     if request.user.is_superuser:
         user_details = get_user_details(request.user)
         if request.method == 'POST':
-            event_category_form = EventCategory(request.POST)
-            event_entertainer_form = EventEntertainer(request.POST)
+            #     event_category_form = EventCategory(request.POST)
+            #     event_entertainer_form = EventEntertainer(request.POST)
             event_ticket_price_form = EventTicketTypePrice(request.POST)
-            if event_category_form.is_valid():
-                event_category_form.save()
-                return redirect('/event/create_event/'+str(event_id))
-            elif event_entertainer_form.is_valid():
-                event_entertainer_form.save()
-                return redirect('/event/create_event/'+str(event_id))
-            elif event_ticket_price_form.is_valid():
+            #     if event_category_form.is_valid():
+            #         event_category_form.save()
+            #         return redirect('/event/create_event/'+str(event_id))
+            #     elif event_entertainer_form.is_valid():
+            #         event_entertainer_form.save()
+            #         return redirect('/event/create_event/'+str(event_id))
+            if event_ticket_price_form.is_valid():
                 event_ticket_price_form.save()
                 return redirect('/event/create_event/'+str(event_id))
         else:
-            event_category_form = EventCategory(initial={'event': the_event})
-            event_entertainer_form = EventEntertainer(
-                initial={'event': the_event})
+            #     event_category_form = EventCategory(initial={'event': the_event})
+            #     event_entertainer_form = EventEntertainer(
+            #         initial={'event': the_event})
             event_ticket_price_form = EventTicketTypePrice(
                 initial={'event': the_event})
+
+        this_events_selected_categories = EventCategory.objects.filter(
+            event_id=event_id)
+        this_events_selected_entertainers = EventEntertainer.objects.filter(
+            event_id=event_id)
+
+        events_cate = []
+        rest_events_cate = []
+        this_events_selected_categories_list = []
+        for i in this_events_selected_categories:
+            this_events_selected_categories_list.append(i.category_id)
+
+        for i in Category.objects.all():
+            if(i.id in this_events_selected_categories_list):
+                events_cate.append(i)
+            else:
+                rest_events_cate.append(i)
+
+        events_ent = []
+        rest_events_ent = []
+        this_events_selected_entertainers_list = []
+        for i in this_events_selected_entertainers:
+
+            this_events_selected_entertainers_list.append(i.entertainer_id)
+
+        for i in Entertainer.objects.all():
+            if(i.id in this_events_selected_entertainers_list):
+                events_ent.append(i)
+            else:
+                rest_events_ent.append(i)
+
         return render(request, 'pages/event/create_event_more_info.html', context={
-            'event_category_form': event_category_form,
-            'event_entertainer_form': event_entertainer_form,
+            # 'event_category_form': event_category_form,
+            # 'event_entertainer_form': event_entertainer_form,
             'event_ticket_price_form': event_ticket_price_form,
             'user_details': user_details,
+            "event_id": event_id,
             "event": the_event,
             "day_month": day_month,
             "hour": hour,
@@ -201,6 +235,10 @@ def create_event_more_info(request, event_id):
             "map_url": map_url,
             "event_price_and_ticket_type": event_price_and_ticket_type,
             'progress_data': progress_data,
+            "Category": rest_events_cate,
+            "EventCategory": events_cate,
+            "Entertainer": rest_events_ent,
+            "EventEntertainer": events_ent,
 
         })
     else:

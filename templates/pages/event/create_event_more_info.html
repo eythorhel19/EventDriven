@@ -97,33 +97,124 @@
         border: 2px solid var(--type-primary);
         border-radius: 8px;
         padding: 16px;
-
+    }
+    .create_more_forms {
+        color: var(--type-primary);
+        display: flex;
+        gap: 32px;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        flex-direction: row;
     }
 </style>
-<form method="post" class="profile_form">
-    {% csrf_token %} {{event_category_form}}
+<script>
+    const sourceParts = window.location.href.split("/");
+    const BASE_URL = sourceParts[0] + "//" + sourceParts[2];
 
-    <div>
-        <input
-            type="submit"
-            class="button_outlined"
-            value="Update"
-            style="border-width: 2px"
-        />
-    </div>
-</form>
-<form method="post" class="profile_form">
-    {% csrf_token %} {{event_entertainer_form}}
+    $(document).ready(function () {
+        $(".js-example-basic-multiple").select2();
+    });
 
-    <div>
-        <input
-            type="submit"
-            class="button_outlined"
-            value="Update"
-            style="border-width: 2px"
-        />
-    </div>
-</form>
+    async function funcForNewEventsCategories(event) {
+        event.preventDefault();
+
+        const token = $('input[name="csrfmiddlewaretoken"]').val();
+
+        const url = BASE_URL + "/api/event_categories";
+
+        const res = await fetch(url, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": token,
+            },
+            body: JSON.stringify({
+                event_id: sourceParts[5],
+                event_categories: $("#event_categories").select2(
+                    "data"
+                ),
+            }),
+        });
+    }
+    async function funcForNewEventsEntertainers(event) {
+        event.preventDefault();
+
+        const token = $('input[name="csrfmiddlewaretoken"]').val();
+
+        const url = BASE_URL + "/api/event_entertainers";
+
+        const res = await fetch(url, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": token,
+            },
+            body: JSON.stringify({
+                event_id: sourceParts[5],
+                event_entertainers: $("#event_entertainers").select2(
+                    "data"
+                ),
+            }),
+        });
+    }
+</script>
+<div class="favorite_type_container">
+    <p class="h3_regular" style="color:var(--type-primary)">This events categories:</p>
+    <form
+        onchange="return funcForNewEventsCategories(event)"
+        class="form_fro_favorite"
+    >
+        {% csrf_token %}
+
+        <select
+            id="event_categories"
+            class="js-example-basic-multiple"
+            name="states[]"
+            multiple="multiple"
+            style="width: 100%"
+            id="select_categories"
+        >
+            {% for category in EventCategory %}
+            <option value="{{category.id}}" selected>
+                {{category.name}}
+            </option>
+            {% endfor %} {% for category in Category %}
+            <option value="{{category.id}}">
+                {{category.name}}
+            </option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+<div class="favorite_type_container">
+    <p class="h3_regular" style="color:var(--type-primary)">This events entertainers:</p>
+    <form
+        onchange="return funcForNewEventsEntertainers(event)"
+        class="form_fro_favorite"
+    >
+        {% csrf_token %}
+
+        <select
+            id="event_entertainers"
+            class="js-example-basic-multiple"
+            name="states[]"
+            multiple="multiple"
+            style="width: 100%"
+            id="select_categories"
+        >
+            {% for entertainer in EventEntertainer %}
+            <option value="{{entertainer.id}}" selected>
+                {{entertainer.name}}
+            </option>
+            {% endfor %} {% for entertainer in Entertainer %}
+            <option value="{{entertainer.id}}">
+                {{entertainer.name}}
+            </option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
 <form method="post" style="display: flex; flex-direction: column">
     {% csrf_token %} {{event_ticket_price_form}}
 
@@ -136,11 +227,55 @@
         />
     </div>
 </form>
-<p class="h2_regular" style="color: white;">Here you can see how the event card will look</p>
+
+<!-- 
+<div class="create_more_forms">
+    <form method="post" class="profile_form">
+        {% csrf_token %} {{event_category_form}}
+        <div>
+            <input
+                type="submit"
+                class="button_outlined"
+                value="Update"
+                style="border-width: 2px"
+            />
+        </div>
+    </form>
+    <form method="post" class="profile_form">
+        {% csrf_token %} {{event_entertainer_form}}
+
+        <div>
+            <input
+                type="submit"
+                class="button_outlined"
+                value="Update"
+                style="border-width: 2px"
+            />
+        </div>
+    </form>
+    <form method="post" style="display: flex; flex-direction: column">
+        {% csrf_token %} {{event_ticket_price_form}}
+
+        <div>
+            <input
+                type="submit"
+                class="button_outlined"
+                value="Update"
+                style="border-width: 2px"
+            />
+        </div>
+    </form>
+</div> -->
+<p class="h2_regular" style="color: white">
+    Here you can see how the event card will look
+</p>
 <div class="preview_of_event">
-<div>{% include 'components/info_card.html' with event=event %}</div>
+    <div>{% include 'components/info_card.html' with event=event %}</div>
 </div>
-<p class="h2_regular" style="color: white;">Here you can see how the event page will look</p>
+<p class="h2_regular" style="color: white">
+    Here you can see how the event page will look
+</p>
+
 <div class="preview_of_event">
     <div class="main_wrapper">
         <div class="top_wrapper">
@@ -154,16 +289,19 @@
                         <h3 class="h3_light">{{event.description}}</h3>
                         <div class="max_cap_wrapper">
                             <p class="label_light">Maximum Capacity</p>
-                            <p class="h3_regular">{{ event.maximum_capacity }}</p>
+                            <p class="h3_regular">
+                                {{ event.maximum_capacity }}
+                            </p>
                         </div>
                     </div>
                 </div>
-            </div><div class="map_and_calander_wrapper">
+            </div>
+            <div class="map_and_calander_wrapper">
                 <div class="the_map_wrapper">
                     <p>Location</p>
                     <p>{{event.location}}</p>
                     <iframe
-                        src={{map_url}}
+                        src="{{map_url}}"
                         height="600"
                         style="border: 0"
                         allowfullscreen=""
@@ -174,55 +312,66 @@
                 <div class="the_map_wrapper">
                     <p>Date</p>
                     <p>{{event.start_date}} to {{event.end_date}}</p>
-                        <style>
-                            .the_calander_icon_wrapper {
-                                display: flex;
-                                flex-direction: column;
-                                height: 600px;
-                                width: 100%;
-                            }
-                            .the_calander_icon_month {
-                                background-color: orange;
-                                border-radius: 10px 10px 0 0px;
-                                display: flex;
-                                justify-content: center;
-                                align-items: center;
-                                height: 25%;
-                            }
-                            .the_calander_icon_date_week {
-                                display: flex;
-                                justify-content: center;
-                                flex-direction: column;
-                                align-items: center;
-                                height: 75%;
-                                background-color: white;
-                            }
-                        </style>
-                        <div class="the_calander_icon_wrapper">
-                            <div class="the_calander_icon_month">
-                                <h2 style="font-size: 3rem">{{year}} to {{year_to}}</h2>
-                            </div>
-                            <div class="the_calander_icon_date_week">
-                                <h1 style="color: var(--base-primary); font-size: 3rem;
-                                ">{{hour}} to {{hour_to}}</h1>
-                                <h3 style="color: orange ; font-size: 3rem" >{{day_month}} to {{day_month_to}}</h3>
-                            </div>
-                            
+                    <style>
+                        .the_calander_icon_wrapper {
+                            display: flex;
+                            flex-direction: column;
+                            height: 600px;
+                            width: 100%;
+                        }
+                        .the_calander_icon_month {
+                            background-color: orange;
+                            border-radius: 10px 10px 0 0px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            height: 25%;
+                        }
+                        .the_calander_icon_date_week {
+                            display: flex;
+                            justify-content: center;
+                            flex-direction: column;
+                            align-items: center;
+                            height: 75%;
+                            background-color: white;
+                        }
+                    </style>
+                    <div class="the_calander_icon_wrapper">
+                        <div class="the_calander_icon_month">
+                            <h2 style="font-size: 3rem">
+                                {{year}} to {{year_to}}
+                            </h2>
+                        </div>
+                        <div class="the_calander_icon_date_week">
+                            <h1
+                                style="
+                                    color: var(--base-primary);
+                                    font-size: 3rem;
+                                "
+                            >
+                                {{hour}} to {{hour_to}}
+                            </h1>
+                            <h3 style="color: orange; font-size: 3rem">
+                                {{day_month}} to {{day_month_to}}
+                            </h3>
                         </div>
                     </div>
                 </div>
-                
             </div>
-            <p class="h3_regular" style="color:var(--type-primary)">Entertainers appearing in this event</p>
-            <div class="row-of-cards">
-                {% if events_entertainers %}
-                    {% for entertainer in events_entertainers %}
-                    <div>{% include 'components/entertainers_info_card.html' with entertainer=entertainer %}</div>
-                    {% endfor %}
-                {% else %}
-                    <p class="h1_regular" style="color:gray">No entertainers found for this event</p>
-                {% endif %}
+        </div>
+        <p class="h3_regular" style="color: var(--type-primary)">
+            Entertainers appearing in this event
+        </p>
+        <div class="row-of-cards">
+            {% if events_entertainers %} {% for entertainer in events_entertainers %}
+            <div>
+                {% include 'components/entertainers_info_card.html' with entertainer=entertainer %}
             </div>
+            {% endfor %} {% else %}
+            <p class="h1_regular" style="color: gray">
+                No entertainers found for this event
+            </p>
+            {% endif %}
         </div>
     </div>
 </div>
