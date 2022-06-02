@@ -5,6 +5,7 @@
     color: var(--type-primary);
 
 }
+
 .top_wrapper {
     display: flex;
     width: 100%;
@@ -17,6 +18,7 @@
     justify-content: center;
 
 }
+
 .image_wrapper_info_card {
     display: flex;
     justify-content: center;
@@ -26,11 +28,13 @@
     height: 40vw;
     border-radius: 16px;
 }
+
 .image_wrapper_info_card img {
     object-fit: cover;
     width: 100%;
     height: 100%;
 }
+
 .info_and_book_wrapper {
     display: flex;
     width: 30%;
@@ -47,11 +51,13 @@
     color: var(--type-primary);
 
 }
+
 .max_cap_wrapper {
     display: flex;
     flex-direction: column;
     gap: 0;
 }
+
 .map_and_calander_wrapper {
     display: flex;
     flex-direction: row;
@@ -63,15 +69,18 @@
     flex-wrap: wrap;
     justify-content: center;
 }
+
 .the_map_wrapper {
     display: flex;
     flex-direction: column;
     width: calc(50% - 16px);
     height: 100%;
 }
+
 .the_map_wrapper iframe {
     border-radius: 16px;
 }
+
 .event_image_buttons {
     padding-left: 4px;
     position: absolute;
@@ -79,18 +88,21 @@
     justify-content: space-between;
     width: 63%;
 }
+
 .event_image_buttons button {
-    background-color: transparent; 
+    background-color: transparent;
     border: 0;
     color: var(--type-primary);
     opacity: 0.6;
 }
+
 .the_calander_icon_wrapper {
     display: flex;
     flex-direction: column;
     height: 600px;
     width: 100%;
 }
+
 .the_calander_icon_month {
     background-color: orange;
     border-radius: 10px 10px 0 0px;
@@ -99,6 +111,7 @@
     align-items: center;
     height: 25%;
 }
+
 .the_calander_icon_date_week {
     display: flex;
     justify-content: center;
@@ -118,6 +131,7 @@
         height: 40vw;
         border-radius: 16px;
     }
+
     .info_and_book_wrapper {
         display: flex;
         width: 100%;
@@ -125,12 +139,14 @@
         flex-direction: column;
         justify-content: space-between;
     }
+
     .the_map_wrapper {
         display: flex;
         flex-direction: column;
         width: 100%;
         height: 100%;
     }
+
     .event_image_buttons {
         width: 95%;
     }

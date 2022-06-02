@@ -7,10 +7,11 @@ from django.contrib.auth.decorators import login_required
 from events.forms.event_form import EventForm
 # from events.forms.event_category_form import EventCategory
 # from events.forms.event_entertainers_form import EventEntertainer
-from events.forms.event_ticket_price_form import EventTicketTypePrice
+from events.forms.event_ticket_price_form import EventTicketTypePriceForm
 from django.shortcuts import redirect
 from home.models import Category, EventCategory, EventEntertainer
 from entertainers.models import Entertainer
+from home.models import EventTicketTypePrice, TicketType
 
 
 def event(request, event_id):
@@ -171,7 +172,7 @@ def create_event_more_info(request, event_id):
         if request.method == 'POST':
             #     event_category_form = EventCategory(request.POST)
             #     event_entertainer_form = EventEntertainer(request.POST)
-            event_ticket_price_form = EventTicketTypePrice(request.POST)
+            event_ticket_price_form = EventTicketTypePriceForm(request.POST)
             #     if event_category_form.is_valid():
             #         event_category_form.save()
             #         return redirect('/event/create_event/'+str(event_id))
@@ -185,7 +186,7 @@ def create_event_more_info(request, event_id):
             #     event_category_form = EventCategory(initial={'event': the_event})
             #     event_entertainer_form = EventEntertainer(
             #         initial={'event': the_event})
-            event_ticket_price_form = EventTicketTypePrice(
+            event_ticket_price_form = EventTicketTypePriceForm(
                 initial={'event': the_event})
 
         this_events_selected_categories = EventCategory.objects.filter(
@@ -222,6 +223,7 @@ def create_event_more_info(request, event_id):
             # 'event_category_form': event_category_form,
             # 'event_entertainer_form': event_entertainer_form,
             'event_ticket_price_form': event_ticket_price_form,
+            "this_event_ticket_type_price": EventTicketTypePrice.objects.filter(event_id=event_id),
             'user_details': user_details,
             "event_id": event_id,
             "event": the_event,

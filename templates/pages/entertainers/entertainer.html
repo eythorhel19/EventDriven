@@ -1,80 +1,12 @@
 {% extends "base.html" %} {% block content %}
-
-<style>
-    .top_wrapper {
-        display: flex;
-        width: 100%;
-        height: 100%;
-        flex-direction: row;
-        align-items: center;
-        padding: 0;
-        gap: 32px;
-        flex-wrap: wrap;
-        justify-content: center;
-        color: var(--type-primary);
-    }
-    .image_wrapper_ent {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        width: 65%;
-        height: 40vw;
-        border-radius: 16px;
-    }
-    .image_wrapper_ent img {
-        object-fit: cover;
-        width: 100%;
-        height: 100%;
-    }
-    @media only screen and (max-width: 900px) {
-        .image_wrapper_ent {
-            width: 100%;
-            height: 40vw;
-            border-radius: 16px;
-        }
-    }
-
-    .info_and_book_wrapper {
-        display: flex;
-        width: 30%;
-        height: 100%;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-    @media only screen and (max-width: 900px) {
-        .info_and_book_wrapper {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-    }
-
-    .info_wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 32px;
-    }
-    .upp_comming_events_header {
-        margin-top: 40px;
-        margin-left: 0px;
-        color: var(--type-primary);
-    }
-</style>
-<script>
-    function scrollParentDivLeft(event) {
-        event.parentNode.scrollLeft -= 350;
-    }
-    function scrollParentDivRight(event) {
-        event.parentNode.scrollLeft += 350;
-    }
-</script>
+{% load static %}
+<script src="{% static 'js/event.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/event.css' %}">
+<script src="{% static 'js/scroll_horizon.js' %}"></script>
 
 <div>
     <div class="top_wrapper">
-        <div class="image_wrapper_ent">
+        <div class="image_wrapper_info_card">
             <img
                 src="{{entertainer_info.image_url}}"
                 alt="entertainer image"
@@ -88,7 +20,7 @@
             </div>
         </div>
     </div>
-    <p class="h3_regular upp_comming_events_header">Upcoming events</p>
+    <p class="h3_regular" style="color:var(--type-primary); padding-top: 40px;">Upcoming events</p>
     <div class="row-of-cards">
         {% for event in entertainer_events %}
         <div>{% include 'components/info_card.html' with event=event %}</div>

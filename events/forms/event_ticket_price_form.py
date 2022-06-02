@@ -3,7 +3,7 @@ from django.forms import ModelForm, widgets
 from home.models import EventTicketTypePrice
 
 
-class EventTicketTypePrice(ModelForm):
+class EventTicketTypePriceForm(ModelForm):
     class Meta:
         model = EventTicketTypePrice
         exclude = ['id']

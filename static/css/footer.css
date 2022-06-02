@@ -1,0 +1,25 @@
+.contact_info {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.footer {
+    width: 100%;
+    background-color: var(--base-secondary);
+    color: var(--type-primary);
+    text-align: center;
+    display: flex;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 20px;
+    margin-top: auto;
+    gap: 20px;
+}
+
+.contact_info_info {
+    min-width: 50px;
+}

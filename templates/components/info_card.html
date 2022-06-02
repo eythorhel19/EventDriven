@@ -1,37 +1,5 @@
-<style>
-    .book-button-div {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .button-adjust {
-        width: 300px;
-    }
-    .icon-and-text {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 10px;
-    }
-    .image_wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        width: 100%;
-        height: 200px;
-        border-radius: 8px 8px 0 0;
-    }
-    .image_wrapper img {
-        object-fit: cover;
-        min-width: 100%;
-        min-height: 100%;
-    }
-    .description_wrapper {
-        overflow: hidden;
-        height: 48px;
-    }
-</style>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/info_cards.css' %}">
 <div class="for_hover_glow">
     <div class="card">
         <a href="/event/{{event.id}}">
@@ -57,12 +25,12 @@
                 </div>
             </div>
         </a>
-        <div class="book-button-div">
+        <div class="book_button_div">
             <!-- Trigger the modal with a button -->
-            <button
+            <button 
                 data-bs-toggle="modal"
                 data-bs-target="#booking_modal"
-                class="button_outlined button-adjust"
+                class="button_outlined button_adjust"
                 onclick="handleBookNow({{ event.id }})"
             >
                 Book now
