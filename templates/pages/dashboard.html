@@ -129,6 +129,14 @@
         });
     }
 </script>
+<script>
+    function scrollParentDivLeft(event) {
+        event.parentNode.scrollLeft -= 350;
+    }
+    function scrollParentDivRight(event) {
+        event.parentNode.scrollLeft += 350;
+    }
+</script>
 
 <div class="dashboard_body">
     <div class="ticket_and_favorites">
@@ -203,6 +211,37 @@
                     {% include 'ticket_info_card.html' with ticket=ticket %}
                 </div>
                 {% endfor %}
+                <button
+        onclick="scrollParentDivLeft(this)"
+        class="icon_large"
+        style="
+            position: absolute;
+            left: 0;
+            padding: 10px;
+
+            background-color: transparent;
+            border: none;
+            color: var(--type-primary);
+            opacity: 0.5;
+            "
+        >
+            arrow_back_ios
+        </button>
+        <button
+            onclick="scrollParentDivRight(this)"
+            class="icon_large"
+            style="
+                position: absolute;
+                right: 0;
+                padding: 10px;
+                background-color: transparent;
+                border: none;
+                color: var(--type-primary);
+                opacity: 0.5;
+            "
+        >
+            arrow_forward_ios
+        </button>
             </div>
         </div>
     </div>
@@ -213,6 +252,37 @@
         {% for event in query_dashboard_user_fav_cat_ent_events_res %}
         <div>{% include 'components/info_card.html' with event=event %}</div>
         {% endfor %}
+        <button
+        onclick="scrollParentDivLeft(this)"
+        class="icon_large"
+        style="
+            position: absolute;
+            left: 0;
+            padding: 10px;
+
+            background-color: transparent;
+            border: none;
+            color: var(--type-primary);
+            opacity: 0.5;
+            "
+        >
+            arrow_back_ios
+        </button>
+        <button
+            onclick="scrollParentDivRight(this)"
+            class="icon_large"
+            style="
+                position: absolute;
+                right: 0;
+                padding: 10px;
+                background-color: transparent;
+                border: none;
+                color: var(--type-primary);
+                opacity: 0.5;
+            "
+        >
+            arrow_forward_ios
+        </button>
     </div>
 </div>
 {% endblock %}

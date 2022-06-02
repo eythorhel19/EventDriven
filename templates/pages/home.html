@@ -6,6 +6,14 @@
         color: var(--type-primary);
     }
 </style>
+<script>
+    function scrollParentDivLeft(event) {
+        event.parentNode.scrollLeft -= 350;
+    }
+    function scrollParentDivRight(event) {
+        event.parentNode.scrollLeft += 350;
+    }
+</script>
 <div>{% include 'search_bar.html' with categories=categories %}</div>
 {% for events in event_cat_categorised %}
 <p class="h2_regular categorie_name">{{events.0.category_name}}</p>
@@ -13,5 +21,36 @@
     {% for event in events %}
     <div>{% include 'components/info_card.html' with event=event %}</div>
     {% endfor %}
+    <button
+        onclick="scrollParentDivLeft(this)"
+        class="icon_large"
+        style="
+            position: absolute;
+            left: 0;
+            padding: 10px;
+
+            background-color: transparent;
+            border: none;
+            color: var(--type-primary);
+            opacity: 0.5;
+        "
+    >
+        arrow_back_ios
+    </button>
+    <button
+        onclick="scrollParentDivRight(this)"
+        class="icon_large"
+        style="
+            position: absolute;
+            right: 0;
+            padding: 10px;
+            background-color: transparent;
+            border: none;
+            color: var(--type-primary);
+            opacity: 0.5;
+        "
+    >
+        arrow_forward_ios
+    </button>
 </div>
 {% endfor %} {% endblock %}

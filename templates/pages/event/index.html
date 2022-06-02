@@ -97,6 +97,14 @@
         }
     }
 </style>
+<script>
+    function scrollParentDivLeft(event) {
+        event.parentNode.scrollLeft -= 350;
+    }
+    function scrollParentDivRight(event) {
+        event.parentNode.scrollLeft += 350;
+    }
+</script>
 <div class="main_wrapper">
     <div class="top_wrapper">
         <div class="image_wrapper_info_card">
@@ -192,6 +200,37 @@
             {% for entertainer in events_entertainers %}
             <div>{% include 'components/entertainers_info_card.html' with entertainer=entertainer %}</div>
             {% endfor %}
+            <button
+        onclick="scrollParentDivLeft(this)"
+        class="icon_large"
+        style="
+            position: absolute;
+            left: 0;
+            padding: 10px;
+
+            background-color: transparent;
+            border: none;
+            color: var(--type-primary);
+            opacity: 0.5;
+            "
+        >
+            arrow_back_ios
+        </button>
+        <button
+            onclick="scrollParentDivRight(this)"
+            class="icon_large"
+            style="
+                position: absolute;
+                right: 0;
+                padding: 10px;
+                background-color: transparent;
+                border: none;
+                color: var(--type-primary);
+                opacity: 0.5;
+            "
+        >
+            arrow_forward_ios
+        </button>
         {% else %}
             <p class="h1_regular" style="color:gray">No entertainers found for this event</p>
         {% endif %}
@@ -203,6 +242,37 @@
 
             <div>{% include 'components/info_card.html' with event=event %}</div>
             {% endfor %}
+            <button
+        onclick="scrollParentDivLeft(this)"
+        class="icon_large"
+        style="
+            position: absolute;
+            left: 0;
+            padding: 10px;
+
+            background-color: transparent;
+            border: none;
+            color: var(--type-primary);
+            opacity: 0.5;
+            "
+        >
+            arrow_back_ios
+        </button>
+        <button
+            onclick="scrollParentDivRight(this)"
+            class="icon_large"
+            style="
+                position: absolute;
+                right: 0;
+                padding: 10px;
+                background-color: transparent;
+                border: none;
+                color: var(--type-primary);
+                opacity: 0.5;
+            "
+        >
+            arrow_forward_ios
+        </button>
         {% else %}
             <p class="h1_regular" style="color:gray">No similar events found</p>
         {% endif %}

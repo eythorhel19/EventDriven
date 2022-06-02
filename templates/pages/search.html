@@ -5,12 +5,51 @@
         margin-top: 8px;
     }
 </style>
+<script>
+    function scrollParentDivLeft(event) {
+        event.parentNode.scrollLeft -= 350;
+    }
+    function scrollParentDivRight(event) {
+        event.parentNode.scrollLeft += 350;
+    }
+</script>
 <div>{% include 'search_bar.html' with categories=categories %}</div>
 <p class="h2_regular event_or_ent_header">Events matching your search result</p>
 <div class="row-of-cards">
     {% if searched_events %} {% for event in searched_events %}
     <div>{% include 'components/info_card.html' with event=event %}</div>
-    {% endfor %} {% else %}
+    {% endfor %} 
+    <button
+        onclick="scrollParentDivLeft(this)"
+        class="icon_large"
+        style="
+            position: absolute;
+            left: 0;
+            padding: 10px;
+
+            background-color: transparent;
+            border: none;
+            color: var(--type-primary);
+            opacity: 0.5;
+            "
+        >
+            arrow_back_ios
+        </button>
+        <button
+            onclick="scrollParentDivRight(this)"
+            class="icon_large"
+            style="
+                position: absolute;
+                right: 0;
+                padding: 10px;
+                background-color: transparent;
+                border: none;
+                color: var(--type-primary);
+                opacity: 0.5;
+            "
+        >
+            arrow_forward_ios
+        </button>{% else %}
     <p class="h1_regular" style="color: gray">
         No events found matching your search
     </p>
@@ -22,10 +61,40 @@
 <div class="row-of-cards">
     {% if searched_events_later %} {% for entertainer in searched_events_later%}
     <div>
-        {% include 'components/entertainers_info_card.html' with
-        entertainer=entertainer %}
+        {% include 'components/entertainers_info_card.html' with entertainer=entertainer %}
     </div>
-    {% endfor %} {% else %}
+    {% endfor %} 
+    <button
+        onclick="scrollParentDivLeft(this)"
+        class="icon_large"
+        style="
+            position: absolute;
+            left: 0;
+            padding: 10px;
+
+            background-color: transparent;
+            border: none;
+            color: var(--type-primary);
+            opacity: 0.5;
+            "
+        >
+            arrow_back_ios
+        </button>
+        <button
+            onclick="scrollParentDivRight(this)"
+            class="icon_large"
+            style="
+                position: absolute;
+                right: 0;
+                padding: 10px;
+                background-color: transparent;
+                border: none;
+                color: var(--type-primary);
+                opacity: 0.5;
+            "
+        >
+            arrow_forward_ios
+        </button>{% else %}
     <p class="h1_regular" style="color: gray">
         No entertainers found matching your search
     </p>

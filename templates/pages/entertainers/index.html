@@ -5,11 +5,50 @@
         margin-top: 32px;
     }
 </style>
+<script>
+    function scrollParentDivLeft(event) {
+        event.parentNode.scrollLeft -= 350;
+    }
+    function scrollParentDivRight(event) {
+        event.parentNode.scrollLeft += 350;
+    }
+</script>
 <div class="row-of-cards extra_margin_entertainers_index">
     {% for entertainer in entertainer %}
     <div>
         {% include 'components/entertainers_info_card.html' with entertainer=entertainer %}
     </div>
     {% endfor %}
+    <button
+        onclick="scrollParentDivLeft(this)"
+        class="icon_large"
+        style="
+            position: absolute;
+            left: 0;
+            padding: 10px;
+
+            background-color: transparent;
+            border: none;
+            color: var(--type-primary);
+            opacity: 0.5;
+        "
+    >
+        arrow_back_ios
+    </button>
+    <button
+        onclick="scrollParentDivRight(this)"
+        class="icon_large"
+        style="
+            position: absolute;
+            right: 0;
+            padding: 10px;
+            background-color: transparent;
+            border: none;
+            color: var(--type-primary);
+            opacity: 0.5;
+        "
+    >
+        arrow_forward_ios
+    </button>
 </div>
 {% endblock %}
