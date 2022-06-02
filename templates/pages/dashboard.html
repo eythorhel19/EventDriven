@@ -18,8 +18,6 @@
         padding: 0;
     }
 
-
-
     .all_users_favorites {
         display: flex;
         flex-direction: row;
@@ -137,7 +135,11 @@
         event.parentNode.scrollLeft += 350;
     }
 </script>
-
+{% if request.user.is_superuser %}
+<button class="button_outlined">
+    <a href="/event/create_event"> Create new event </a>
+</button>
+{% endif %}
 <div class="dashboard_body">
     <div class="ticket_and_favorites">
         <div class="all_users_favorites">
@@ -212,36 +214,36 @@
                 </div>
                 {% endfor %}
                 <button
-        onclick="scrollParentDivLeft(this)"
-        class="icon_large"
-        style="
-            position: absolute;
-            left: 0;
-            padding: 10px;
+                    onclick="scrollParentDivLeft(this)"
+                    class="icon_large"
+                    style="
+                        position: absolute;
+                        left: 0;
+                        padding: 10px;
 
-            background-color: transparent;
-            border: none;
-            color: var(--type-primary);
-            opacity: 0.5;
-            "
-        >
-            arrow_back_ios
-        </button>
-        <button
-            onclick="scrollParentDivRight(this)"
-            class="icon_large"
-            style="
-                position: absolute;
-                right: 0;
-                padding: 10px;
-                background-color: transparent;
-                border: none;
-                color: var(--type-primary);
-                opacity: 0.5;
-            "
-        >
-            arrow_forward_ios
-        </button>
+                        background-color: transparent;
+                        border: none;
+                        color: var(--type-primary);
+                        opacity: 0.5;
+                    "
+                >
+                    arrow_back_ios
+                </button>
+                <button
+                    onclick="scrollParentDivRight(this)"
+                    class="icon_large"
+                    style="
+                        position: absolute;
+                        right: 0;
+                        padding: 10px;
+                        background-color: transparent;
+                        border: none;
+                        color: var(--type-primary);
+                        opacity: 0.5;
+                    "
+                >
+                    arrow_forward_ios
+                </button>
             </div>
         </div>
     </div>
@@ -253,17 +255,17 @@
         <div>{% include 'components/info_card.html' with event=event %}</div>
         {% endfor %}
         <button
-        onclick="scrollParentDivLeft(this)"
-        class="icon_large"
-        style="
-            position: absolute;
-            left: 0;
-            padding: 10px;
+            onclick="scrollParentDivLeft(this)"
+            class="icon_large"
+            style="
+                position: absolute;
+                left: 0;
+                padding: 10px;
 
-            background-color: transparent;
-            border: none;
-            color: var(--type-primary);
-            opacity: 0.5;
+                background-color: transparent;
+                border: none;
+                color: var(--type-primary);
+                opacity: 0.5;
             "
         >
             arrow_back_ios

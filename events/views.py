@@ -105,7 +105,7 @@ def create_event(request):
                 event = event_form.save(commit=False)
                 event.user = request.user
                 event.save()
-                return redirect('event/create_event'+str(event.id))
+                return redirect('/event/create_event/'+str(event.id))
         else:
             event_form = EventForm()
         return render(request, 'pages/event/create_event.html', context={
