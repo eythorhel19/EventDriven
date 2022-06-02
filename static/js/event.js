@@ -42,3 +42,11 @@ function loadPrevImage() {
         document.getElementById('event_current_image').src = images[imageIndex];
     }
 }
+
+function scrollParentDivLeft(event) {
+    event.parentNode.scrollLeft -= 350;
+}
+
+function scrollParentDivRight(event) {
+    event.parentNode.scrollLeft += 350;
+}

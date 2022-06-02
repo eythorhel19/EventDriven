@@ -389,6 +389,18 @@ VALUES (1,3),(2,3),(3,3),(4,3)
 INSERT INTO HOME_EVENTENTERTAINER(ENTERTAINER_ID,EVENT_ID)
 VALUES (1,3),(2,3),(3,3),(4,3),(5,3)
 
+INSERT INTO EVENTS_EVENT(TITLE, DESCRIPTION, MAXIMUM_CAPACITY, START_DATE, END_DATE, LOCATION_ID, MAIN_IMAGE_URL)
+VALUES ('Louis Armstrong memorial', 'This evnet is in memory of the great Louis Armstorng where his music will be played.', 1000, '2022-06-07','2022-06-10',5,'https://upload.travelawaits.com/ta/uploads/2021/09/Louis-Armstrong.jpg')
+
+INSERT INTO HOME_EVENTCATEGORY(CATEGORY_ID, EVENT_ID)
+VALUES (5,4)
+
+INSERT INTO HOME_EVENTENTERTAINER(ENTERTAINER_ID, EVENT_ID)
+VALUES (6,4)
+
+INSERT INTO ENTERTAINERS_ENTERTAINER (NAME, DESCRIPTION, IMAGE_URL)
+VALUES ('LOUIS ARMSTRONG', 'Louis Daniel Armstrong, nicknamed "Satchmo", "Satch", and "Pops", was an American trumpeter and vocalist. He is among the most influential figures in jazz. His career spanned five decades and different eras in the history of jazz. Armstrong was born and raised in New Orleans.','https://upload.wikimedia.org/wikipedia/commons/0/0e/Louis_Armstrong_restored.jpg')
+
 
 INSERT INTO home_city (state_id, name) VALUES (4, 'Reykjavik');
 INSERT INTO home_city (state_id, name) VALUES (4, 'Kopavogur');
