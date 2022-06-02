@@ -31,6 +31,11 @@
         overflow: hidden;
         height: 48px;
     }
+    .event_title {
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap;
+    }
 </style>
 <div class="for_hover_glow">
     <div class="card">
@@ -43,7 +48,7 @@
                 />
             </div>
             <div class="card_body">
-                <h1 class="h2_semibold">{{event.title}}</h1>
+                <h2 class="h2_semibold event_title">{{event.title}}</h2>
                 <div class="description_wrapper">
                     <p class="card-text">{{event.description}}</p>
                 </div>
@@ -69,5 +74,4 @@
             </button>
         </div>
     </div>
-    <!-- this is for the popup window -->
 </div>

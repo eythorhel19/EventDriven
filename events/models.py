@@ -10,7 +10,10 @@ class Event(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     location = models.ForeignKey('home.Location', on_delete=models.CASCADE)
-    main_image_url = models.CharField(max_length=1020, default='https://upload.wikimedia.org/wikipedia/commons/b/b1/Missing-image-232x150.png')
+    main_image_url = models.CharField(
+        max_length=1020,
+        default='https://upload.wikimedia.org/wikipedia/commons/b/b1/Missing-image-232x150.png'
+    )
 
 
 class EventImage(models.Model):

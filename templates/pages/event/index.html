@@ -67,7 +67,7 @@
                 <div class="the_calander_icon_wrapper">
                     <div class="the_calander_icon_month">
                         {% if year == year_to %}
-                        <h2 style="font-size: 3rem">{{year}}</h2>
+                            <h2 style="font-size: 3rem">{{year}}</h2>
                         {% else %}
                             <h2 style="font-size: 3rem">{{year}} to {{year_to}}</h2>
                         {% endif %}
@@ -75,7 +75,11 @@
                     <div class="the_calander_icon_date_week">
                         <h1 style="color: var(--base-primary); font-size: 3rem;
                         ">{{hour}} to {{hour_to}}</h1>
-                        <h3 style="color: orange ; font-size: 3rem" >{{day_month}} to {{day_month_to}}</h3>
+                        {% if day_month == day_month_to %}
+                            <h3 style="font-size: 3rem" >{{day_month}}</h3>
+                        {% else %}
+                            <h3 style="font-size: 3rem" >{{day_month}} to {{day_month_to}}</h3>
+                        {% endif %}
                     </div>
                     
                 </div>
@@ -83,7 +87,7 @@
         </div>
         
     </div>
-    <p class="h3_regular" style="color:var(--type-primary)">Entertainers appearing in this event</p>
+    <p class="h3_regular" style="color:var(--type-primary)">Entertainers appearing on this event</p>
     <div class="row-of-cards">
         {% if events_entertainers %}
             {% for entertainer in events_entertainers %}
@@ -121,7 +125,7 @@
             arrow_forward_ios
         </button>
         {% else %}
-            <p class="h1_regular" style="color:gray">No entertainers found for this event</p>
+            <p class="h3_regular" style="color: var(--type-dark);">No entertainers found for this event</p>
         {% endif %}
     </div>
     <p class="h3_regular" style="color:var(--type-primary)">Similar events</p>
@@ -163,7 +167,7 @@
             arrow_forward_ios
         </button>
         {% else %}
-            <p class="h1_regular" style="color:gray">No similar events found</p>
+            <p class="h3_regular" style="color: var(--type-dark);">No similar events found</p>
         {% endif %}
     </div>
     

@@ -31,6 +31,9 @@
         width: 20%;
         height: 50px;
         border-radius: 0px;
+        border-top: 0px;
+        border-bottom: 0px;
+        background-color: var(--type-secondary);
     }
 
     .search_input_field {
@@ -38,13 +41,13 @@
         height: 50px;
         border: 0px;
         padding-left: 16px;
-        background-color: var(--type-primary);
+        background-color: var(--type-secondary);
         color: var(--base-primary);
     }
     .search_button {
         width: 10%;
         height: 50px;
-        background-color: var(--type-primary);
+        background-color: var(--type-secondary);
         border-radius: 0px 16px 16px 0px;
         border: 0px;
         display: flex;
@@ -57,7 +60,7 @@
     #date_from_div {
         display: none;
     }
-    #chose_date_range_type {
+    #chosen_date_range_type {
         display: flex;
     }
     .search_input_with_button {
@@ -102,88 +105,171 @@
 </style>
 <script>
     var button_bool = false;
+    
     function button_bool_true() {
         button_bool = true;
     }
+
     function search(ele) {
         if (event.key === "Enter") {
             button_bool_true();
             sendSearchAsParam(ele);
         }
     }
-    function sendSearchAsParam(ele) {
+
+    function sendSearchAsParam(form) {
         if (button_bool === true) {
             var getUrl = window.location;
             var baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + "search";
             var url = new URL(baseUrl);
 
+            // Category
             url.searchParams.append(
                 "categories",
-                ele.elements.categories.value
+                form.elements.categories.value
             );
-            if (ele.elements.date_to.value !== "") {
-                url.searchParams.append("date_to", ele.elements.date_to.value);
-                url.searchParams.append(
-                    "date_from",
-                    ele.elements.date_from.value
-                );
-            } else {
-                if (ele.elements.chose_date_range_type.value === "") {
-                    url.searchParams.append("date_to", "All");
-                    url.searchParams.append("date_from", "All");
-                } else if (
-                    ele.elements.chose_date_range_type.value === "today"
-                ) {
-                    yourDate = new Date();
-                    const offset = yourDate.getTimezoneOffset();
-                    yourDate = new Date(
-                        yourDate.getTime() - offset * 60 * 1000
-                    );
-                    the_date = yourDate.toISOString().split("T")[0];
 
-                    url.searchParams.append("date_to", the_date);
-                    url.searchParams.append("date_from", the_date);
-                } else if (
-                    ele.elements.chose_date_range_type.value === "this week"
-                ) {
-                    yourDate = new Date();
-                    const offset = yourDate.getTimezoneOffset();
-                    yourDate = new Date(
-                        yourDate.getTime() - offset * 60 * 1000
+            // Dates
+            if (form.elements.chosen_date_range_type.value === "") {
+                url.searchParams.append("date_to", "All");
+                url.searchParams.append("date_from", "All");
+            } else if (
+                form.elements.chosen_date_range_type.value === "today"
+            ) {
+                let yourDate = new Date();
+                const offset = yourDate.getTimezoneOffset();
+                yourDate = new Date(
+                    yourDate.getTime() - offset * 60 * 1000
+                );
+                const theDate = yourDate.toISOString().split("T")[0];
+
+                url.searchParams.append("date_to", theDate);
+                url.searchParams.append("date_from", theDate);
+            } else if (
+                form.elements.chosen_date_range_type.value === "this week"
+            ) {
+                let yourDate = new Date();
+                const offset = yourDate.getTimezoneOffset();
+                yourDate = new Date(
+                    yourDate.getTime() - offset * 60 * 1000
+                );
+
+                const yourDateISO = yourDate.toISOString().split("T")[0];
+                url.searchParams.append("date_from", yourDateISO);
+                
+                const firstDay = new Date(yourDateISO);
+                const theDate = new Date(
+                    firstDay.getTime() + 7 * 24 * 60 * 60 * 1000
+                );
+                const theDateIso = theDate.toISOString().split("T")[0];
+                url.searchParams.append("date_to", theDateIso);
+            } else if (
+                form.elements.chosen_date_range_type.value === "specific date"
+            ) {
+                console.log('Date from',form.elements.date_from.value);
+                console.log('Date to',form.elements.date_to.value);
+
+                if (form.elements.date_from.value !== "" && form.elements.date_to.value !== "") {
+                    url.searchParams.append(
+                        "date_to", 
+                        form.elements.date_to.value
                     );
-                    the_date = yourDate.toISOString().split("T")[0];
-                    url.searchParams.append("date_from", the_date);
-                    var firstDay = new Date(the_date);
-                    var the_date = new Date(
-                        firstDay.getTime() + 7 * 24 * 60 * 60 * 1000
+                    
+                    url.searchParams.append(
+                        "date_from",
+                        form.elements.date_from.value
                     );
-                    the_date = the_date.toISOString().split("T")[0];
-                    url.searchParams.append("date_to", the_date);
+                } else if (form.elements.date_from.value !== "") {
+                    url.searchParams.append(
+                        "date_from",
+                        form.elements.date_from.value
+                    )
+                } else if (form.elements.date_to.value !== "") {
+                    url.searchParams.append(
+                        "date_to", 
+                        form.elements.date_to.value
+                    );
                 }
             }
 
-            if (ele.elements.search_input_field.value !== "") {
+            // Search Input
+            if (form.elements.search_input_field.value !== "") {
                 url.searchParams.append(
                     "search_input_field",
-                    ele.elements.search_input_field.value
+                    form.elements.search_input_field.value
                 );
             } else {
                 url.searchParams.append("search_input_field", "All");
             }
+
             window.location.replace(url.href);
         }
     }
-    function isItSpecificDate(ele) {
-        if (ele.value === "specific date") {
+
+    function isItSpecificDate(form) {
+        if (form.value === "specific date") {
             theInputField = document.getElementById("date_to_div");
             theInputField2 = document.getElementById("date_from_div");
-            theSelectField = document.getElementById("chose_date_range_type");
+            theSelectField = document.getElementById("chosen_date_range_type");
             theInputField.style.display = "flex";
             theInputField2.style.display = "flex";
             theSelectField.style.display = "none";
             // this.style.display = "none";
         } else {
             return false;
+        }
+    }
+
+    function populateSearchBar() {
+        const url = window.location.search;
+        const urlParams = new URLSearchParams(url);
+
+        const categories = urlParams.get('categories');
+
+        if (categories !== null) {
+            document.getElementById('categories').value = categories;
+        }
+
+        const dateTo = urlParams.get('date_to');
+        const dateFrom = urlParams.get('date_from');
+        console.log(dateTo);
+        console.log(dateFrom);
+        
+        const todayDate = new Date();
+        const today = todayDate.toISOString().split("T")[0];
+        const afterWeekDay = new Date(
+            todayDate.getTime() + 7 * 24 * 60 * 60 * 1000
+        ).toISOString().split("T")[0];
+
+        console.log(today);
+        console.log(afterWeekDay);
+
+        if (dateTo === 'All' && dateFrom === 'All') {
+            // pass
+        } else if (dateTo === null && dateFrom === null) {
+            // pass
+        } else if (dateFrom === today && dateTo === today) {
+            document.getElementById('chosen_date_range_type').value = 'today';
+        } else if (dateFrom === today && dateTo == afterWeekDay) {
+            document.getElementById('chosen_date_range_type').value = 'this week';
+        } else {
+            document.getElementById('chosen_date_range_type').value = 'specific date';
+            isItSpecificDate({'value': 'specific date'});
+            
+            if (dateFrom !== null) {
+                document.getElementById('date_from').value = dateFrom;
+            }
+
+            if (dateTo !== null) {
+                document.getElementById('date_to').value = dateTo;
+            }
+        }
+
+
+        const searchInputField = urlParams.get('search_input_field');
+
+        if (searchInputField !== 'All') {
+            document.getElementById('search_input_field').value = searchInputField;
         }
     }
 </script>
@@ -207,7 +293,7 @@
         <div
             id="date_from_div"
             class="date_options"
-            style="flex-direction: column; background-color: white"
+            style="flex-direction: column;"
         >
             <label for="date_from">Date from</label>
             <input id="date_from" type="date" value="" />
@@ -215,13 +301,13 @@
         <div
             id="date_to_div"
             class="date_options"
-            style="flex-direction: column; background-color: white"
+            style="flex-direction: column;"
         >
             <label for="date_to">Date to</label>
             <input id="date_to" type="date" value="" />
         </div>
         <select
-            id="chose_date_range_type"
+            id="chosen_date_range_type"
             class="form-select date_options"
             aria-label="categories"
             onchange="isItSpecificDate(this)"
@@ -248,3 +334,6 @@
         </div>
     </form>
 </div>
+<script>
+    populateSearchBar();
+</script>

@@ -1,46 +1,19 @@
 {% extends "base.html" %} {% block content %}
 <div>{% include 'search_bar.html' with categories=categories %}</div>
 <style>
-    .extra_margin_entertainers_index {
+    .entertainer_wrapper {
         margin-top: 32px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 16px;
     }
 </style>
-<div class="extra_margin_entertainers_index">
+<div class="entertainer_wrapper">
     {% for entertainer in entertainer %}
     <div>
         {% include 'components/entertainers_info_card.html' with entertainer=entertainer %}
     </div>
     {% endfor %}
-    <button
-        onclick="scrollParentDivLeft(this)"
-        class="icon_large"
-        style="
-            position: absolute;
-            left: 0;
-            padding: 10px;
-
-            background-color: transparent;
-            border: none;
-            color: var(--type-primary);
-            opacity: 0.5;
-        "
-    >
-        arrow_back_ios
-    </button>
-    <button
-        onclick="scrollParentDivRight(this)"
-        class="icon_large"
-        style="
-            position: absolute;
-            right: 0;
-            padding: 10px;
-            background-color: transparent;
-            border: none;
-            color: var(--type-primary);
-            opacity: 0.5;
-        "
-    >
-        arrow_forward_ios
-    </button>
 </div>
 {% endblock %}

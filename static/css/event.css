@@ -92,7 +92,7 @@
     width: 100%;
 }
 .the_calander_icon_month {
-    background-color: orange;
+    background-color: var(--graphical-secondary);
     border-radius: 10px 10px 0 0px;
     display: flex;
     justify-content: center;
@@ -100,12 +100,14 @@
     height: 25%;
 }
 .the_calander_icon_date_week {
+    color: var(--graphical-secondary);
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
     height: 75%;
     background-color: white;
+    border-radius: 0 0 16px 16px;
 }
 
 @media only screen and (max-width: 900px) {

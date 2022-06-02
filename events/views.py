@@ -15,14 +15,13 @@ def event(request, event_id):
     user_details = get_user_details(request.user)
 
     the_event = Event.objects.get(pk=event_id)
-    extra_event_images = EventImage.objects.filter(event = the_event)
+    extra_event_images = EventImage.objects.filter(event=the_event)
     day_month = the_event.start_date.strftime("%d %b")
     hour = the_event.start_date.strftime("%H:%M")
     year = the_event.start_date.strftime("%Y")
     day_month_to = the_event.end_date.strftime("%d %b")
     hour_to = the_event.end_date.strftime("%H:%M")
     year_to = the_event.end_date.strftime("%Y")
-    # the_artists = Entertainers.objects.filter(event=the_event)
 
     event_images = [the_event.main_image_url]
     for ei in extra_event_images:
@@ -36,21 +35,35 @@ def event(request, event_id):
     events_entertainers = Event.objects.raw('''
         SELECT *
         FROM (
-        SELECT DISTINCT ON (EENT.ID) EENT.ID, EENT.NAME, EENT.DESCRIPTION, EENT.IMAGE_URL, MIN(EVE.START_DATE) AS NEXT_EVENT_DATE, HLOC.NAME AS LOCATION_NAME
-        FROM ENTERTAINERS_ENTERTAINER AS EENT
-        JOIN HOME_EVENTENTERTAINER AS HEVENT ON EENT.ID = HEVENT.ENTERTAINER_ID
-        JOIN EVENTS_EVENT AS EVE ON EVE.ID = HEVENT.EVENT_ID
-        JOIN HOME_LOCATION AS HLOC ON HLOC.ID = EVE.LOCATION_ID
-        WHERE EVE.START_DATE >= CURRENT_DATE
-        GROUP BY EENT.ID, EENT.NAME, EENT.DESCRIPTION, EENT.IMAGE_URL, HLOC.NAME, EVE.ID, EVE.START_DATE
-        HAVING EVE.ID = {}) AS FRO_GROUP_BY
-        ORDER BY FRO_GROUP_BY.NEXT_EVENT_DATE'''.format(event_id)
-                                            )
+            SELECT DISTINCT ON (EENT.id) 
+                EENT.id, 
+                EENT.name, 
+                EENT.description, 
+                EENT.image_url, 
+                MIN(EVE.start_date) AS next_event_id, 
+                HLOC.name AS location_name
+            FROM 
+                ENTERTAINERS_ENTERTAINER AS EENT
+                JOIN HOME_EVENTENTERTAINER AS HEVENT 
+                ON EENT.id = HEVENT.entertainer_id
+                JOIN EVENTS_EVENT AS EVE 
+                ON EVE.id = HEVENT.event_id
+                JOIN HOME_LOCATION AS HLOC 
+                ON HLOC.id = EVE.location_id
+            WHERE 
+                EVE.start_date >= CURRENT_DATE
+            GROUP BY 
+                EENT.id, EENT.name, EENT.description, EENT.image_url, HLOC.name, EVE.id, EVE.start_date
+            HAVING 
+                EVE.ID = {}) AS FRO_GROUP_BY
+        ORDER BY 
+            FRO_GROUP_BY.next_event_id;'''.format(event_id)
+    )
 
     event_map_url = ('''
         SELECT *
         FROM HOME_LOCATION AS HLOC
-        WHERE HLOC.ID = {}
+        WHERE HLOC.id = {}
         '''.format(the_event.location.id)
     )
     event_map_url = Event.objects.raw(event_map_url)
@@ -60,30 +73,65 @@ def event(request, event_id):
     event_price_and_ticket_type = Event.objects.raw('''
     SELECT *
     FROM HOME_EVENTTICKETTYPEPRICE AS HETT
-    JOIN HOME_TICKETTYPE AS HTT ON HTT.ID = HETT.TICKET_TYPE_ID
-    WHERE HETT.EVENT_ID = {}
+    JOIN HOME_TICKETTYPE AS HTT ON HTT.id = HETT.ticket_type_id
+    WHERE HETT.event_id = {}
     '''.format(event_id))
 
     most_similar_events = Event.objects.raw('''
     SELECT *
     FROM (
-    SELECT THIS_EVENT.ID, THIS_EVENT.TITLE, THIS_EVENT.DESCRIPTION, THIS_EVENT.MAXIMUM_CAPACITY, THIS_EVENT.START_DATE, THIS_EVENT.END_DATE, THIS_EVENT.LOCATION_ID, THIS_EVENT.MAIN_IMAGE_URL, COUNT(*)
-    FROM EVENTS_EVENT AS THIS_EVENT
-    JOIN HOME_EVENTENTERTAINER AS HEENT ON HEENT.EVENT_ID = THIS_EVENT.ID
-    JOIN HOME_EVENTCATEGORY AS HECAT ON HECAT.EVENT_ID = THIS_EVENT.ID
-    WHERE HEENT.ENTERTAINER_ID IN (SELECT HEENT.ENTERTAINER_ID
-    FROM EVENTS_EVENT AS EEVE
-    JOIN HOME_EVENTENTERTAINER AS HEENT ON HEENT.EVENT_ID = EEVE.ID
-    JOIN HOME_EVENTCATEGORY AS HECAT ON HECAT.EVENT_ID = EEVE.ID
-    WHERE EEVE.ID = {}) AND HECAT.CATEGORY_ID IN (SELECT HECAT.CATEGORY_ID
-    FROM EVENTS_EVENT AS EEVE
-    JOIN HOME_EVENTENTERTAINER AS HEENT ON HEENT.EVENT_ID = EEVE.ID
-    JOIN HOME_EVENTCATEGORY AS HECAT ON HECAT.EVENT_ID = EEVE.ID
-    WHERE EEVE.ID = {}) AND THIS_EVENT.ID != {}
-    GROUP BY THIS_EVENT.ID, THIS_EVENT.TITLE, THIS_EVENT.DESCRIPTION, THIS_EVENT.MAXIMUM_CAPACITY, THIS_EVENT.START_DATE, THIS_EVENT.END_DATE, THIS_EVENT.LOCATION_ID, THIS_EVENT.MAIN_IMAGE_URL
-    ORDER BY COUNT DESC) AS MOST_SIMILAR_EVENTS
-    JOIN HOME_LOCATION AS HLOC ON HLOC.ID = MOST_SIMILAR_EVENTS.LOCATION_ID
-'''.format(event_id, event_id, event_id))
+        SELECT 
+            THIS_EVENT.id, 
+            THIS_EVENT.title, 
+            THIS_EVENT.description, 
+            THIS_EVENT.maximum_capacity, 
+            THIS_EVENT.start_date, 
+            THIS_EVENT.end_date, 
+            THIS_EVENT.location_id, 
+            THIS_EVENT.main_image_url, 
+            COUNT(*) as apperances
+        FROM
+            EVENTS_EVENT AS THIS_EVENT
+            -- Joining on event entertainer table
+            JOIN HOME_EVENTENTERTAINER AS HEENT 
+            ON HEENT.event_id = THIS_EVENT.id
+            
+            -- Joining on event category table
+            JOIN HOME_EVENTCATEGORY AS HECAT 
+            ON HECAT.event_id = THIS_EVENT.id
+        WHERE
+            HEENT.entertainer_id IN (
+                SELECT HEENT.entertainer_id
+                FROM EVENTS_EVENT AS EEVE
+                JOIN HOME_EVENTENTERTAINER AS HEENT ON HEENT.event_id = EEVE.id
+                JOIN HOME_EVENTCATEGORY AS HECAT ON HECAT.event_id = EEVE.id
+                WHERE 
+                    EEVE.id = {}
+            ) OR 
+            HECAT.category_id IN (
+                SELECT HECAT.category_id
+                FROM EVENTS_EVENT AS EEVE
+                JOIN HOME_EVENTENTERTAINER AS HEENT 
+                ON HEENT.event_id = EEVE.id
+                JOIN HOME_EVENTCATEGORY AS HECAT 
+                ON HECAT.event_id = EEVE.id
+                WHERE EEVE.id = {}
+            ) AND THIS_EVENT.id != {}
+        GROUP BY 
+            THIS_EVENT.id, 
+            THIS_EVENT.title, 
+            THIS_EVENT.description, 
+            THIS_EVENT.maximum_capacity, 
+            THIS_EVENT.start_date, 
+            THIS_EVENT.end_date, 
+            THIS_EVENT.location_id, 
+            THIS_EVENT.main_image_url
+        ORDER BY 
+            apperances DESC
+        ) AS MOST_SIMILAR_EVENTS
+        JOIN HOME_LOCATION AS HLOC 
+        ON HLOC.id = MOST_SIMILAR_EVENTS.location_id;
+    '''.format(event_id, event_id, event_id))
 
     return render(request, "pages/event/index.html", context={
         "event": the_event,
@@ -110,10 +158,8 @@ def create_event(request):
         if request.method == 'POST':
             event_form = EventForm(request.POST)
             if event_form.is_valid():
-                event = event_form.save(commit=False)
-                event.user = request.user
-                event.save()
-                return redirect('event/create_event'+str(event.id))
+                event_ = event_form.save()
+                return redirect('event/create_event'+str(event_.id))
         else:
             event_form = EventForm()
         return render(request, 'pages/event/create_event.html', context={
@@ -137,21 +183,35 @@ def create_event_more_info(request, event_id):
     events_entertainers = Event.objects.raw('''
         SELECT *
         FROM (
-        SELECT DISTINCT ON (EENT.ID) EENT.ID, EENT.NAME, EENT.DESCRIPTION, EENT.IMAGE_URL, MIN(EVE.START_DATE) AS NEXT_EVENT_DATE, HLOC.NAME AS LOCATION_NAME
-        FROM ENTERTAINERS_ENTERTAINER AS EENT
-        JOIN HOME_EVENTENTERTAINER AS HEVENT ON EENT.ID = HEVENT.ENTERTAINER_ID
-        JOIN EVENTS_EVENT AS EVE ON EVE.ID = HEVENT.EVENT_ID
-        JOIN HOME_LOCATION AS HLOC ON HLOC.ID = EVE.LOCATION_ID
-        WHERE EVE.START_DATE >= CURRENT_DATE
-        GROUP BY EENT.ID, EENT.NAME, EENT.DESCRIPTION, EENT.IMAGE_URL, HLOC.NAME, EVE.ID, EVE.START_DATE
-        HAVING EVE.ID = {}) AS FRO_GROUP_BY
-        ORDER BY FRO_GROUP_BY.NEXT_EVENT_DATE'''.format(event_id)
-                                            )
+            SELECT DISTINCT ON (EENT.ID) EENT.id, 
+                EENT.name,
+                EENT.description, 
+                EENT.image_url, 
+                MIN(EVE.start_date) AS NEXT_EVENT_DATE, 
+                HLOC.name AS LOCATION_NAME
+            FROM 
+                ENTERTAINERS_ENTERTAINER AS EENT
+                JOIN HOME_EVENTENTERTAINER AS HEVENT 
+                ON EENT.id = HEVENT.entertainer_id
+                JOIN EVENTS_EVENT AS EVE 
+                ON EVE.id = HEVENT.event_id
+                JOIN HOME_LOCATION AS HLOC 
+                ON HLOC.id = EVE.location_id
+            WHERE 
+                EVE.start_date >= CURRENT_DATE
+            GROUP BY
+                EENT.id, EENT.name, EENT.description, EENT.image_url, HLOC.name, EVE.id, EVE.start_date
+            HAVING 
+                EVE.id = {}
+            ) AS FRO_GROUP_BY
+        ORDER BY 
+            FRO_GROUP_BY.next_event_date;'''.format(event_id)
+    )
 
     event_map_url = ('''
         SELECT *
         FROM HOME_LOCATION AS HLOC
-        WHERE HLOC.ID = {}
+        WHERE HLOC.id = {}
         '''.format(the_event.location.id)
     )
     event_map_url = Event.objects.raw(event_map_url)
@@ -160,8 +220,8 @@ def create_event_more_info(request, event_id):
     event_price_and_ticket_type = Event.objects.raw('''
     SELECT *
     FROM HOME_EVENTTICKETTYPEPRICE AS HETT
-    JOIN HOME_TICKETTYPE AS HTT ON HTT.ID = HETT.TICKET_TYPE_ID
-    WHERE HETT.EVENT_ID = {}
+    JOIN HOME_TICKETTYPE AS HTT ON HTT.id = HETT.ticket_type_id
+    WHERE HETT.event_id = {}
     '''.format(event_id))
 
     if request.user.is_superuser:

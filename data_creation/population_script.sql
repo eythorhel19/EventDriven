@@ -263,6 +263,15 @@ INSERT INTO events_event (title, description, maximum_capacity, start_date, end_
     '2022-07-1', 
     4,
     'https://i.guim.co.uk/img/media/05d40829197a54e67e8bde4bcaffe35d5da1fe46/0_250_3414_2048/master/3414.jpg?width=465&quality=45&auto=format&fit=max&dpr=2&s=7d23a70263bfc696fa3dd09aba7c778c'
+),
+(
+    'ANDI, LÍF, HJARTA, SÁL premiere', 
+    'Aron can is going to premiere his new album ANDI, LÍF, HJARTA, SÁL at Harpa concert hall.',
+    4500, 
+	timestamp with time zone '2022-06-25 19:00:00 +00:00',
+	timestamp with time zone '2022-06-25 22:30:00 +00:00',
+    3,
+    'https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/93/d2/00/93d200ec-b1be-9d82-f149-8f815a84cff1/886449371877.jpg/1200x1200bf-60.jpg'
 );
 
 INSERT INTO events_eventimage (image_url, description, event_id) VALUES
@@ -356,10 +365,17 @@ INSERT INTO entertainers_entertainer (name, description, image_url) VALUES
     'Skepta', 
     'Joseph Olaitan Adenuga Jr., known professionally as Skepta, is a British grime MC, rapper, songwriter and record producer. Skepta, alongside his younger brother Jme, briefly joined Roll Deep before becoming founding members of Boy Better Know in 2005.', 
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHZXQ-9IIA5Ufq2e-pjIdUOXoZvTcKaxvxyonk6hxOi1VoJzTO'
+),
+(
+    'Aron Can', 
+    'Aron Can is an Icelandic rapper. He released his hit song "Enginn mórall" in 2016 and was the most popular local artist on Spotify in Iceland in 2017.', 
+    'https://www.ruv.is/sites/default/files/fr_20210430_158195.jpg'
 );
 
 insert into home_evententertainer (entertainer_id,event_id)
 values (1,2),(2,2),(3,2),(4,2),(5,2),(1,1),(2,1),(3,1),(4,1),(5,1);
+INSERT INTO home_evententertainer (event_id, entertainer_id) VALUES (9,8);
+
 INSERT INTO home_tickettype (description) VALUES 
 ('Standard'),
 ('VIP');
@@ -372,6 +388,8 @@ INSERT INTO home_eventtickettypeprice (event_id, ticket_type_id, price) VALUES
 
 INSERT INTO HOME_EVENTCATEGORY(CATEGORY_ID,EVENT_ID)
 VALUES (1,1),(3,1),(4,2),(3,2),(2,2),(1,2);
+INSERT INTO home_eventcategory (event_id, category_id) VALUES (9, 4);
+INSERT INTO home_eventcategory (event_id, category_id) VALUES (9, 1);
 
 
 INSERT INTO HOME_TICKET(DELIVERY_METHOD, EMAIL, STATUS, FIRST_NAME, LAST_NAME, STREET_NAME, HOUSE_NUMBER, EVENT_ID, POSTAL_CODE_ID, TICKET_TYPE_ID, USER_ID)

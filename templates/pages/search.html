@@ -50,16 +50,17 @@
         >
             arrow_forward_ios
         </button>{% else %}
-    <p class="h1_regular" style="color: gray">
+    <h3 class="h3_regular" style="color: var(--type-dark);">
         No events found matching your search
-    </p>
+    </h3>
     {% endif %}
 </div>
 <p class="h2_regular event_or_ent_header">
     Entertainers matching your search result
 </p>
 <div class="row-of-cards">
-    {% if searched_events_later %} {% for entertainer in searched_events_later%}
+    {% if searched_entertainers %} 
+    {% for entertainer in searched_entertainers%}
     <div>
         {% include 'components/entertainers_info_card.html' with entertainer=entertainer %}
     </div>
@@ -95,9 +96,9 @@
         >
             arrow_forward_ios
         </button>{% else %}
-    <p class="h1_regular" style="color: gray">
+    <h3 class="h3_regular" style="color: var(--type-dark);">
         No entertainers found matching your search
-    </p>
+    </h3>
     {% endif %}
 </div>
 {% endblock %}

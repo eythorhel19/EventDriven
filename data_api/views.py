@@ -6,7 +6,8 @@ from django.contrib.auth.models import AnonymousUser
 from rest_framework.decorators import api_view
 
 from events.models import Event
-from home.models import Ticket, TicketType, EventTicketTypePrice, Country, City, UserFavoriteCategory, UserFavoriteEntertainer
+from home.models import Ticket, TicketType, EventTicketTypePrice, Country, City, UserFavoriteCategory, \
+    UserFavoriteEntertainer
 from user.views import get_user_details
 
 
@@ -28,13 +29,13 @@ def event(request, event_id):
         return JsonResponse(status=400, data={'message': 'event_id must be a integer!'})
 
     events = Event.objects.raw('''
-        SELECT
-            E.id,
-            E.title,
-            E.description,
-            E.start_date,
-            E.end_date,
-            CONCAT(L.name,', ',C.name) AS location_name,
+        SELECT 
+            E.id, 
+            E.title, 
+            E.description, 
+            E.start_date, 
+            E.end_date, 
+            CONCAT(L.name,', ',C.name) AS location_name, 
             E.main_image_url
         FROM events_event AS E
         INNER JOIN home_location AS L
@@ -159,8 +160,14 @@ def generate_tickets(request):
         Ticket.objects.filter(event_id=req_body['event_id']))
 
     if req_body['quantity'] > (the_event.maximum_capacity - current_ticket_count):
-        return JsonResponse(status=400, data={'message': 'Tickets not available, maximum tickets available are {}'.format(
-            the_event.maximum_capacity - current_ticket_count)})
+        return JsonResponse(
+            status=400,
+            data={
+                'message': 'Tickets not available, maximum tickets available are {}'.format(
+                    the_event.maximum_capacity - current_ticket_count
+                )
+            }
+        )
 
     # Creating the tickets
     tickets = []
@@ -238,7 +245,12 @@ def book_tickets(request):
         )
 
         if req_body['quantity'] > 10:
-            return JsonResponse(status=400, data={'message': 'Quantity is too large, only a maximum of 10 tickets can be bought!' })
+            return JsonResponse(
+                status=400,
+                data={
+                    'message': 'Quantity is too large, only a maximum of 10 tickets can be bought!'
+                }
+            )
 
         if len(available_tickets) < req_body['quantity']:
             return JsonResponse(status=400, data={'message': 'Quantity is too large, only {} tickets available.'.format(
@@ -250,7 +262,7 @@ def book_tickets(request):
             if i > req_body['quantity']:
                 break
             else:
-                if user != None:
+                if user is not None:
                     t.user = user
 
                 t.delivery_method = req_body['delivery_method']
@@ -271,7 +283,9 @@ def book_tickets(request):
 
     elif req_body['delivery_method'] == 'P':
         required_fields = ['ticket_type_id', 'event_id', 'delivery_method', 'email',
-                           'first_name', 'last_name', 'street_name', 'house_number', 'postal_code', 'quantity', 'phone_country', 'phone_number']
+                           'first_name', 'last_name', 'street_name', 'house_number',
+                           'postal_code', 'quantity', 'phone_country', 'phone_number']
+
         status, msg = check_required_fields(req_body, required_fields)
         if status != 200:
             return HttpResponse(msg, status=status)
@@ -283,18 +297,27 @@ def book_tickets(request):
         )
 
         if req_body['quantity'] > 10:
-            return JsonResponse(status=400, data={'message': 'Quantity is too large, only a maximum of 10 tickets can be bought!'})
+            return JsonResponse(
+                status=400,
+                data={
+                    'message': 'Quantity is too large, only a maximum of 10 tickets can be bought!'
+                }
+            )
 
         if len(available_tickets) < req_body['quantity']:
-            return JsonResponse(status=400, data={'message': 'Quantity is too large, only {} tickets available.'.format(
-                len(available_tickets))})
+            return JsonResponse(
+                status=400,
+                data={
+                    'message': 'Quantity is too large, only {} tickets available.'.format(len(available_tickets))
+                }
+            )
 
         booked_tickets = []
         for i, t in enumerate(available_tickets):
             if i > req_body['quantity']:
                 break
             else:
-                if user != None:
+                if user is not None:
                     t.user = user
                 t.delivery_method = req_body['delivery_method']
                 t.email = req_body['email']
@@ -316,7 +339,12 @@ def book_tickets(request):
         return JsonResponse(return_dict, safe=False)
 
     else:
-        return JsonResponse(status=400, data={'message': 'Delivery method "{}" not available!'.format(req_body['delivery_method'])})
+        return JsonResponse(
+            status=400,
+            data={
+                'message': 'Delivery method "{}" not available!'.format(req_body['delivery_method'])
+            }
+        )
 
 
 @api_view(['PUT'])

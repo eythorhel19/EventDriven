@@ -49,96 +49,132 @@ def help(request):
     })
 
 
+def create_where_cond_event(search_params):
+    where_cond = ""
+    where_params = []
+    search_fields = ['EVEE.title', 'HCITY.name', 'HLC.name', 'HCONT.name']
+
+    for key, val in search_params.items():
+        if key == 'categories':
+            where_cond += "HCAT.name = '{}' AND ".format(val)
+
+        if key == 'date_from':
+            where_cond += "EVEE.start_date >= '{}' AND ".format(val)
+
+        if key == 'date_to':
+            where_cond += "EVEE.start_date <= '{}' AND ".format(val)
+
+        if key == 'search_input_field':
+            where_cond += "("
+            for i, field in enumerate(search_fields):
+                if i > 0:
+                    where_cond += " OR "
+
+                where_cond += "LOWER({}) LIKE %s".format(field)
+                where_params.append('%{}%'.format(val.lower()))
+            
+            where_cond += ") AND "
+
+    return where_cond, where_params
+
+def create_where_cond_entertainer(search_params):
+    where_cond = ""
+    where_params = []
+    search_fields = ['X.name']
+
+    for key, val in search_params.items():
+        if key == 'date_from':
+            where_cond += "X.start_date >= '{}' AND ".format(val)
+
+        if key == 'date_to':
+            where_cond += "X.start_date <= '{}' AND ".format(val)
+
+        if key == 'search_input_field':
+            where_cond += "("
+            for i, field in enumerate(search_fields):
+                if i > 0:
+                    where_cond += " OR "
+
+                where_cond += "LOWER({}) LIKE %s".format(field)
+                where_params.append('%{}%'.format(val.lower()))
+            
+            where_cond += ") AND "
+
+    return where_cond, where_params
+
+
 def search(request):
     user_details = get_user_details(request.user)
 
-    categories = request.GET["categories"]
-    date_to = request.GET["date_to"]
-    date_from = request.GET["date_from"]
-    search_input_field = request.GET["search_input_field"]
-    if categories == "All":
-        categories_events = "true"
-    else:
-        categories_events = "HCAT.NAME='{}'".format(categories)
+    search_params = {}
+    available_params = ['categories', 'date_from', 'date_to', 'search_input_field']
+    for param, value in request.GET.items():
+        if param in available_params:
+            if value != 'All':
+                search_params[param] = value
 
-    if date_to == "All" and date_from == "All":
-        date_to_events = "true"
-    elif date_to == "All" and date_from != "All":
-        date_to_events = "'{}' <= EEV.START_DATE".format(date_from)
-    elif date_to != "All" and date_from == "All":
-        date_to_events = "'{}' >= EEV.START_DATE".format(date_to)
-    else:
-        date_to_events = "'{}'<=EVEE.START_DATE AND EVEE.START_DATE<='{}'".format(
-            date_from, date_to)
-
-    if search_input_field == "All":
-        search_input_field_events = "true"
-        search_input_field_events2 = "true"
-        search_input_field_events3 = "true"
-        search_input_field_events4 = "true"
-        search_input_field_events5 = "true"
-        search_input_field_events6 = "true"
-        search_input_field_events7 = "true"
-        search_input_field_events8 = "true"
-        search_input_field_events9 = "true"
-        search_input_field_events10 = "true"
-        search_input_field_events12 = "true"
-    else:
-        search_input_field_events = "LOWER(EVEE.TITLE) LIKE LOWER('_{}_')".format(
-            search_input_field)
-        search_input_field_events2 = "LOWER(EVEE.TITLE) LIKE LOWER('{}_')".format(
-            search_input_field)
-        search_input_field_events3 = "LOWER(EVEE.TITLE) LIKE LOWER('_{}')".format(
-            search_input_field)
-        search_input_field_events4 = "LOWER(EVEE.TITLE) = LOWER('{}')".format(
-            search_input_field)
-        search_input_field_events5 = "LOWER(ENT.NAME) LIKE LOWER('_{}_')".format(
-            search_input_field)
-        search_input_field_events6 = "LOWER(ENT.NAME) LIKE LOWER('{}_')".format(
-            search_input_field)
-        search_input_field_events7 = "LOWER(ENT.NAME) LIKE LOWER('_{}')".format(
-            search_input_field)
-        search_input_field_events8 = "LOWER(ENT.NAME) = LOWER('{}')".format(
-            search_input_field)
-        search_input_field_events9 = "LOWER(HLC.NAME) = LOWER('{}')".format(
-            search_input_field)
-        search_input_field_events10 = "LOWER(HCITY.NAME) = LOWER('{}')".format(
-            search_input_field)
-        search_input_field_events12 = "LOWER(HCONT.NAME) = LOWER('{}')".format(
-            search_input_field)
+    where_cond_1, where_params_1 = create_where_cond_event(search_params)
+    
+    where_cond_2, where_params_2 = create_where_cond_entertainer(search_params)
 
     query = '''   
-        SELECT DISTINCT(EVEE.*)
+        SELECT DISTINCT(X.*)
         FROM (  
             SELECT EVEE.*
-            FROM EVENTS_EVENT AS EVEE
-            JOIN HOME_EVENTCATEGORY AS HEC  ON EVEE.ID = HEC.EVENT_ID
-            JOIN HOME_CATEGORY AS HCAT ON HCAT.ID = HEC.CATEGORY_ID
-			JOIN HOME_LOCATION AS HLC ON HLC.ID = EVEE.LOCATION_ID
-			JOIN HOME_CITY AS HCITY ON HCITY.ID = HLC.CITY_ID
-			JOIN HOME_COUNTRY AS HCONT ON HCONT.ID = HCITY.COUNTRY_ID
-            WHERE {} AND {} AND ({} OR {} OR {} OR {} OR {} OR {} OR {}) AND EVEE.START_DATE >= CURRENT_DATE
-            ORDER BY EVEE.START_DATE
-            ) AS EVEE
-        '''.format(categories_events, date_to_events, search_input_field_events, search_input_field_events2, search_input_field_events3, search_input_field_events4, search_input_field_events9, search_input_field_events10, search_input_field_events12)
+            FROM 
+                EVENTS_EVENT AS EVEE
+                JOIN HOME_EVENTCATEGORY AS HEC
+                ON EVEE.ID = HEC.EVENT_ID
+                JOIN HOME_CATEGORY AS HCAT
+                ON HCAT.ID = HEC.CATEGORY_ID
+                JOIN HOME_LOCATION AS HLC
+                ON HLC.ID = EVEE.LOCATION_ID
+                JOIN HOME_CITY AS HCITY
+                ON HCITY.ID = HLC.CITY_ID
+                JOIN HOME_COUNTRY AS HCONT
+                ON HCONT.ID = HCITY.COUNTRY_ID
+            WHERE {} EVEE.START_DATE >= CURRENT_DATE
+            ORDER BY 
+                EVEE.START_DATE
+            ) AS X;
+        '''.format(where_cond_1)
 
-    searched_events = Event.objects.raw(query)
+    searched_events = Event.objects.raw(query, where_params_1)
 
     query2 = '''
-        SELECT ENT.*, MIN(EVEE.START_DATE) AS NEXT_EVENT_DATE, HLOC.NAME AS LOCATION_NAME
-        FROM ENTERTAINERS_ENTERTAINER AS ENT
-        JOIN HOME_EVENTENTERTAINER AS HEVENT ON ENT.ID = HEVENT.ENTERTAINER_ID
-        JOIN EVENTS_EVENT AS EVEE ON EVEE.ID = HEVENT.EVENT_ID
-        JOIN HOME_LOCATION AS HLOC ON HLOC.ID = EVEE.LOCATION_ID
-        GROUP BY (ENT.ID, ENT.NAME, ENT.DESCRIPTION, ENT.IMAGE_URL, HLOC.NAME, EVEE.START_DATE)
-        HAVING ({} or {} or {} or {}) AND {} AND EVEE.START_DATE >= CURRENT_DATE
-        '''.format(search_input_field_events5, search_input_field_events6, search_input_field_events7, search_input_field_events8, date_to_events)
+        SELECT *
+        FROM (
+            SELECT DISTINCT ON (ENT.id)
+                ENT.id,
+                ENT.name,
+                ENT.description,
+                ENT.image_url,
+                EVEE.title,
+                EVEE.start_date,
+                MIN(EVEE.start_date) AS next_event_date,
+                HLOC.name AS location_name
+            FROM 
+                ENTERTAINERS_ENTERTAINER AS ENT
+                JOIN HOME_EVENTENTERTAINER AS HEVENT
+                ON ENT.id = HEVENT.entertainer_id
+                JOIN EVENTS_EVENT AS EVEE
+                ON EVEE.id = HEVENT.event_id
+                JOIN HOME_LOCATION AS HLOC 
+                ON HLOC.id = EVEE.location_id
+            GROUP BY 
+                ENT.id, ENT.name, ENT.description, ENT.image_url, EVEE.title, HLOC.name, EVEE.start_date
+            ) AS X
+        WHERE {} X.start_date >= CURRENT_DATE;
+        '''.format(where_cond_2)
 
-    searched_events_later = Entertainer.objects.raw(query2)
+    print('1', query)
+    print('2', query2)
+
+    searched_entertainers = Entertainer.objects.raw(query2, where_params_2)
 
     return render(request, 'pages/search.html', context={
         'searched_events': searched_events,
-        'searched_events_later': searched_events_later,
+        'searched_entertainers': searched_entertainers,
         'categories': Category.objects.all(),
         'user_details': user_details
     })

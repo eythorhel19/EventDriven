@@ -11,7 +11,3 @@ class EventTicketTypePrice(ModelForm):
         widgets = {
             'event': widgets.HiddenInput(),
         }
-        # widgets = {
-        #     'category': widgets.CheckboxSelectMultiple(),
-
-        # }

@@ -11,7 +11,3 @@ class EventEntertainer(ModelForm):
         widgets = {
             'event': widgets.HiddenInput(),
         }
-        # widgets = {
-        #     'category': widgets.CheckboxSelectMultiple(),
-
-        # }
