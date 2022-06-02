@@ -166,9 +166,6 @@
             } else if (
                 form.elements.chosen_date_range_type.value === "specific date"
             ) {
-                console.log('Date from',form.elements.date_from.value);
-                console.log('Date to',form.elements.date_to.value);
-
                 if (form.elements.date_from.value !== "" && form.elements.date_to.value !== "") {
                     url.searchParams.append(
                         "date_to", 
@@ -232,17 +229,12 @@
 
         const dateTo = urlParams.get('date_to');
         const dateFrom = urlParams.get('date_from');
-        console.log(dateTo);
-        console.log(dateFrom);
         
         const todayDate = new Date();
         const today = todayDate.toISOString().split("T")[0];
         const afterWeekDay = new Date(
             todayDate.getTime() + 7 * 24 * 60 * 60 * 1000
         ).toISOString().split("T")[0];
-
-        console.log(today);
-        console.log(afterWeekDay);
 
         if (dateTo === 'All' && dateFrom === 'All') {
             // pass
@@ -264,7 +256,6 @@
                 document.getElementById('date_to').value = dateTo;
             }
         }
-
 
         const searchInputField = urlParams.get('search_input_field');
 

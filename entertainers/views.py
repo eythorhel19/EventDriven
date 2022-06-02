@@ -38,8 +38,6 @@ def entertainers(request):
     '''
 
     entertainer_ = Entertainer.objects.raw(query_for_entertainers_card)
-    for i in entertainer_:
-        print(i.next_event_date)
 
     return render(request, 'pages/entertainers/index.html', context={
         "entertainer": entertainer_,

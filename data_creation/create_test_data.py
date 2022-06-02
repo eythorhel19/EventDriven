@@ -64,8 +64,6 @@ def main():
             continue
         data = line.strip().split(';')
         country_id_map[data[1]] = data[0]
-    
-    print(country_id_map)
 
     with open('data_creation/raw_data/worldcities.csv', 'r') as f:
         columns = None

@@ -167,9 +167,6 @@ def search(request):
         WHERE {} X.start_date >= CURRENT_DATE;
         '''.format(where_cond_2)
 
-    print('1', query)
-    print('2', query2)
-
     searched_entertainers = Entertainer.objects.raw(query2, where_params_2)
 
     return render(request, 'pages/search.html', context={

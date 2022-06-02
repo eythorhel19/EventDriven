@@ -1,0 +1,174 @@
+
+{% load static %}
+<script src="{% static 'js/event.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/event.css' %}">
+
+<div hidden>
+{% for img_url in event_images %}
+    <div class="event_image_url">{{img_url}}</div>
+{% endfor %}
+</div>
+{% if request.user.is_superuser %}
+<button class="button_outlined">
+    <a href="/event/create_event/{{event.id}}"> Edit event info </a>
+</button>
+{% endif %}
+<div class="main_wrapper">
+    <div class="top_wrapper">
+        <div class="image_wrapper_info_card">
+            <img
+                id="event_current_image"
+                src="{{event.main_image_url}}"
+                alt="Event image"
+            />
+            
+            <div class="event_image_buttons">
+                <button class="icon_large" onclick="loadPrevImage()">arrow_back_ios</button>
+                <button class="icon_large" onclick="loadNextImage()">arrow_forward_ios</button>
+            </div>
+            
+        </div>
+        <div class="info_and_book_wrapper">
+            <div class="info_wrapper">
+                <h1 class="h1_semibold">{{event.title}}</h1>
+                <h3 class="h3_light">{{event.description}}</h3>
+                <div class="max_cap_wrapper">
+                    <p class="label_light">Maximum Capacity</p>
+                    <p class="h3_regular">{{ event.maximum_capacity }}</p>
+                </div>
+                <div class="max_cap_wrapper">
+                    <p class="label_light">Ticket prices</p>
+                    {% for price_type in event_price_and_ticket_type %}
+                    <p class="p_light" value="{{price.price}}">{{price_type.description}}: {{price_type.price}} USD</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <button 
+                data-bs-toggle="modal"
+                data-bs-target="#booking_modal"
+                class="button_outlined button_large"
+                onclick="handleBookNow({{ event.id }})"
+            >Book Now</button>
+        </div>
+    </div>
+    <div class="map_and_calander_wrapper">
+        <div class="the_map_wrapper">
+            <p>Location</p>
+            <p>{{event.location}}</p>
+            <iframe
+                src={{map_url}}
+                height="600"
+                style="border: 0"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+        </div>
+        <div class="the_map_wrapper">
+            <p>Date</p>
+            <p>{{event.start_date}} to {{event.end_date}}</p>
+                <div class="the_calander_icon_wrapper">
+                    <div class="the_calander_icon_month">
+                        {% if year == year_to %}
+                        <h2 style="font-size: 3rem">{{year}}</h2>
+                        {% else %}
+                            <h2 style="font-size: 3rem">{{year}} to {{year_to}}</h2>
+                        {% endif %}
+                    </div>
+                    <div class="the_calander_icon_date_week">
+                        <h1 style="color: var(--base-primary); font-size: 3rem;
+                        ">{{hour}} to {{hour_to}}</h1>
+                        <h3 style="color: orange ; font-size: 3rem" >{{day_month}} to {{day_month_to}}</h3>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <p class="h3_regular" style="color:var(--type-primary)">Entertainers appearing in this event</p>
+    <div class="row-of-cards">
+        {% if events_entertainers %}
+            {% for entertainer in events_entertainers %}
+            <div>{% include 'components/entertainers_info_card.html' with entertainer=entertainer %}</div>
+            {% endfor %}
+            <button
+        onclick="scrollParentDivLeft(this)"
+        class="icon_large"
+        style="
+            position: absolute;
+            left: 0;
+            padding: 10px;
+
+            background-color: transparent;
+            border: none;
+            color: var(--type-primary);
+            opacity: 0.5;
+            "
+        >
+            arrow_back_ios
+        </button>
+        <button
+            onclick="scrollParentDivRight(this)"
+            class="icon_large"
+            style="
+                position: absolute;
+                right: 0;
+                padding: 10px;
+                background-color: transparent;
+                border: none;
+                color: var(--type-primary);
+                opacity: 0.5;
+            "
+        >
+            arrow_forward_ios
+        </button>
+        {% else %}
+            <p class="h1_regular" style="color:gray">No entertainers found for this event</p>
+        {% endif %}
+    </div>
+    <p class="h3_regular" style="color:var(--type-primary)">Similar events</p>
+    <div class="row-of-cards">
+        {% if most_similar_events %}
+            {% for event in most_similar_events %}
+
+            <div>{% include 'components/info_card.html' with event=event %}</div>
+            {% endfor %}
+            <button
+        onclick="scrollParentDivLeft(this)"
+        class="icon_large"
+        style="
+            position: absolute;
+            left: 0;
+            padding: 10px;
+
+            background-color: transparent;
+            border: none;
+            color: var(--type-primary);
+            opacity: 0.5;
+            "
+        >
+            arrow_back_ios
+        </button>
+        <button
+            onclick="scrollParentDivRight(this)"
+            class="icon_large"
+            style="
+                position: absolute;
+                right: 0;
+                padding: 10px;
+                background-color: transparent;
+                border: none;
+                color: var(--type-primary);
+                opacity: 0.5;
+            "
+        >
+            arrow_forward_ios
+        </button>
+        {% else %}
+            <p class="h1_regular" style="color:gray">No similar events found</p>
+        {% endif %}
+    </div>
+    
+</div>

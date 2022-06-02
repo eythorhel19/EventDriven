@@ -1,4 +1,6 @@
 {% extends "base.html" %} {% block content %}
+{% load static %}
+<script src="{% static 'js/scroll_horizon.js' %}"></script>
 <style>
     .categorie_name {
         padding: 0;
@@ -6,14 +8,7 @@
         color: var(--type-primary);
     }
 </style>
-<script>
-    function scrollParentDivLeft(event) {
-        event.parentNode.scrollLeft -= 350;
-    }
-    function scrollParentDivRight(event) {
-        event.parentNode.scrollLeft += 350;
-    }
-</script>
+
 <div>{% include 'search_bar.html' with categories=categories %}</div>
 {% for events in event_cat_categorised %}
 <p class="h2_regular categorie_name">{{events.0.category_name}}</p>

@@ -1,18 +1,13 @@
 {% extends "base.html" %} {% block content %}
+{% load static %}
+<script src="{% static 'js/scroll_horizon.js' %}"></script>
 <style>
     .event_or_ent_header {
         color: var(--type-primary);
         margin-top: 8px;
     }
 </style>
-<script>
-    function scrollParentDivLeft(event) {
-        event.parentNode.scrollLeft -= 350;
-    }
-    function scrollParentDivRight(event) {
-        event.parentNode.scrollLeft += 350;
-    }
-</script>
+
 <div>{% include 'search_bar.html' with categories=categories %}</div>
 <p class="h2_regular event_or_ent_header">Events matching your search result</p>
 <div class="row-of-cards">

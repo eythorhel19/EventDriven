@@ -311,8 +311,6 @@ function displayConfimationPage() {
     // Delivery Info
     if (postData.delivery_method == 'P') {
 
-        console.log(postData.postal_delivery_info);
-
         const nameTag = document.createElement('p');
         nameTag.textContent = postData.postal_delivery_info.first_name + ' ' + postData.postal_delivery_info.last_name;
         nameTag.classList.add('p_light');
