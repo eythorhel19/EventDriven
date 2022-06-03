@@ -22,7 +22,11 @@ def register(request):
         form = SignUpForm(data=request.POST)
         if form.is_valid():
             form.save()
-            return redirect('login')
+            return redirect('/user/login')
+        else:
+            return render(request, 'pages/user/register.html', {
+                'form': form
+            })
 
     return render(request, 'pages/user/register.html', {
         'form': SignUpForm()
@@ -32,6 +36,7 @@ def register(request):
 @login_required
 def profile(request):
     user_details = UserDetails.objects.filter(user=request.user).first()
+    posting_failed = False
 
     if request.method == 'POST':
         # Posting user details form
@@ -41,6 +46,8 @@ def profile(request):
             user_details.user = request.user
             user_details.save()
             return redirect('/user/profile?success=true')
+        else:
+            posting_failed = True
 
         # Posting user standard information form
         form2 = UserInfoForm(instance=request.user, data=request.POST)
@@ -48,6 +55,17 @@ def profile(request):
             user = form2.save(commit=False)
             user.save()
             return redirect('/user/profile?success=true')
+        
+        else:
+            posting_failed = True
+
+        if posting_failed:
+            return render(request, 'pages/user/profile.html', {
+                    'form': form,
+                    'form2': form2,
+                    'user_details': user_details,
+                    'user': request.user
+                })
 
     return render(request, 'pages/user/profile.html', {
         'form': ProfileForm(instance=user_details),

@@ -49,13 +49,55 @@
     }
 </script>
 
-{% if request.user.is_superuser %}
-<button class="button_outlined">
-    <a href="/event/create_event"> Create new event </a>
-</button>
-{% endif %}
 <div class="dashboard_body">
     <div class="ticket_and_favorites">
+        {% if request.user.is_superuser %}
+        <button class="button_outlined">
+            <a href="/event/create_event">Create new event</a>
+        </button>
+        {% endif %}
+        <div class="all_users_tickets">
+            <p class="h3_regular">Your tickets</p>
+            <div class="row_of_tickets">
+                {% for ticket in user_tickets %}
+                <div>
+                    {% include 'ticket_info_card.html' with ticket=ticket %}
+                </div>
+                {% endfor %}
+                <button
+                    onclick="scrollParentDivLeft(this)"
+                    class="icon_large"
+                    style="
+                        position: absolute;
+                        left: 0;
+                        padding: 10px;
+
+                        background-color: transparent;
+                        border: none;
+                        color: var(--type-primary);
+                        opacity: 0.5;
+                    "
+                >
+                arrow_back_ios
+                </button>
+                <button
+                    onclick="scrollParentDivRight(this)"
+                    class="icon_large"
+                    style="
+                        position: absolute;
+                        right: 0;
+                        padding: 10px;
+                        background-color: transparent;
+                        border: none;
+                        color: var(--type-primary);
+                        opacity: 0.5;
+                    "
+                >
+                arrow_forward_ios
+                </button>
+            </div>
+        </div>
+    
         <div class="all_users_favorites">
             <div class="favorite_type_container">
                 <p class="h3_regular">Your favorite entertainers:</p>
@@ -96,7 +138,7 @@
                         class="js-example-basic-multiple"
                         name="states[]"
                         multiple="multiple"
-                        style="width: 100%"
+                        style="width: 100%;"
                         id="select_categories"
                     >
                         {% for category in user_fav_cate %}
@@ -112,47 +154,7 @@
                 </form>
             </div>
         </div>
-        <div class="all_users_tickets">
-            <p class="h3_regular">Your tickets</p>
-            <div class="row_of_tickets">
-                {% for ticket in user_tickets %}
-                <div>
-                    {% include 'ticket_info_card.html' with ticket=ticket %}
-                </div>
-                {% endfor %}
-                <button
-                    onclick="scrollParentDivLeft(this)"
-                    class="icon_large"
-                    style="
-                        position: absolute;
-                        left: 0;
-                        padding: 10px;
-
-                        background-color: transparent;
-                        border: none;
-                        color: var(--type-primary);
-                        opacity: 0.5;
-                    "
-                >
-                    arrow_back_ios
-                </button>
-                <button
-                    onclick="scrollParentDivRight(this)"
-                    class="icon_large"
-                    style="
-                        position: absolute;
-                        right: 0;
-                        padding: 10px;
-                        background-color: transparent;
-                        border: none;
-                        color: var(--type-primary);
-                        opacity: 0.5;
-                    "
-                >
-                    arrow_forward_ios
-                </button>
-            </div>
-        </div>
+        <button class="button_outlined" onclick="window.location.reload();">Update</button>
     </div>
     <p class="h3_regular">
         Upcoming events matching your favorite categories and events

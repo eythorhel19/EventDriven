@@ -46,13 +46,21 @@
                     {% endfor %}
                 </div>
             </div>
-
+            
+            {% if is_past %}
+            <button 
+            class="button_outlined button_large button_disabled"
+            disabled
+            >Book Now</button>
+            <p class="p_light">This event has passed.</p>
+            {% else %}
             <button 
                 data-bs-toggle="modal"
                 data-bs-target="#booking_modal"
                 class="button_outlined button_large"
                 onclick="handleBookNow({{ event.id }})"
             >Book Now</button>
+            {% endif %}
         </div>
     </div>
     <div class="map_and_calender_wrapper">

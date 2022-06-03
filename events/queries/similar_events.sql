@@ -17,7 +17,7 @@ FROM (
         JOIN HOME_EVENTCATEGORY AS HECAT 
         ON HECAT.event_id = THIS_EVENT.id
     WHERE
-        HEENT.entertainer_id IN (
+        (HEENT.entertainer_id IN (
             SELECT HEENT.entertainer_id
             FROM EVENTS_EVENT AS EEVE
             JOIN HOME_EVENTENTERTAINER AS HEENT ON HEENT.event_id = EEVE.id
@@ -33,7 +33,8 @@ FROM (
             JOIN HOME_EVENTCATEGORY AS HECAT 
             ON HECAT.event_id = EEVE.id
             WHERE EEVE.id = {event_id}
-        ) AND THIS_EVENT.id != {event_id}
+        )) AND THIS_EVENT.id != {event_id}
+        AND THIS_EVENT.start_date >= CURRENT_DATE
     GROUP BY 
         THIS_EVENT.id, 
         THIS_EVENT.title, 

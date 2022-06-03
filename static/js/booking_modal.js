@@ -14,7 +14,7 @@ async function getEventData(eventID) {
     const res = await fetch(url);
 
     if (res.status !== 200) {
-        return;
+        return undefined;
     }
     return await res.json();
 }
@@ -417,6 +417,26 @@ async function handleBookNow(eventID) {
 
     // Getting event data
     eventData = await getEventData(eventID);
+
+    if (eventData === undefined) {
+        stopLoading();
+        displayErrorPage('No tickets are available to book for this event.');
+        return;
+    }
+
+    const end_date = new Date(eventData.end_date);
+    const today = new Date();
+
+    if (end_date < today) {
+        stopLoading();
+        displayErrorPage('This event is in the past!');
+        return;
+    } else if (eventData.tickets_sold === eventData.maximum_capacity) {
+        stopLoading();
+        displayErrorPage('This event is in the past!');
+        return;
+    }
+
     userInfo = await getUserInfo();
 
     // Populating Booking Modal
@@ -748,6 +768,7 @@ async function handlePostBooking(e) {
         const data = await res.json();
         displayErrorPage(data['message'])
     } else {
+        document.getElementById('booking_modal_success_delivery_method').textContent = 'You will receive your tickets shortly via ' + postData.delivery_method_description.toLowerCase() + '.';
         displayContentPage(6);
     }
 

@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -33,7 +34,7 @@ def event(request, event_id):
         event_images.append(ei.image_url)
 
     events_entertainers = run_query(
-        Event, 
+        Entertainer, 
         'events/queries/events_entertainers.sql', 
         {'event_id': event_id}
     )
@@ -61,8 +62,11 @@ def event(request, event_id):
         {'event_id': event_id}
     )
 
+
+
     return render(request, "pages/event/index.html", context={
         "event": the_event,
+        "is_past": the_event.end_date < timezone.now(),
         "event_images": event_images,
         "day_month": day_month,
         "hour": hour,
