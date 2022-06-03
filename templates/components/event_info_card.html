@@ -11,17 +11,22 @@
                 />
             </div>
             <div class="card_body">
-                <h2 class="h2_semibold info_card_title">{{event.title}}</h2>
-                <div class="description_wrapper">
-                    <p class="card_text">{{event.description}}</p>
+                <div class="card_content">
+                    <h2 class="h2_semibold info_card_title">{{event.title}}</h2>
+                    <div class="description_wrapper">
+                        <p class="card_text">{{event.description}}</p>
+                    </div>
                 </div>
-                <div class="icon_and_text">
-                    <p class="icon_large">pin_drop</p>
-                    <h3 class="h4_regular">{{event.location}}</h3>
-                </div>
-                <div class="icon_and_text">
-                    <p class="icon_large">calendar_month</p>
-                    <h3 class="h4_regular">{{event.start_date}}</h3>
+
+                <div class="card_content">
+                    <div class="icon_and_text">
+                        <p class="icon_large">pin_drop</p>
+                        <h3 class="h4_regular">{{event.location}}</h3>
+                    </div>
+                    <div class="icon_and_text">
+                        <p class="icon_large">calendar_month</p>
+                        <h3 class="h4_regular">{{event.start_date}}</h3>
+                    </div>
                 </div>
             </div>
         </a>

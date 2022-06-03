@@ -1,0 +1,31 @@
+.login_main_wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    color: var(--type-primary);
+}
+.login_button_wrapper {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.errorlist {
+    display: flex;
+    background-color: rgba(255, 0, 0, 0.2);
+    border: 2px solid var(--status-danger);
+    border-radius: 16px;
+    padding: 0;
+}
+.errorlist li {
+    padding: 8px 16px;
+    display: block;
+    list-style-type: none;
+}
+.sign_up_button_adjuster {
+    width: calc(50% - 8px);
+}

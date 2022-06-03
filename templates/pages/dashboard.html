@@ -3,51 +3,7 @@
 <link rel="stylesheet" href="{% static 'css/form_multi_select.css' %}">
 <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 <script src="{% static 'js/scroll_horizon.js' %}"></script>
-<script>
-    const sourceParts = window.location.href.split("/");
-    const BASE_URL = sourceParts[0] + "//" + sourceParts[2];
-
-    $(document).ready(function () {
-        $(".js-example-basic-multiple").select2();
-    });
-
-    async function funcForUersFavCatSelected(event) {
-        event.preventDefault();
-
-        const token = $('input[name="csrfmiddlewaretoken"]').val();
-
-        const url = BASE_URL + "/api/user_categories";
-        const res = await fetch(url, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": token,
-            },
-            body: JSON.stringify({
-                users_fav_cat_selected: $("#users_fav_cat_selected").select2(
-                    "data"
-                ),
-            }),
-        });
-    }
-    async function funcForUsersFavEntSelected(event) {
-        event.preventDefault();
-
-        const token = $('input[name="csrfmiddlewaretoken"]').val();
-
-        const url = BASE_URL + "/api/user_entertainers";
-        const res = await fetch(url, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": token,
-            },
-            body: JSON.stringify({
-                select_entertainers: $("#select_entertainers").select2("data"),
-            }),
-        });
-    }
-</script>
+<script src="{% static 'js/dashboard.js' %}"></script>
 
 <div class="dashboard_body">
     <div class="ticket_and_favorites">
@@ -64,36 +20,11 @@
                     {% include 'ticket_info_card.html' with ticket=ticket %}
                 </div>
                 {% endfor %}
-                <button
-                    onclick="scrollParentDivLeft(this)"
-                    class="icon_large"
-                    style="
-                        position: absolute;
-                        left: 0;
-                        padding: 10px;
-
-                        background-color: transparent;
-                        border: none;
-                        color: var(--type-primary);
-                        opacity: 0.5;
-                    "
-                >
-                arrow_back_ios
+                <button onclick="scrollParentDivLeft(this)" class="icon_large scroll_button_wrapper_left">
+                    arrow_back_ios
                 </button>
-                <button
-                    onclick="scrollParentDivRight(this)"
-                    class="icon_large"
-                    style="
-                        position: absolute;
-                        right: 0;
-                        padding: 10px;
-                        background-color: transparent;
-                        border: none;
-                        color: var(--type-primary);
-                        opacity: 0.5;
-                    "
-                >
-                arrow_forward_ios
+                <button onclick="scrollParentDivRight(this)" class="icon_large scroll_button_wrapper_right">
+                    arrow_forward_ios
                 </button>
             </div>
         </div>
@@ -101,16 +32,12 @@
         <div class="all_users_favorites">
             <div class="favorite_type_container">
                 <p class="h3_regular">Your favorite entertainers:</p>
-                <form
-                    class="form_fro_favorite"
-                    onchange="return funcForUsersFavEntSelected(event)"
-                >
+                <form class="form_fro_favorite" onchange="return funcForUsersFavEntSelected(event)">
                     {% csrf_token %}
                     <select
-                        class="js-example-basic-multiple"
+                        class="js-example-basic-multiple multi_select_adj"
                         name="states[]"
                         multiple="multiple"
-                        style="width: 100%"
                         id="select_entertainers"
                     >
                         {% for entertainer in user_fav_ent %}
@@ -127,18 +54,14 @@
             </div>
             <div class="favorite_type_container">
                 <p class="h3_regular">Your favorite categories:</p>
-                <form
-                    onchange="return funcForUersFavCatSelected(event)"
-                    class="form_fro_favorite"
-                >
+                <form onchange="return funcForUsersFavCatSelected(event)" class="form_fro_favorite">
                     {% csrf_token %}
 
                     <select
                         id="users_fav_cat_selected"
-                        class="js-example-basic-multiple"
+                        class="js-example-basic-multiple multi_select_adj"
                         name="states[]"
                         multiple="multiple"
-                        style="width: 100%;"
                         id="select_categories"
                     >
                         {% for category in user_fav_cate %}
@@ -163,35 +86,10 @@
         {% for event in events_matching_favorites %}
         <div>{% include 'components/event_info_card.html' with event=event %}</div>
         {% endfor %}
-        <button
-            onclick="scrollParentDivLeft(this)"
-            class="icon_large"
-            style="
-                position: absolute;
-                left: 0;
-                padding: 10px;
-
-                background-color: transparent;
-                border: none;
-                color: var(--type-primary);
-                opacity: 0.5;
-            "
-        >
+        <button onclick="scrollParentDivLeft(this)" class="icon_large scroll_button_wrapper_left">
             arrow_back_ios
         </button>
-        <button
-            onclick="scrollParentDivRight(this)"
-            class="icon_large"
-            style="
-                position: absolute;
-                right: 0;
-                padding: 10px;
-                background-color: transparent;
-                border: none;
-                color: var(--type-primary);
-                opacity: 0.5;
-            "
-        >
+        <button onclick="scrollParentDivRight(this)" class="icon_large scroll_button_wrapper_right">
             arrow_forward_ios
         </button>
     </div>

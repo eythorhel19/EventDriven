@@ -1,0 +1,11 @@
+.search_page_main_wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    color: var(--type-primary);
+}
+
+.event_or_ent_header {
+    color: var(--type-primary);
+    margin-top: 8px;
+}

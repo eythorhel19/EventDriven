@@ -1,23 +1,6 @@
 {% extends 'base.html' %} {% block content %}
-
-<style>
-    .help_wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 32px;
-        color: var(--type-primary);
-    }
-    .contact_info {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-    }
-    .location_of_our_offices {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-    }
-</style>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/help.css' %}">
 
 <div class="help_wrapper">
     <h1 class="h1_regular">Contact Us:</h1>
@@ -46,5 +29,4 @@
         ></iframe>
     </div>
 </div>
-<!-- filter: grayscale(30%) invert(100%) contrast(100%); -->
 {% endblock %}

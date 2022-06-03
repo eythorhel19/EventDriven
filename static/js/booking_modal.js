@@ -418,9 +418,16 @@ async function handleBookNow(eventID) {
     // Getting event data
     eventData = await getEventData(eventID);
 
-    if (eventData === undefined) {
+    // Handling errors
+    if (!eventData.tickets_available) {
         stopLoading();
         displayErrorPage('No tickets are available to book for this event.');
+        return;
+    }
+
+    if (eventData.tickets_sold >= eventData.maximum_capacity) {
+        stopLoading();
+        displayErrorPage('The event is sold out.');
         return;
     }
 
@@ -428,10 +435,6 @@ async function handleBookNow(eventID) {
     const today = new Date();
 
     if (end_date < today) {
-        stopLoading();
-        displayErrorPage('This event is in the past!');
-        return;
-    } else if (eventData.tickets_sold === eventData.maximum_capacity) {
         stopLoading();
         displayErrorPage('This event is in the past!');
         return;

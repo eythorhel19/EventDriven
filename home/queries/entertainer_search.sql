@@ -17,8 +17,10 @@ FROM (
         ON EVEE.id = HEVENT.event_id
         JOIN HOME_LOCATION AS HLOC 
         ON HLOC.id = EVEE.location_id
+    WHERE
+        EVEE.start_date >= CURRENT_DATE
     GROUP BY 
         ENT.id, ENT.name, ENT.description, ENT.image_url, EVEE.title, HLOC.name, EVEE.start_date
     ) AS X
 WHERE 
-    {where_cond} X.start_date >= CURRENT_DATE;
+    {where_cond} true;

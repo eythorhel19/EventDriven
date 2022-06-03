@@ -1,3 +1,9 @@
+.event_title_font_size {
+    font-size: 64px;
+}
+.top_line {
+    border-top: 1px solid var(--type-primary);
+}
 .model_adjuster {
     width: 80vw;
     max-width: none;

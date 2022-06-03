@@ -1,78 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
-<script>
-    function showHelp() {
-        const helpTags = document.getElementsByClassName('helptext');
 
-        for (let i = 0; i<helpTags.length; i++) {
-            if (helpTags[i].style.display == 'none') {
-                helpTags[i].style.display = 'block';
-            } else {
-                helpTags[i].style.display = 'none';
-            }
-        }
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+<script src="{% static 'js/register.js' %}"></script>
 
-    }
-</script>
-<style>
-    .sign_up_main_wrapper {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        color: var(--type-primary);
-    }
-    .sign_up_form {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        width: 50%;
-        min-width: 350px;
-        max-width: 450px;
-    }
-    .sign_up_form input {
-        padding: 8px 16px;
-        border-radius: 8px;
-        border-width: 0;
-    }
-    .sign_up_form label {
-        font-family: var(--base-font);
-        font-weight: 300;
-        font-size:var(--label-font-size);
-        text-transform: uppercase;
-        padding: 0;
-        margin: 0;
-    }
-    .helptext {
-        display: none;
-    }
-    .sign_up_button_wrapper {
-        display: flex;
-        gap: 16px;
-        width: 100%;
-    }
-    .sign_up_button_adjuster {
-        width: calc(50% - 8px);
-    }
-    .show_help_button {
-        border-color: var(--type-weak);
-    }
-
-    .show_help_button:hover {
-        background-color: var(--type-weak);
-        color: var(--base-secondary);
-    }
-</style>
 <div class="sign_up_main_wrapper">
     <h2 class="h2_regular">Sign up</h2>
-    <form class="sign_up_form" method="post">
+    <form class="form_styling" method="post">
         {% csrf_token %}
         {{ form }}
         <div class="sign_up_button_wrapper">
-            <button class="button_outlined sign_up_button_adjuster show_help_button" onclick="showHelp()">Show Help</button>
             <input type="submit" class="button_outlined sign_up_button_adjuster" value="Sign up" style="border-width: 2px;"/>
         </div>
     </form>
+    <div class="help_button_wrapper">
+        <button class="button_outlined sign_up_button_adjuster show_help_button" onclick="showHelp()">Show Help</button>
+    </div>
 </div>
 {% endblock %}

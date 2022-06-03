@@ -1,0 +1,6 @@
+.home_main_wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    color: var(--type-primary);
+}

@@ -1,99 +1,50 @@
 {% extends "base.html" %} {% block content %}
 {% load static %}
 <script src="{% static 'js/scroll_horizon.js' %}"></script>
-<style>
-    .event_or_ent_header {
-        color: var(--type-primary);
-        margin-top: 8px;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
 
-<div>{% include 'search_bar.html' with categories=categories %}</div>
-<p class="h2_regular event_or_ent_header">Events matching your search result</p>
-<div class="row-of-cards">
-    {% if searched_events %} {% for event in searched_events %}
-    <div>{% include 'components/event_info_card.html' with event=event %}</div>
-    {% endfor %} 
-    <button
-        onclick="scrollParentDivLeft(this)"
-        class="icon_large"
-        style="
-            position: absolute;
-            left: 0;
-            padding: 10px;
-
-            background-color: transparent;
-            border: none;
-            color: var(--type-primary);
-            opacity: 0.5;
-            "
-        >
-            arrow_back_ios
-        </button>
-        <button
-            onclick="scrollParentDivRight(this)"
-            class="icon_large"
-            style="
-                position: absolute;
-                right: 0;
-                padding: 10px;
-                background-color: transparent;
-                border: none;
-                color: var(--type-primary);
-                opacity: 0.5;
-            "
-        >
-            arrow_forward_ios
-        </button>{% else %}
-    <h3 class="h3_regular" style="color: var(--type-dark);">
-        No events found matching your search
-    </h3>
-    {% endif %}
-</div>
-<p class="h2_regular event_or_ent_header">
-    Entertainers matching your search result
-</p>
-<div class="row-of-cards">
-    {% if searched_entertainers %} 
-    {% for entertainer in searched_entertainers%}
+<div class="search_page_main_wrapper">
     <div>
-        {% include 'components/entertainers_info_card.html' with entertainer=entertainer %}
+        {% include 'search_bar.html' with categories=categories %}
     </div>
-    {% endfor %} 
-    <button
-        onclick="scrollParentDivLeft(this)"
-        class="icon_large"
-        style="
-            position: absolute;
-            left: 0;
-            padding: 10px;
-
-            background-color: transparent;
-            border: none;
-            color: var(--type-primary);
-            opacity: 0.5;
-            "
-        >
-            arrow_back_ios
-        </button>
-        <button
-            onclick="scrollParentDivRight(this)"
-            class="icon_large"
-            style="
-                position: absolute;
-                right: 0;
-                padding: 10px;
-                background-color: transparent;
-                border: none;
-                color: var(--type-primary);
-                opacity: 0.5;
-            "
-        >
-            arrow_forward_ios
-        </button>{% else %}
-    <h3 class="h3_regular" style="color: var(--type-dark);">
-        No entertainers found matching your search
-    </h3>
-    {% endif %}
+    <p class="h2_regular event_or_ent_header">Events matching your search result</p>
+    <div class="row-of-cards">
+        {% if searched_events %} {% for event in searched_events %}
+            <div>{% include 'components/event_info_card.html' with event=event %}</div>
+        {% endfor %} 
+            <button onclick="scrollParentDivLeft(this)" class="icon_large scroll_button_wrapper_left">
+                arrow_back_ios
+            </button>
+            <button onclick="scrollParentDivRight(this)" class="icon_large scroll_button_wrapper_right">
+                arrow_forward_ios
+            </button>
+        {% else %}
+            <h3 class="h3_regular dark_text">
+                No events found matching your search
+            </h3>
+        {% endif %}
+    </div>
+    <p class="h2_regular event_or_ent_header">
+        Entertainers matching your search result
+    </p>
+    <div class="row-of-cards">
+        {% if searched_entertainers %} 
+        {% for entertainer in searched_entertainers%}
+            <div>
+                {% include 'components/entertainers_info_card.html' with entertainer=entertainer %}
+            </div>
+        {% endfor %} 
+            <button onclick="scrollParentDivLeft(this)" class="icon_large scroll_button_wrapper_left">
+                arrow_back_ios
+            </button>
+            <button onclick="scrollParentDivRight(this)" class="icon_large scroll_button_wrapper_right">
+                arrow_forward_ios
+            </button>
+        {% else %}
+            <h3 class="h3_regular dark_text">
+                No entertainers found matching your search
+            </h3>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

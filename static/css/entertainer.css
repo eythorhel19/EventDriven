@@ -1,0 +1,15 @@
+.entertainer_wrapper {
+        margin-top: 32px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 16px;
+}
+
+.main_wrapper_entertainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    color: var(--type-primary);
+    gap: 32px;
+}

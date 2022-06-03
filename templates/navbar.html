@@ -1,126 +1,18 @@
 {% load static %}
-<style>
-    .navbar_wrapper {
-        /* Alignment */
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        color: var(--type-primary);
-        /* Body */
-        background-color: var(--base-primary);
-        padding: 16px;
-        box-shadow: 0 1px 24px rgba(255, 255, 255, 0.25);
-    }
+<link rel="stylesheet" href="{% static 'css/navbar.css' %}">
 
-    .navbar_navbar_logo_login {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        width: 100%;
-        padding: 0;
-    }
-
-    .navbar_options {
-        position: absolute;
-        margin-top: 40px;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    .navbar_option {
-        color: var(--type-primary);
-        text-decoration: none;
-        padding: 8px;
-    }
-
-    .navbar_option:hover {
-        color: var(--type-primary);
-        background-color: var(--base-secondary);
-        border-radius: 8px;
-        padding: 8px;
-    }
-    .the_options {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        width: 100%;
-        gap: 16px;
-    }
-
-    @media only screen and (max-width: 800px) {
-        .navbar_wrapper {
-            /* Alignment */
-            height: 120px;
-
-            display: flex;
-            flex-wrap: wrap;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-
-            /* Body */
-            background-color: var(--base-primary);
-            box-shadow: 0 1px 24px rgba(255, 255, 255, 0.25);
-            padding-left: 8px;
-            padding-right: 8px;
-            padding-bottom: 0px;
-        }
-        .navbar_navbar_logo_login {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            width: 800px;
-            padding: 0;
-            gap: 0px;
-        }
-        .navbar_options {
-            position: relative;
-            width: 100%;
-            justify-content: center;
-            margin-top: 25px;
-        }
-        .button_outlined {
-            /* Alignment */
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            padding: 8px 16px;
-
-            /* Body */
-            background-color: rgba(0, 0, 0, 0);
-            border: 2px solid var(--graphical-primary);
-            border-radius: 8px;
-            color: var(--type-primary);
-            font-size: 18px;
-        }
-        .the_options {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            align-items: center;
-            overflow-x: scroll;
-            padding-bottom: 20px;
-            padding-top: 20px;
-        }
-    }
-</style>
 <nav class="navbar_wrapper">
     <div class="navbar_navbar_logo_login">
         <a href="/">
-            <img src={% static 'images/event_driven_white_transparent.png' %}
-            alt="Event driven logo" />
+            <img alt="Event driven logo" src={% static 'images/event_driven_white_transparent.png' %} />
         </a>
         <div>
             {% if user.is_authenticated %}
                 {% include 'components/user_avatar.html' %}
             {% else %}
             <a class="button_outlined" href="{% url 'login' %}"
-                >Login / Register</a
-            >
+                >Login / Register
+            </a>
             {% endif %}
         </div>
     </div>

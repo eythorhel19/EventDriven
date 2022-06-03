@@ -70,7 +70,6 @@
             <iframe
                 src="{{map_url}}"
                 height="600"
-                style="border: 0"
                 allowfullscreen=""
                 loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"
@@ -82,98 +81,52 @@
                 <div class="the_calendar_icon_wrapper">
                     <div class="the_calendar_icon_month">
                         {% if year == year_to %}
-                        <h2 style="font-size: 3rem">{{year}}</h2>
+                        <h2 class="h2_light calendar_font_size">{{year}}</h2>
                         {% else %}
-                            <h2 style="font-size: 3rem">{{year}} to {{year_to}}</h2>
+                            <h2 class="h2_light calendar_font_size">{{year}} to {{year_to}}</h2>
                         {% endif %}
                     </div>
                     <div class="the_calendar_icon_date_week">
-                        <h1 style="color: var(--base-primary); font-size: 3rem;
-                        ">{{hour}} to {{hour_to}}</h1>
-                        <h3 style="color: orange ; font-size: 3rem" >{{day_month}} to {{day_month_to}}</h3>
+                        <h1 class="calendar_font_size calendar_black_font">{{hour}} to {{hour_to}}</h1>
+                        <h3 class="calendar_font_size calendar_colored_font" >{{day_month}} to {{day_month_to}}</h3>
                     </div>
                     
                 </div>
         </div>
-    <p class="h3_regular" style="color:var(--type-primary)">Entertainers appearing in this event</p>
+    </div>
+    <p class="h3_regular">Entertainers appearing in this event</p>
     <div class="row-of-cards">
         {% if events_entertainers %}
             {% for entertainer in events_entertainers %}
             <div>{% include 'components/entertainers_info_card.html' with entertainer=entertainer %}</div>
             {% endfor %}
-            <button
-        onclick="scrollParentDivLeft(this)"
-        class="icon_large"
-        style="
-            position: absolute;
-            left: 0;
-            padding: 10px;
-
-            background-color: transparent;
-            border: none;
-            color: var(--type-primary);
-            opacity: 0.5;
-            "
-        >
-            arrow_back_ios
-        </button>
-        <button
-            onclick="scrollParentDivRight(this)"
-            class="icon_large"
-            style="
-                position: absolute;
-                right: 0;
-                padding: 10px;
-                background-color: transparent;
-                border: none;
-                color: var(--type-primary);
-                opacity: 0.5;
-            "
-        >
-            arrow_forward_ios
-        </button>
+            <button onclick="scrollParentDivLeft(this)" class="icon_large scroll_button_wrapper_left">
+                arrow_back_ios
+            </button>
+            <button onclick="scrollParentDivRight(this)" class="icon_large scroll_button_wrapper_right">
+                arrow_forward_ios
+            </button>
         {% else %}
-            <p class="h1_regular" style="color:gray">No entertainers found for this event</p>
+            <h3 class="h3_regular dark_text">No entertainers found for this event</h3>
         {% endif %}
     </div>
-    <p class="h3_regular" style="color:var(--type-primary)">Similar events</p>
+    <p class="h3_regular">Similar events</p>
     <div class="row-of-cards">
         {% if most_similar_events %}
             {% for event in most_similar_events %}
 
-            <div>{% include 'components/event_info_card.html' with event=event %}</div>
+            <div>
+                {% include 'components/event_info_card.html' with event=event %}
+            </div>
             {% endfor %}
-            <button
-                onclick="scrollParentDivLeft(this)"
-                class="icon_large"
-                style="
-                    position: absolute;
-                    left: 0;
-                    padding: 10px;
-
-                    background-color: transparent;
-                    border: none;
-                    color: var(--type-primary);
-                    opacity: 0.5;
-                    "
-            > arrow_back_ios
+            <button onclick="scrollParentDivLeft(this)" class="icon_large scroll_button_wrapper_left">
+                arrow_back_ios
             </button>
-            <button
-                onclick="scrollParentDivRight(this)"
-                class="icon_large"
-                style="
-                position: absolute;
-                right: 0;
-                padding: 10px;
-                background-color: transparent;
-                border: none;
-                color: var(--type-primary);
-                opacity: 0.5;
-            "
-            > arrow_forward_ios
+            <button onclick="scrollParentDivRight(this)" class="icon_large scroll_button_wrapper_right">
+                arrow_forward_ios
             </button>
         {% else %}
-            <p class="h1_regular" style="color:gray">No similar events found</p>
+            <h3 class="h3_regular dark_text">No similar events found</h3>
         {% endif %}
     </div>
 </div>

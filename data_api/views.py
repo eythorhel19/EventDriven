@@ -58,6 +58,13 @@ def event(request, event_id):
         event_dict = model_to_dict(event_info[0])
 
         event_dict['location_name'] = event_info[0].location_name
+        if event_info[0].tickets_sold is None:
+            event_dict['tickets_sold'] = 0
+            event_dict['tickets_available'] = False
+        else:
+            event_dict['tickets_sold'] = event_info[0].tickets_sold
+            event_dict['tickets_available'] = True
+        
         event_dict['ticket_types'] = ticket_types
 
         if event_info[0].start_date == event_info[0].end_date:

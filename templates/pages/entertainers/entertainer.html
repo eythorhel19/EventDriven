@@ -2,15 +2,15 @@
 {% load static %}
 <script src="{% static 'js/event.js' %}"></script>
 <link rel="stylesheet" href="{% static 'css/event.css' %}">
+<link rel="stylesheet" href="{% static 'css/entertainer.css' %}">
 <script src="{% static 'js/scroll_horizon.js' %}"></script>
 
-<div>
+<div class="main_wrapper_entertainer">
     <div class="top_wrapper">
         <div class="image_wrapper_info_card">
             <img
                 src="{{entertainer_info.image_url}}"
                 alt="entertainer image"
-                style="width: 100%"
             />
         </div>
         <div class="info_and_book_wrapper">
@@ -20,41 +20,19 @@
             </div>
         </div>
     </div>
-    <p class="h3_regular" style="color:var(--type-primary); padding-top: 40px;">Upcoming events</p>
-    <div class="row-of-cards">
-        {% for event in entertainer_events %}
-        <div>{% include 'components/event_info_card.html' with event=event %}</div>
-        {% endfor %}
-        <button
-        onclick="scrollParentDivLeft(this)"
-        class="icon_large"
-        style="
-            position: absolute;
-            left: 0;
-            padding: 10px;
-            background-color: transparent;
-            border: none;
-            color: var(--type-primary);
-            opacity: 0.5;
-            "
-        >
-            arrow_back_ios
-        </button>
-        <button
-            onclick="scrollParentDivRight(this)"
-            class="icon_large"
-            style="
-                position: absolute;
-                right: 0;
-                padding: 10px;
-                background-color: transparent;
-                border: none;
-                color: var(--type-primary);
-                opacity: 0.5;
-            "
-        >
-            arrow_forward_ios
-        </button>
+    <div>
+        <p class="h3_regular">Upcoming events</p>
+        <div class="row-of-cards">
+            {% for event in entertainer_events %}
+            <div>{% include 'components/event_info_card.html' with event=event %}</div>
+            {% endfor %}
+            <button onclick="scrollParentDivLeft(this)" class="icon_large scroll_button_wrapper_left">
+                arrow_back_ios
+            </button>
+            <button onclick="scrollParentDivRight(this)" class="icon_large scroll_button_wrapper_right">
+                arrow_forward_ios
+            </button>
+        </div>
     </div>
 </div>
 {% endblock %}

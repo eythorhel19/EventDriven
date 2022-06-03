@@ -1,51 +1,25 @@
 {% extends "base.html" %} {% block content %}
 {% load static %}
 <script src="{% static 'js/scroll_horizon.js' %}"></script>
-<style>
-    .categorie_name {
-        padding: 0;
-        margin-top: 20px;
-        color: var(--type-primary);
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
 
-<div>{% include 'search_bar.html' with categories=categories %}</div>
-{% for events in event_cat_categorised %}
-<p class="h2_regular categorie_name">{{events.0.category_name}}</p>
-<div class="row-of-cards">
-    {% for event in events %}
-    <div>{% include 'components/event_info_card.html' with event=event %}</div>
-    {% endfor %}
-    <button
-        onclick="scrollParentDivLeft(this)"
-        class="icon_large"
-        style="
-            position: absolute;
-            left: 0;
-            padding: 10px;
-
-            background-color: transparent;
-            border: none;
-            color: var(--type-primary);
-            opacity: 0.5;
-        "
-    >
-        arrow_back_ios
-    </button>
-    <button
-        onclick="scrollParentDivRight(this)"
-        class="icon_large"
-        style="
-            position: absolute;
-            right: 0;
-            padding: 10px;
-            background-color: transparent;
-            border: none;
-            color: var(--type-primary);
-            opacity: 0.5;
-        "
-    >
-        arrow_forward_ios
-    </button>
+<div>
+    {% include 'search_bar.html' with categories=categories %}
 </div>
-{% endfor %} {% endblock %}
+<div class="home_main_wrapper">
+    {% for events in event_cat_categorised %}
+    <h2 class="h2_regular">{{events.0.category_name}}</h2>
+    <div class="row-of-cards">
+        {% for event in events %}
+        <div>{% include 'components/event_info_card.html' with event=event %}</div>
+        {% endfor %}
+        <button onclick="scrollParentDivLeft(this)" class="icon_large scroll_button_wrapper_left">
+            arrow_back_ios
+        </button>
+        <button onclick="scrollParentDivRight(this)" class="icon_large scroll_button_wrapper_right">
+            arrow_forward_ios
+        </button>
+    </div>
+    {% endfor %} 
+</div>
+{% endblock %}

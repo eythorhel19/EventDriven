@@ -1,0 +1,32 @@
+.preview_of_event {
+    border: 2px solid var(--type-primary);
+    border-radius: 8px;
+    padding: 16px;
+}
+.create_more_forms {
+    color: var(--type-primary);
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+.favorite_type_container {
+    color: var(--type-primary);
+}
+#ticket_type_price {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    margin-bottom: 8px;
+    border: 1px solid var(--type-primary);
+    border-radius: 8px;
+    padding: 8px;
+}
+.create_page_main_wrapper {
+    color: var(--type-primary);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}

@@ -132,6 +132,7 @@ def search(request):
 
     return render(request, 'pages/search.html', context={
         'searched_events': searched_events,
+        'progress_data': progress_data,
         'searched_entertainers': searched_entertainers,
         'categories': Category.objects.all(),
         'user_details': user_details
@@ -193,6 +194,7 @@ def dashboard(request):
     return render(request, 'pages/dashboard.html', context={
         'user_tickets': user_tickets,
         "events_matching_favorites": events_matching_favorites,
+        'progress_data': progress_data,
         "user_fav_cate": user_fav_cate,
         "rest_fav_cate": rest_fav_cate,
         "user_fav_ent": user_fav_ent,

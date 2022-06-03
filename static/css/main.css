@@ -390,10 +390,15 @@ body {
 .card_body {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 32px;
     padding: 16px;
     width: 100%;
     color: var(--type-primary);
+}
+
+.card_content {
+    overflow: hidden;
 }
 
 .row-of-cards {
@@ -411,3 +416,46 @@ a, a:hover, a:focus, a:active {
     color: inherit;
 }
 
+.scroll_button_wrapper_left {
+    position: absolute;
+    left: 0;
+    padding: 10px;
+    background-color: transparent;
+    border: none;
+    color: var(--type-primary);
+    opacity: 0.5;
+}
+
+.scroll_button_wrapper_right {
+    position: absolute;
+    right: 0;
+    padding: 10px;
+    background-color: transparent;
+    border: none;
+    color: var(--type-primary);
+    opacity: 0.5;
+}
+.dark_text {
+    color: var(--type-dark);
+}
+.form_styling {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.form_styling input {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border-width: 0;
+}
+.form_styling select {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border-width: 0;
+    height: 40px;
+}
+.multi_select_adj {
+    width: 100%;
+}

@@ -13,7 +13,7 @@ FROM
     ON E.location_id = L.id
     JOIN HOME_CITY AS C
     ON L.city_id = C.id
-	JOIN (
+	LEFT JOIN (
 		SELECT
 			T.event_id,
 			COUNT(*) AS tickets_sold
