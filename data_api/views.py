@@ -1,17 +1,15 @@
 import json
-from unicodedata import category
-
 from django.http import JsonResponse, HttpResponse
 from django.forms.models import model_to_dict
 from django.contrib.auth.models import AnonymousUser
 from rest_framework.decorators import api_view
+from django.contrib.auth.decorators import login_required
 
 from events.models import Event
+from eventdriven.shared_functions import run_query
 from home.models import Ticket, TicketType, EventTicketTypePrice, Country, City, UserFavoriteCategory, \
-    UserFavoriteEntertainer
+    UserFavoriteEntertainer, EventCategory, EventEntertainer
 from user.views import get_user_details
-from home.models import EventCategory, EventEntertainer
-from django.contrib.auth.decorators import login_required
 
 
 def check_required_fields(req_body, required_fields):
@@ -31,35 +29,19 @@ def event(request, event_id):
     if not event_id.isdigit():
         return JsonResponse(status=400, data={'message': 'event_id must be a integer!'})
 
-    events = Event.objects.raw('''
-        SELECT 
-            E.id, 
-            E.title, 
-            E.description, 
-            E.start_date, 
-            E.end_date, 
-            CONCAT(L.name,', ',C.name) AS location_name, 
-            E.main_image_url
-        FROM events_event AS E
-        INNER JOIN home_location AS L
-        ON E.location_id = L.id
-        INNER JOIN home_city AS C
-        ON L.city_id = C.id
-        WHERE E.id = {};
-    '''.format(event_id))
+    # Getting the event info
+    event_info = run_query(
+        Event,
+        'data_api/queries/event_info.sql',
+        options={'event_id': event_id}
+    )
 
-    ticket_types_result = TicketType.objects.raw('''
-    SELECT
-        TT.*,
-        ETTP.price,
-        CONCAT(TT.description,' - ', ETTP.price) AS option_description
-    FROM
-        home_tickettype AS TT
-        INNER JOIN home_eventtickettypeprice AS ETTP
-        ON TT.id = ETTP.ticket_type_id
-    WHERE
-        ETTP.event_id = {};
-    '''.format(event_id))
+    # Getting the events ticket types
+    ticket_types_result = run_query(
+        TicketType,
+        'data_api/queries/event_ticket_types.sql',
+        options={'event_id': event_id}
+    )
 
     ticket_types = []
     for tt in ticket_types_result:
@@ -70,21 +52,21 @@ def event(request, event_id):
             'price': tt.price
         })
 
-    if len(events) == 0:
+    if len(event_info) == 0:
         return JsonResponse(status=400, data={'message': 'Event not found!'})
     else:
-        event_dict = model_to_dict(events[0])
+        event_dict = model_to_dict(event_info[0])
 
-        event_dict['location_name'] = events[0].location_name
+        event_dict['location_name'] = event_info[0].location_name
         event_dict['ticket_types'] = ticket_types
 
-        if events[0].start_date == events[0].end_date:
+        if event_info[0].start_date == event_info[0].end_date:
             event_dict['date_description'] = "{}".format(
-                events[0].start_date.strftime("%d. %B"))
+                event_info[0].start_date.strftime("%d. %B"))
         else:
             event_dict['date_description'] = "{} to {}".format(
-                events[0].start_date.strftime("%d. %B"),
-                events[0].end_date.strftime("%d. %B")
+                event_info[0].start_date.strftime("%d. %B"),
+                event_info[0].end_date.strftime("%d. %B")
             )
         return JsonResponse(event_dict)
 

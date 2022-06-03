@@ -13,70 +13,71 @@ async function getEventData(eventID) {
     const url = BASE_URL + "/api/event/" + eventID;
     const res = await fetch(url);
 
-    if (res.status != 200) {
+    if (res.status !== 200) {
         return;
     }
-    const data = await res.json();
-    return data;
+    return await res.json();
 }
 
 async function getCountryData() {
     const url = BASE_URL + "/api/country";
     const res = await fetch(url);
 
-    if (res.status != 200) {
+    if (res.status !== 200) {
         return;
     }
-    const data = await res.json();
-    return data;
+    return await res.json();
 }
 
 async function getCityData(countryID) {
     const url = BASE_URL + "/api/city?country_id=" + countryID;
     const res = await fetch(url);
 
-    if (res.status != 200) {
+    if (res.status !== 200) {
         return;
     }
-    const data = await res.json();
-    return data;
+    return await res.json();
 }
 
 async function getUserInfo() {
     const url = BASE_URL + "/api/user_info";
     const res = await fetch(url);
 
-    if (res.status != 200) {
+    if (res.status !== 200) {
         return undefined;
     }
     
-    const data = await res.json();
-    return data;
+    return await res.json();
 }
 
 function populateEventData(eventData) {
-    document.getElementById("booking_modal_image").src = eventData.main_image_url;
-    document.getElementById("booking_modal_title").textContent = eventData.title;
-    document.getElementById("booking_modal_description").textContent = eventData.description;
-    document.getElementById("booking_modal_location").textContent = eventData.location_name;
-    document.getElementById("booking_modal_date").textContent = eventData.date_description;
+    document.getElementById("booking_modal_image").src = eventData['main_image_url'];
+    document.getElementById("booking_modal_title").textContent = eventData['title'];
+
+    if (eventData['title'].length > 15) {
+        document.getElementById("booking_modal_title").style.fontSize = '32px';
+    }
+
+    document.getElementById("booking_modal_description").textContent = eventData['description'];
+    document.getElementById("booking_modal_location").textContent = eventData['location_name'];
+    document.getElementById("booking_modal_date").textContent = eventData['date_description'];
 
     const select = document.getElementById("ticket_type_select");
     select.innerHTML = "";
-    for (let i = 0; i<eventData.ticket_types.length; i++) {
+    for (let i = 0; i<eventData['ticket_types'].length; i++) {
         let option = document.createElement('option');
-        option.value = eventData.ticket_types[i].ticket_type_id;
-        option.textContent = eventData.ticket_types[i].option_description;
+        option.value = eventData['ticket_types'][i].ticket_type_id;
+        option.textContent = eventData['ticket_types'][i]['option_description'];
         select.appendChild(option);
     }
 }
 
-function startLoading(loadingTag, contentTag) {
+function startLoading() {
     displayContentPage(-1);
     document.getElementById('booking_modal_loading').style.display = 'flex';
 }
 
-function stopLoading(loadingTag, contentTag) {
+function stopLoading() {
     document.getElementById('booking_modal_loading').style.display = 'none';
 }
 
@@ -105,7 +106,7 @@ function setProgressPoint(index) {
         
         if (index > i) {
             document.getElementById(id).classList.add('finished');
-        } else if (index == i) {
+        } else if (index === i) {
             document.getElementById(id).classList.add('active');
         }
     }
@@ -142,22 +143,22 @@ function displayInfoBar() {
     document.getElementById('booking_modal_order_info').style.display = 'flex';
 
     document.getElementById('booking_modal_order_info_event').textContent = eventData.title;
-    document.getElementById('booking_modal_order_info_date').textContent = eventData.date_description;
-    document.getElementById('booking_modal_order_info_quantity').textContent = postData.ticket_quantity;
-    document.getElementById('booking_modal_order_info_delivery').textContent = postData.delivery_method_description;
+    document.getElementById('booking_modal_order_info_date').textContent = eventData['date_description'];
+    document.getElementById('booking_modal_order_info_quantity').textContent = String(postData['ticket_quantity']);
+    document.getElementById('booking_modal_order_info_delivery').textContent = postData['delivery_method_description'];
 
     let ticketType = '';
     let totalPrice = 0;
 
-    for (let i = 0; i<eventData.ticket_types.length; i++) {
-        if (eventData.ticket_types[i].ticket_type_id === postData.ticket_type_id) {
-            ticketType = eventData.ticket_types[i].description;
-            totalPrice = eventData.ticket_types[i].price * postData.ticket_quantity;
+    for (let i = 0; i<eventData['ticket_types'].length; i++) {
+        if (eventData['ticket_types'][i]['ticket_type_id'] === postData.ticket_type_id) {
+            ticketType = eventData['ticket_types'][i]['description'];
+            totalPrice = eventData['ticket_types'][i]['price'] * postData.ticket_quantity;
         }
     }
 
     document.getElementById('booking_modal_order_info_ticket_type').textContent = ticketType;
-    document.getElementById('booking_modal_order_info_total_price').textContent = totalPrice;
+    document.getElementById('booking_modal_order_info_total_price').textContent = String(totalPrice);
 }
 
 function hideInfoBar() {
@@ -183,7 +184,7 @@ async function populatePostalCity() {
         citySelect.appendChild(option);
     }
 
-    if (document.getElementById('booking_modal_p_phone_country_code').value == "") {
+    if (document.getElementById('booking_modal_p_phone_country_code').value === "") {
         document.getElementById('booking_modal_p_phone_country_code').value = countryID;
     }
 }
@@ -206,7 +207,7 @@ async function populationPostalInfo(countryData) {
     for (let i = 0; i<countryData.length; i++) {
         let option = document.createElement('option');
         option.value = countryData[i].id;
-        option.textContent = countryData[i].name + " (+" + countryData[i].phone_country_code + ")";
+        option.textContent = countryData[i].name + " (+" + countryData[i]['phone_country_code'] + ")";
         phoneCountrySelect.appendChild(option);
     }
 
@@ -239,7 +240,7 @@ async function displayPostalInfo() {
         return a.name > b.name;
     })
 
-    populationPostalInfo(countryData);
+    await populationPostalInfo(countryData);
 }
 
 function populateEmailInfo(countryData) {
@@ -287,7 +288,7 @@ function formatCardNumber(cardNumber) {
 
     for (let i = 0; i<cardNumber.length; i++) {
         ret_str += cardNumber[i];
-        if ((i + 1) % 4 == 0 && i !== 15) {
+        if ((i + 1) % 4 === 0 && i !== 15) {
             ret_str += '-';
         }
     }
@@ -295,7 +296,7 @@ function formatCardNumber(cardNumber) {
     return ret_str;
 }
 
-function displayConfimationPage() {
+function displayConfirmationPage() {
     displayContentPage(5);
 
     // Event Info
@@ -309,7 +310,7 @@ function displayConfimationPage() {
 
     
     // Delivery Info
-    if (postData.delivery_method == 'P') {
+    if (postData.delivery_method === 'P') {
 
         const nameTag = document.createElement('p');
         nameTag.textContent = postData.postal_delivery_info.first_name + ' ' + postData.postal_delivery_info.last_name;
@@ -349,7 +350,7 @@ function displayConfimationPage() {
         cityCountryTag.classList.add('p_light');
         deliveryDetails.appendChild(cityCountryTag);
 
-    } else if (postData.delivery_method == 'E') {
+    } else if (postData.delivery_method === 'E') {
         const nameTag = document.createElement('p');
         nameTag.textContent = postData.email_delivery_info.first_name + ' ' + postData.email_delivery_info.last_name;
         nameTag.classList.add('p_light');
@@ -406,7 +407,7 @@ function displayErrorPage(message) {
 // Handler Functions
 
 async function handleBookNow(eventID) {
-    // Initilizing
+    // Initializing
     closeErrorMessage();
     eventData = undefined;
     postData = {};
@@ -429,7 +430,7 @@ async function handleBookNow(eventID) {
 function handleDeliveryMethodPage() {
     const ticketAmount = document.getElementById('ticket_amount_entry_field').value;
 
-    if (isNaN(ticketAmount) || ticketAmount == "") {
+    if (isNaN(ticketAmount) || ticketAmount === "") {
         showErrorMessage("Please enter a valid integer input as the quantity.");
         return;
     } else if (ticketAmount > 10) {
@@ -446,12 +447,12 @@ function handleDeliveryMethodPage() {
 }
 
 function handleDeliveryMethod(chosenMethod) {
-    if (chosenMethod == 'postal') {
+    if (chosenMethod === 'postal') {
         postData['delivery_method'] = 'P';
         postData['delivery_method_description'] = 'Postal';
         displayPostalInfo();
         
-    } else if (chosenMethod == 'email') {
+    } else if (chosenMethod === 'email') {
         postData['delivery_method'] = 'E';
         postData['delivery_method_description'] = 'Email';
         displayEmailInfo();
@@ -463,10 +464,7 @@ function handleBack(contentPageIndex) {
 }
 
 function validateEmail(value) {
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
-        return true;
-    }
-    return false;
+    return /^\w+(-?\w+)*@\w+(-?\w+)*(\.\w{2,3})+$/.test(value);
 }
 
 function autoFillNameOnCard(firstName, lastName) {
@@ -480,13 +478,13 @@ function handleSavePostDeliveryInfo() {
     closeErrorMessage();
 
     const countryID = document.getElementById('booking_modal_p_country').value;
-    if (isNaN(countryID)) {
+    if (isNaN(countryID) || countryID === '') {
         showErrorMessage('Please enter a valid country ID.');
         return;
     }
 
     const cityID = document.getElementById('booking_modal_p_city').value;
-    if (isNaN(cityID)) {
+    if (isNaN(cityID) || cityID === '') {
         showErrorMessage('Please enter a valid city ID.');
         return;
     }
@@ -498,7 +496,7 @@ function handleSavePostDeliveryInfo() {
     }
 
     const streetName = document.getElementById('booking_modal_p_street_name').value;
-    if (streetName == '') {
+    if (streetName === '') {
         showErrorMessage('Please enter the street name.')
         return;
     }
@@ -510,25 +508,25 @@ function handleSavePostDeliveryInfo() {
     }
 
     const firstName = document.getElementById('booking_modal_p_first_name').value;
-    if (firstName == '') {
+    if (firstName === '') {
         showErrorMessage('Please enter your first name.');
         return;
     }
 
     const lastName = document.getElementById('booking_modal_p_last_name').value;
-    if (lastName == '') {
+    if (lastName === '') {
         showErrorMessage('Please enter your last name.');
         return;
     }
 
     const phoneCountry = document.getElementById('booking_modal_p_phone_country_code').value;
-    if (isNaN(phoneCountry)) {
+    if (isNaN(phoneCountry) || phoneCountry === '') {
         showErrorMessage('Please enter a valid phone country code.');
         return;
     }
 
     const phoneNumber = document.getElementById('booking_modal_p_phone_number').value;
-    if (phoneNumber == '') {
+    if (phoneNumber === '') {
         showErrorMessage('Please enter your phone number.')
         return;
     } else if (isNaN(phoneNumber)) {
@@ -564,13 +562,13 @@ function handleSaveEmailDeliveryInfo() {
     closeErrorMessage();
 
     const firstName = document.getElementById('booking_modal_e_first_name').value;
-    if (firstName == '') {
+    if (firstName === '') {
         showErrorMessage('Please enter your first name.');
         return;
     }
 
     const lastName = document.getElementById('booking_modal_e_last_name').value;
-    if (lastName == '') {
+    if (lastName === '') {
         showErrorMessage('Please enter your last name.');
         return;
     }
@@ -582,7 +580,7 @@ function handleSaveEmailDeliveryInfo() {
     }
 
     const phoneCountry = Number(document.getElementById('booking_modal_e_phone_country_code').value);
-    if (phoneCountry == 0) {
+    if (phoneCountry === 0) {
         showErrorMessage('Please select the phone country code.');
         return;
     }
@@ -593,7 +591,7 @@ function handleSaveEmailDeliveryInfo() {
 
     const phoneNumber = document.getElementById('booking_modal_e_phone_number').value;
 
-    if (phoneNumber == '') {
+    if (phoneNumber === '') {
         showErrorMessage('Please enter your phone number.')
         return;
     } else if (isNaN(phoneNumber)) {
@@ -615,7 +613,7 @@ function handleSaveEmailDeliveryInfo() {
 }
 
 function validateExpirationDate(exDate) {
-    dateSplit = exDate.split('/');
+    const dateSplit = exDate.split('/');
     if (dateSplit.length !== 2) {
         return false;
     } else if (dateSplit[0].length !== 2 || dateSplit[1].length !== 2) {
@@ -631,11 +629,7 @@ function validateExpirationDate(exDate) {
     const today = new Date();
     const expirationDate = new Date('20' + dateSplit[1] + '-' + dateSplit[0] + '-1')
 
-    if (expirationDate <= today) {
-        return false;
-    }
-
-    return true;
+    return expirationDate > today;
 }
 
 function validateCVC(cvc) {
@@ -694,7 +688,7 @@ function handleSavePaymentInfo() {
         'cvc': cvc
     }
 
-    displayConfimationPage();
+    displayConfirmationPage();
 }
 
 async function handlePostBooking(e) {
@@ -704,10 +698,10 @@ async function handlePostBooking(e) {
 
     const token = $('input[name="csrfmiddlewaretoken"]').val();
     
-    // Formating for post
+    // Formatting for post
 
     let patchBody;
-    if (postData.delivery_method == 'E') {
+    if (postData.delivery_method === 'E') {
         patchBody = {
             'ticket_type_id': postData.ticket_type_id,
             'event_id': eventData.id,
@@ -719,7 +713,7 @@ async function handlePostBooking(e) {
             'phone_country': postData.email_delivery_info.phone_country,
             'phone_number': postData.email_delivery_info.phone_number
         };
-    } else if (postData.delivery_method == 'P') {
+    } else if (postData.delivery_method === 'P') {
         patchBody = {
             'ticket_type_id': postData.ticket_type_id,
             'event_id': eventData.id,
@@ -750,7 +744,7 @@ async function handlePostBooking(e) {
 
     stopLoading();
 
-    if (res.status != 200) {
+    if (res.status !== 200) {
         const data = await res.json();
         displayErrorPage(data['message'])
     } else {

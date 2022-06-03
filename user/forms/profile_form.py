@@ -5,7 +5,8 @@ from home.models import City
 
 class ProfileForm(ModelForm):
     def __init__(self, *args, **kwargs):
-        super (ProfileForm, self).__init__(*args,**kwargs) # populates the post
+        super (ProfileForm, self).__init__(*args,**kwargs)
+        # Filtering city by the selected country
         self.fields['postal_city'].queryset = City.objects.filter(country=self.instance.postal_country)
     
     class Meta:

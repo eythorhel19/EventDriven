@@ -1,0 +1,26 @@
+SELECT 
+	DISTINCT(EEVE.*)
+FROM 
+	EVENTS_EVENT AS EEVE
+	JOIN HOME_EVENTCATEGORY AS HEVECAT
+	ON HEVECAT.event_id = EEVE.id
+	JOIN HOME_EVENTENTERTAINER AS HEENT
+	ON HEENT.event_id = EEVE.id
+WHERE 
+	EEVE.start_date >= CURRENT_DATE AND 
+	HEVECAT.category_id IN (
+		SELECT 
+			HUFC.category_id
+		FROM 
+			HOME_USERFAVORITECATEGORY AS HUFC
+		WHERE 
+			HUFC.user_id = {user_id}
+	) OR 
+	HEENT.entertainer_id IN (
+		SELECT 
+			HUFENT.entertainer_id
+		FROM 
+			HOME_USERFAVORITEENTERTAINER AS HUFENT
+		WHERE 
+			HUFENT.user_id = {user_id}
+	);

@@ -12,7 +12,7 @@
 <p class="h2_regular event_or_ent_header">Events matching your search result</p>
 <div class="row-of-cards">
     {% if searched_events %} {% for event in searched_events %}
-    <div>{% include 'components/info_card.html' with event=event %}</div>
+    <div>{% include 'components/event_info_card.html' with event=event %}</div>
     {% endfor %} 
     <button
         onclick="scrollParentDivLeft(this)"

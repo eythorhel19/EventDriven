@@ -3,9 +3,9 @@
         <div class="booking_modal_confirm_column">
             <h2 class="h3_semibold underline">Event</h2>
             <div class="booking_modal_confirm_event_info_wrapper">
-                <p id="booking_modal_confirm_event_title" class="p_light">lalalala</p>
-                <p id="booking_modal_confirm_location" class="p_light">lalalala</p>
-                <p id="booking_modal_confirm_date" class="p_light">lalalala</p>
+                <p id="booking_modal_confirm_event_title" class="p_light"></p>
+                <p id="booking_modal_confirm_location" class="p_light"></p>
+                <p id="booking_modal_confirm_date" class="p_light"></p>
             </div>
 
             <h2 class="h3_semibold underline">Delivery</h2>
@@ -51,7 +51,7 @@
     
     <div class="booking_modal_back_continue_wrapper">
         <button class="button_outlined back_button" onclick="handleBack(5)">Back</button>
-        <form action="POST" id="confirm-form" onsubmit="return handlePostBooking(event)">
+        <form method="post" id="confirm-form" onsubmit="return handlePostBooking(event)">
             {% csrf_token %}
             <input class="button_outlined" type="submit" value="Confirm">
         </form>

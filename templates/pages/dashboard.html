@@ -115,7 +115,7 @@
         <div class="all_users_tickets">
             <p class="h3_regular">Your tickets</p>
             <div class="row_of_tickets">
-                {% for ticket in query_dashboard_user_tickets_results %}
+                {% for ticket in user_tickets %}
                 <div>
                     {% include 'ticket_info_card.html' with ticket=ticket %}
                 </div>
@@ -155,11 +155,11 @@
         </div>
     </div>
     <p class="h3_regular">
-        Upcomming events matching your favorite categories and events
+        Upcoming events matching your favorite categories and events
     </p>
     <div class="row-of-cards">
-        {% for event in query_dashboard_user_fav_cat_ent_events_res %}
-        <div>{% include 'components/info_card.html' with event=event %}</div>
+        {% for event in events_matching_favorites %}
+        <div>{% include 'components/event_info_card.html' with event=event %}</div>
         {% endfor %}
         <button
             onclick="scrollParentDivLeft(this)"

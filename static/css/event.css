@@ -58,7 +58,7 @@
     gap: 0;
 }
 
-.map_and_calander_wrapper {
+.map_and_calender_wrapper {
     display: flex;
     flex-direction: row;
     gap: 32px;
@@ -96,23 +96,23 @@
     opacity: 0.6;
 }
 
-.the_calander_icon_wrapper {
+.the_calendar_icon_wrapper {
     display: flex;
     flex-direction: column;
     height: 600px;
     width: 100%;
 }
 
-.the_calander_icon_month {
+.the_calendar_icon_month {
     background-color: var(--graphical-secondary);
-    border-radius: 10px 10px 0 0px;
+    border-radius: 10px 10px 0 0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 25%;
 }
 
-.the_calander_icon_date_week {
+.the_calendar_icon_date_week {
     color: var(--graphical-secondary);
     display: flex;
     justify-content: center;
@@ -121,6 +121,12 @@
     height: 75%;
     background-color: white;
     border-radius: 0 0 16px 16px;
+}
+
+.event_action_wrapper {
+    display: flex;
+    justify-content: end;
+    padding-bottom: 16px;
 }
 
 @media only screen and (max-width: 900px) {

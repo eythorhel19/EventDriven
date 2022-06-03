@@ -33,7 +33,7 @@ function loadPrevImage() {
     }
 
     if (images.length > 0) {
-        if (imageIndex == 0) {
+        if (imageIndex === 0) {
             imageIndex = images.length - 1;
         } else {
             imageIndex--;

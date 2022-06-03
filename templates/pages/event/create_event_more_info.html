@@ -1,6 +1,5 @@
 {% extends "base.html" %} {% block content %}
 {% load static %}
-
 <link rel="stylesheet" href="{% static 'css/form_multi_select.css' %}">
 <style>
     .preview_of_event {
@@ -136,7 +135,7 @@
 </div>
 <label for="ticket_type_price" class="h3_regular" style="color: white; margin-top: 16px;">Set the events ticket type price</label>
 {% for ticket_type_price in this_event_ticket_type_price %}
-    <p style="color: var(--type-primary);">{{ticket_type_price.ticket_type_id}}-{{ticket_type_price.price}}</p>
+    <p style="color: var(--type-primary);">{{ticket_type_price.ticket_type.description}} - {{ticket_type_price.price}}</p>
 {% endfor %}
 <form id="ticket_type_price" method="post" >
     {% csrf_token %} {{event_ticket_price_form}}
@@ -151,13 +150,13 @@
     </div>
 </form>
 
-<label for="prview_info_card" class="h2_regular" style="color: var(--type-primary)"> Here you can see how the event card will look</label>
-<div id="prview_info_card" class="preview_of_event">
-    <div>{% include 'components/info_card.html' with event=event %}</div>
+<label for="preview_info_card" class="h2_regular" style="color: var(--type-primary)"> Here you can see how the event card will look</label>
+<div id="preview_info_card" class="preview_of_event">
+    <div>{% include 'components/event_info_card.html' with event=event %}</div>
 </div>
 
-<label for="prview_page" class="h2_regular" style="color: var(--type-primary)">  Here you can see how the event page will look</label>
-<div id="prview_page" class="preview_of_event">
+<label for="preview_page" class="h2_regular" style="color: var(--type-primary)">  Here you can see how the event page will look</label>
+<div id="preview_page" class="preview_of_event">
     {% include 'components/specific_event.html' with event=event %}
 </div>
 {% endblock %}

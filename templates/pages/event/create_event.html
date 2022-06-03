@@ -18,6 +18,8 @@
         flex-wrap: wrap;
         justify-content: center;
     }
+
+
     .image_wrapper_info_card {
         display: flex;
         justify-content: center;
@@ -40,34 +42,23 @@
         flex-direction: column;
         justify-content: space-between;
     }
-
-    .info_wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 32px;
-        color: var(--type-primary);
-    }
-    .max_cap_wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-    }
-    .map_and_calander_wrapper {
-        display: flex;
-        flex-direction: row;
-        gap: 32px;
+    .profile_form {
         width: 100%;
-        height: 100%;
-        margin-top: 30px;
-        margin-bottom: 30px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .the_map_wrapper {
+        max-width: 500px;
         display: flex;
         flex-direction: column;
-        width: 45%;
-        height: 100%;
+        gap: 16px;
+    }
+    .profile_form input {
+        padding: 8px 16px;
+        border-radius: 8px;
+        border-width: 0;
+    }
+    .profile_form select {
+        padding: 8px 16px;
+        border-radius: 8px;
+        border-width: 0;
+        height: 40px;
     }
     @media only screen and (max-width: 900px) {
         .image_wrapper_info_card {
@@ -85,12 +76,6 @@
             height: 100%;
             flex-direction: column;
             justify-content: space-between;
-        }
-        .the_map_wrapper {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            height: 100%;
         }
     }
 </style>
@@ -117,16 +102,5 @@
             </div>
         </form>
     </div>
-    <!-- <form method="post" class="profile_form info_and_book_wrapper">
-        {% csrf_token %} {{ event_category_form }}
-        <div>
-            <input
-                type="submit"
-                class="button_outlined"
-                value="Update"
-                style="border-width: 2px"
-            />
-        </div>
-    </form> -->
 </div>
 {% endblock %}

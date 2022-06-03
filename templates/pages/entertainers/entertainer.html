@@ -23,7 +23,7 @@
     <p class="h3_regular" style="color:var(--type-primary); padding-top: 40px;">Upcoming events</p>
     <div class="row-of-cards">
         {% for event in entertainer_events %}
-        <div>{% include 'components/info_card.html' with event=event %}</div>
+        <div>{% include 'components/event_info_card.html' with event=event %}</div>
         {% endfor %}
         <button
         onclick="scrollParentDivLeft(this)"
@@ -32,7 +32,6 @@
             position: absolute;
             left: 0;
             padding: 10px;
-
             background-color: transparent;
             border: none;
             color: var(--type-primary);

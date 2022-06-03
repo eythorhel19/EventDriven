@@ -8,12 +8,15 @@
     <div class="event_image_url">{{img_url}}</div>
 {% endfor %}
 </div>
-{% if request.user.is_superuser %}
-<button class="button_outlined">
-    <a href="/event/create_event/{{event.id}}"> Edit event info </a>
-</button>
-{% endif %}
+
 <div class="main_wrapper">
+    {% if request.user.is_superuser %}
+    <div class="event_action_wrapper">
+        <button class="button_outlined">
+            <a href="/event/create_event/{{event.id}}"> Edit event info </a>
+        </button>
+    </div>
+    {% endif %}
     <div class="top_wrapper">
         <div class="image_wrapper_info_card">
             <img
@@ -39,7 +42,7 @@
                 <div class="max_cap_wrapper">
                     <p class="label_light">Ticket prices</p>
                     {% for price_type in event_price_and_ticket_type %}
-                    <p class="p_light" value="{{price.price}}">{{price_type.description}}: {{price_type.price}} USD</p>
+                    <p class="p_light">{{price_type.description}}: {{price_type.price}} USD</p>
                     {% endfor %}
                 </div>
             </div>
@@ -52,12 +55,12 @@
             >Book Now</button>
         </div>
     </div>
-    <div class="map_and_calander_wrapper">
+    <div class="map_and_calender_wrapper">
         <div class="the_map_wrapper">
             <p>Location</p>
             <p>{{event.location}}</p>
             <iframe
-                src={{map_url}}
+                src="{{map_url}}"
                 height="600"
                 style="border: 0"
                 allowfullscreen=""
@@ -68,25 +71,22 @@
         <div class="the_map_wrapper">
             <p>Date</p>
             <p>{{event.start_date}} to {{event.end_date}}</p>
-                <div class="the_calander_icon_wrapper">
-                    <div class="the_calander_icon_month">
+                <div class="the_calendar_icon_wrapper">
+                    <div class="the_calendar_icon_month">
                         {% if year == year_to %}
                         <h2 style="font-size: 3rem">{{year}}</h2>
                         {% else %}
                             <h2 style="font-size: 3rem">{{year}} to {{year_to}}</h2>
                         {% endif %}
                     </div>
-                    <div class="the_calander_icon_date_week">
+                    <div class="the_calendar_icon_date_week">
                         <h1 style="color: var(--base-primary); font-size: 3rem;
                         ">{{hour}} to {{hour_to}}</h1>
                         <h3 style="color: orange ; font-size: 3rem" >{{day_month}} to {{day_month_to}}</h3>
                     </div>
                     
                 </div>
-            </div>
         </div>
-        
-    </div>
     <p class="h3_regular" style="color:var(--type-primary)">Entertainers appearing in this event</p>
     <div class="row-of-cards">
         {% if events_entertainers %}
@@ -133,28 +133,27 @@
         {% if most_similar_events %}
             {% for event in most_similar_events %}
 
-            <div>{% include 'components/info_card.html' with event=event %}</div>
+            <div>{% include 'components/event_info_card.html' with event=event %}</div>
             {% endfor %}
             <button
-        onclick="scrollParentDivLeft(this)"
-        class="icon_large"
-        style="
-            position: absolute;
-            left: 0;
-            padding: 10px;
+                onclick="scrollParentDivLeft(this)"
+                class="icon_large"
+                style="
+                    position: absolute;
+                    left: 0;
+                    padding: 10px;
 
-            background-color: transparent;
-            border: none;
-            color: var(--type-primary);
-            opacity: 0.5;
-            "
-        >
-            arrow_back_ios
-        </button>
-        <button
-            onclick="scrollParentDivRight(this)"
-            class="icon_large"
-            style="
+                    background-color: transparent;
+                    border: none;
+                    color: var(--type-primary);
+                    opacity: 0.5;
+                    "
+            > arrow_back_ios
+            </button>
+            <button
+                onclick="scrollParentDivRight(this)"
+                class="icon_large"
+                style="
                 position: absolute;
                 right: 0;
                 padding: 10px;
@@ -163,12 +162,10 @@
                 color: var(--type-primary);
                 opacity: 0.5;
             "
-        >
-            arrow_forward_ios
-        </button>
+            > arrow_forward_ios
+            </button>
         {% else %}
             <p class="h1_regular" style="color:gray">No similar events found</p>
         {% endif %}
     </div>
-    
 </div>
