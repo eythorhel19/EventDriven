@@ -39,7 +39,7 @@ def profile(request):
             user_details = form.save(commit=False)
             user_details.user = request.user
             user_details.save()
-            # return redirect('profile')
+            return redirect('/user/profile?success=true')
 
         form2 = UserInfoForm(instance=request.user, data=request.POST)
         if form2.is_valid():
