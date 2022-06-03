@@ -70,7 +70,7 @@
     <div>    
         <h2 class="h2_light">Detailed Information</h2>
         
-        <form method="post" class="profile_form">
+        <form method="post" class="profile_form" id="detailed_info_form">
             {% csrf_token %}
             {{ form }}
             <div>
@@ -79,4 +79,15 @@
         </form>
     </div>
 </div>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('success') == 'true') {
+        document.body.scrollTop = 1000; // For Safari
+        document.documentElement.scrollTop = 1000; // For Chrome, Firefox, IE and Opera
+    }
+    
+    document.getElementById('id_postal_country').addEventListener('change', function() {
+        document.getElementById("detailed_info_form").submit(); 
+    });
+</script>
 {% endblock %}

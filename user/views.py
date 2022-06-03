@@ -13,7 +13,7 @@ def get_user_details(user):
         user_details = None
     else:
         user_details = UserDetails.objects.filter(user=user).first()
-    
+
     return user_details
 
 
@@ -40,13 +40,14 @@ def profile(request):
             user_details = form.save(commit=False)
             user_details.user = request.user
             user_details.save()
-            return redirect('profile')
+            return redirect('/user/profile?success=true')
 
         # Posting user standard information form
         form2 = UserInfoForm(instance=request.user, data=request.POST)
         if form2.is_valid():
             user = form2.save(commit=False)
             user.save()
+            return redirect('/user/profile?success=true')
 
     return render(request, 'pages/user/profile.html', {
         'form': ProfileForm(instance=user_details),
@@ -54,4 +55,3 @@ def profile(request):
         'user_details': user_details,
         'user': request.user
     })
-
