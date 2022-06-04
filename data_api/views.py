@@ -308,7 +308,7 @@ def book_tickets(request):
 
         booked_tickets = []
         for i, t in enumerate(available_tickets):
-            if i > req_body['quantity']:
+            if i >= req_body['quantity']:
                 break
             else:
                 if user is not None:
